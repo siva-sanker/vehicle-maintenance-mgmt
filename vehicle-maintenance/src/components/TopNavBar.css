@@ -1,0 +1,46 @@
+.top-navbar {
+  background-color: #101010;
+  padding: 8px 10px;
+  display: flex;
+  justify-content: space-between; /* Separate left and right content */
+  align-items: center; /* Vertically center items */
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navItem img {
+  height: 30px; /* Optional: set logo size */
+  /* margin-right: 10px; */
+  margin-left: 15px;
+}
+
+.topNavBarTitle {
+  margin: 0;
+}
+
+.nav-list {
+  display: flex;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  gap: 20px; /* spacing between items */
+}
+
+.nav-list li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.nav-list li a.active,
+.nav-list li a:hover {
+  color: lightblue;
+}
+
+.nav-link{
+  width: 30px;
+}

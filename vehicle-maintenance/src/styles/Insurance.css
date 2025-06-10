@@ -1,0 +1,22 @@
+.insurance{
+    color: #0d92ae;
+    border: 1px solid #eeeeee;
+    border-left: 5px solid #0d92ae;
+    border-radius: 4px;
+}
+.insurance:hover{
+    color: #8de6ff;
+    cursor: pointer;
+}
+.insuranceBtn{
+    background-color: #37a9be;
+    color: white;
+}
+.insuranceBtn:hover{
+    background-color: #37a9be;
+    color: white;
+}
+.insuranceForm{
+    border: 1px solid #eeeeee;
+    border-radius: 4px;
+}

@@ -1,0 +1,22 @@
+.container-fluid{
+    border: 1px dashed rgb(184, 181, 181);
+}
+
+.registration{
+    color: #0d92ae;
+    border: 1px solid #eeeeee;
+    border-left: 5px solid #0d92ae;
+    border-radius: 4px;
+}
+.registration:hover{
+    color: #8de6ff;
+    cursor: pointer;
+}
+.registerBtn{
+    background-color: #37a9be;
+    color: white;
+}
+.registerBtn:hover{
+    background-color: #37a9be;
+    color: white;
+}
