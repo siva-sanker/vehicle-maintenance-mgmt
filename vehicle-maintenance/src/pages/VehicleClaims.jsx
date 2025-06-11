@@ -118,7 +118,8 @@ const InsuranceClaims = () => {
       });
 
     } catch (error) {
-      console.error('Error adding claim:', error);
+      // console.error('Error adding claim:', error);
+      alert('Error submitting claim. Please try again.');
     }
   };
 

@@ -56,7 +56,7 @@
           "claimDate": "2025-06-12",
           "claimAmount": "12500",
           "reason": "accident",
-          "status": "Rejected"
+          "status": "Approved"
         }
       ]
     },
@@ -90,13 +90,13 @@
           "claimDate": "2025-01-15",
           "claimAmount": "8500",
           "reason": "minor collision",
-          "status": "Rejected"
+          "status": "Approved"
         },
         {
           "claimDate": "2025-03-20",
           "claimAmount": "15000",
           "reason": "windshield damage",
-          "status": "Pending"
+          "status": "Approved"
         }
       ]
     },
@@ -217,6 +217,12 @@
           "claimAmount": "35000",
           "reason": "theft",
           "status": "Rejected"
+        },
+        {
+          "claimDate": "2025-06-18",
+          "claimAmount": "2754.65",
+          "reason": "fell in river",
+          "status": "Pending"
         }
       ]
     },
@@ -251,6 +257,12 @@
           "claimAmount": "18500",
           "reason": "rear collision",
           "status": "Approved"
+        },
+        {
+          "claimDate": "2025-06-19",
+          "claimAmount": "4000",
+          "reason": "tsunami",
+          "status": "Pending"
         }
       ]
     },
@@ -726,7 +738,31 @@
       "color": "bronze",
       "owner": "Rajesh Gogoi",
       "phone": "7654321098",
-      "address": "Guwahati, Assam"
+      "address": "Guwahati, Assam",
+      "insurance": {
+        "policyNumber": "758432",
+        "insurer": "bajaj",
+        "policytype": "Liability",
+        "startDate": "2025-06-22",
+        "endDate": "2026-07-07",
+        "payment": "card",
+        "issueDate": "2025-06-01",
+        "premiumAmount": "3500"
+      },
+      "claims": [
+        {
+          "claimDate": "2025-08-13",
+          "claimAmount": "6000",
+          "reason": "CRASH",
+          "status": "Approved"
+        },
+        {
+          "claimDate": "2025-06-30",
+          "claimAmount": "7500",
+          "reason": "landslide",
+          "status": "Pending"
+        }
+      ]
     },
     {
       "id": "z1c5",
