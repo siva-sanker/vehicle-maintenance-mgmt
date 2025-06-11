@@ -234,7 +234,7 @@ const Dashboard = () => {
         <div className="header-content">
           <h1 className="dashboard-title">
             <Car className="dashboard-icon" />
-            Vehicle Management Dashboard
+            Vehicle Maintenance Management Dashboard
           </h1>
           <p className="dashboard-subtitle">Monitor your fleet performance and analytics</p>
         </div>

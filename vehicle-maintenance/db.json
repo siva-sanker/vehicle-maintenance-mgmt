@@ -56,9 +56,709 @@
           "claimDate": "2025-06-12",
           "claimAmount": "12500",
           "reason": "accident",
+          "status": "Rejected"
+        }
+      ]
+    },
+    {
+      "id": "c8f2",
+      "make": "honda",
+      "model": "city",
+      "purchaseDate": "2018-05-15",
+      "registrationNumber": "MH02AB4567",
+      "purchasePrice": "950000",
+      "fuelType": "Petrol",
+      "engineNumber": "honda123xyz789",
+      "chassisNumber": "honda456def012",
+      "kilometers": "45000",
+      "color": "silver",
+      "owner": "Rajesh Kumar",
+      "phone": "9876543210",
+      "address": "Mumbai, Maharashtra",
+      "insurance": {
+        "policyNumber": "789456",
+        "insurer": "ICICI Lombard",
+        "policytype": "Comprehensive",
+        "startDate": "2024-12-01",
+        "endDate": "2025-11-30",
+        "payment": "card",
+        "issueDate": "2024-11-25",
+        "premiumAmount": "12000"
+      },
+      "claims": [
+        {
+          "claimDate": "2025-01-15",
+          "claimAmount": "8500",
+          "reason": "minor collision",
+          "status": "Rejected"
+        },
+        {
+          "claimDate": "2025-03-20",
+          "claimAmount": "15000",
+          "reason": "windshield damage",
+          "status": "Pending"
+        }
+      ]
+    },
+    {
+      "id": "d9g3",
+      "make": "hyundai",
+      "model": "i20",
+      "purchaseDate": "2020-08-22",
+      "registrationNumber": "DL01CD7890",
+      "purchasePrice": "750000",
+      "fuelType": "Petrol",
+      "engineNumber": "hyundai789abc456",
+      "chassisNumber": "hyundai123ghi789",
+      "kilometers": "32000",
+      "color": "red",
+      "owner": "Priya Sharma",
+      "phone": "8765432109",
+      "address": "New Delhi, Delhi",
+      "insurance": {
+        "policyNumber": "456789",
+        "insurer": "HDFC Ergo",
+        "policytype": "Third Party",
+        "startDate": "2025-06-11",
+        "endDate": "2025-09-30",
+        "payment": "cash",
+        "issueDate": "2025-06-10",
+        "premiumAmount": "1652"
+      }
+    },
+    {
+      "id": "e0h4",
+      "make": "maruti",
+      "model": "baleno",
+      "purchaseDate": "2019-11-10",
+      "registrationNumber": "KA03EF1234",
+      "purchasePrice": "680000",
+      "fuelType": "Petrol",
+      "engineNumber": "maruti456jkl123",
+      "chassisNumber": "maruti789mno456",
+      "kilometers": "55000",
+      "color": "blue",
+      "owner": "Amit Patel",
+      "phone": "7654321098",
+      "address": "Bangalore, Karnataka",
+      "insurance": {
+        "policyNumber": "321654",
+        "insurer": "Bajaj Allianz",
+        "policytype": "Comprehensive",
+        "startDate": "2024-08-01",
+        "endDate": "2025-07-31",
+        "payment": "upi",
+        "issueDate": "2024-07-25",
+        "premiumAmount": "9500"
+      },
+      "claims": [
+        {
+          "claimDate": "2024-12-05",
+          "claimAmount": "22000",
+          "reason": "major accident",
           "status": "Approved"
         }
       ]
+    },
+    {
+      "id": "f1i5",
+      "make": "tata",
+      "model": "nexon",
+      "purchaseDate": "2021-03-18",
+      "registrationNumber": "TN02GH5678",
+      "purchasePrice": "1450000",
+      "fuelType": "Electric",
+      "engineNumber": "tata123pqr789",
+      "chassisNumber": "tata456stu123",
+      "kilometers": "28000",
+      "color": "green",
+      "owner": "Sneha Reddy",
+      "phone": "6543210987",
+      "address": "Chennai, Tamil Nadu",
+      "insurance": {
+        "policyNumber": "987123",
+        "insurer": "Reliance General",
+        "policytype": "Comprehensive",
+        "startDate": "2024-09-01",
+        "endDate": "2025-08-31",
+        "payment": "card",
+        "issueDate": "2024-08-20",
+        "premiumAmount": "18000"
+      }
+    },
+    {
+      "id": "g2j6",
+      "make": "kia",
+      "model": "seltos",
+      "purchaseDate": "2022-01-25",
+      "registrationNumber": "AP05IJ9012",
+      "purchasePrice": "1250000",
+      "fuelType": "Diesel",
+      "engineNumber": "kia789vwx456",
+      "chassisNumber": "kia123yza789",
+      "kilometers": "18000",
+      "color": "orange",
+      "owner": "Vikram Singh",
+      "phone": "5432109876",
+      "address": "Hyderabad, Telangana",
+      "insurance": {
+        "policyNumber": "654321",
+        "insurer": "SBI General",
+        "policytype": "Liability",
+        "startDate": "2024-07-01",
+        "endDate": "2025-06-30",
+        "payment": "cash",
+        "issueDate": "2024-06-15",
+        "premiumAmount": "11000"
+      },
+      "claims": [
+        {
+          "claimDate": "2024-11-10",
+          "claimAmount": "35000",
+          "reason": "theft",
+          "status": "Rejected"
+        }
+      ]
+    },
+    {
+      "id": "h3k7",
+      "make": "mahindra",
+      "model": "xuv300",
+      "purchaseDate": "2020-06-12",
+      "registrationNumber": "GJ01KL3456",
+      "purchasePrice": "850000",
+      "fuelType": "Petrol",
+      "engineNumber": "mahindra456bcd789",
+      "chassisNumber": "mahindra123efg456",
+      "kilometers": "42000",
+      "color": "yellow",
+      "owner": "Rahul Mehta",
+      "phone": "4321098765",
+      "address": "Ahmedabad, Gujarat",
+      "insurance": {
+        "policyNumber": "147258",
+        "insurer": "Tata AIG",
+        "policytype": "Comprehensive",
+        "startDate": "2024-11-01",
+        "endDate": "2025-10-31",
+        "payment": "upi",
+        "issueDate": "2024-10-20",
+        "premiumAmount": "13500"
+      },
+      "claims": [
+        {
+          "claimDate": "2025-02-08",
+          "claimAmount": "18500",
+          "reason": "rear collision",
+          "status": "Approved"
+        }
+      ]
+    },
+    {
+      "id": "i4l8",
+      "make": "ford",
+      "model": "ecosport",
+      "purchaseDate": "2019-09-30",
+      "registrationNumber": "UP32MN7890",
+      "purchasePrice": "1100000",
+      "fuelType": "Diesel",
+      "engineNumber": "ford789hij123",
+      "chassisNumber": "ford456klm789",
+      "kilometers": "38000",
+      "color": "brown",
+      "owner": "Anjali Verma",
+      "phone": "3210987654",
+      "address": "Lucknow, Uttar Pradesh",
+      "insurance": {
+        "policyNumber": "963852",
+        "insurer": "New India Assurance",
+        "policytype": "Third Party",
+        "startDate": "2024-09-01",
+        "endDate": "2025-08-31",
+        "payment": "bank account",
+        "issueDate": "2024-08-15",
+        "premiumAmount": "9000"
+      }
+    },
+    {
+      "id": "j5m9",
+      "make": "renault",
+      "model": "kwid",
+      "purchaseDate": "2021-12-05",
+      "registrationNumber": "PB02OP1234",
+      "purchasePrice": "450000",
+      "fuelType": "Petrol",
+      "engineNumber": "renault123qrs456",
+      "chassisNumber": "renault789tuv123",
+      "kilometers": "25000",
+      "color": "purple",
+      "owner": "Harpreet Kaur",
+      "phone": "2109876543",
+      "address": "Chandigarh, Punjab",
+      "insurance": {
+        "policyNumber": "741852",
+        "insurer": "Oriental Insurance",
+        "policytype": "Comprehensive",
+        "startDate": "2024-10-01",
+        "endDate": "2025-09-30",
+        "payment": "card",
+        "issueDate": "2024-09-20",
+        "premiumAmount": "7000"
+      },
+      "claims": [
+        {
+          "claimDate": "2024-12-20",
+          "claimAmount": "12000",
+          "reason": "side damage",
+          "status": "Rejected"
+        }
+      ]
+    },
+    {
+      "id": "k6n0",
+      "make": "nissan",
+      "model": "magnite",
+      "purchaseDate": "2022-04-18",
+      "registrationNumber": "HR06QR5678",
+      "purchasePrice": "720000",
+      "fuelType": "Petrol",
+      "engineNumber": "nissan456wxy789",
+      "chassisNumber": "nissan123zab456",
+      "kilometers": "15000",
+      "color": "pink",
+      "owner": "Deepika Sharma",
+      "phone": "1098765432",
+      "address": "Gurgaon, Haryana",
+      "insurance": {
+        "policyNumber": "369258",
+        "insurer": "United India Insurance",
+        "policytype": "Liability",
+        "startDate": "2024-08-01",
+        "endDate": "2025-07-31",
+        "payment": "cash",
+        "issueDate": "2024-07-25",
+        "premiumAmount": "8500"
+      }
+    },
+    {
+      "id": "l7o1",
+      "make": "volkswagen",
+      "model": "polo",
+      "purchaseDate": "2018-11-22",
+      "registrationNumber": "RJ14ST9012",
+      "purchasePrice": "780000",
+      "fuelType": "Diesel",
+      "engineNumber": "volkswagen789cde123",
+      "chassisNumber": "volkswagen456fgh789",
+      "kilometers": "62000",
+      "color": "gray",
+      "owner": "Rajiv Malhotra",
+      "phone": "0987654321",
+      "address": "Jaipur, Rajasthan",
+      "insurance": {
+        "policyNumber": "852963",
+        "insurer": "National Insurance",
+        "policytype": "Comprehensive",
+        "startDate": "2024-12-01",
+        "endDate": "2025-11-30",
+        "payment": "upi",
+        "issueDate": "2024-11-20",
+        "premiumAmount": "14000"
+      },
+      "claims": [
+        {
+          "claimDate": "2025-01-30",
+          "claimAmount": "28000",
+          "reason": "engine damage",
+          "status": "Approved"
+        },
+        {
+          "claimDate": "2025-03-15",
+          "claimAmount": "9500",
+          "reason": "bumper damage",
+          "status": "Rejected"
+        }
+      ]
+    },
+    {
+      "id": "m8p2",
+      "make": "skoda",
+      "model": "rapid",
+      "purchaseDate": "2020-03-08",
+      "registrationNumber": "MP09UV3456",
+      "purchasePrice": "920000",
+      "fuelType": "Petrol",
+      "engineNumber": "skoda123ijk456",
+      "chassisNumber": "skoda789lmn123",
+      "kilometers": "35000",
+      "color": "cyan",
+      "owner": "Priyanka Dubey",
+      "phone": "9876543210",
+      "address": "Bhopal, Madhya Pradesh",
+      "insurance": {
+        "policyNumber": "456123",
+        "insurer": "Royal Sundaram",
+        "policytype": "Third Party",
+        "startDate": "2024-09-01",
+        "endDate": "2025-08-31",
+        "payment": "bank account",
+        "issueDate": "2024-08-25",
+        "premiumAmount": "10000"
+      }
+    },
+    {
+      "id": "n9q3",
+      "make": "mg",
+      "model": "hector",
+      "purchaseDate": "2021-07-14",
+      "registrationNumber": "WB16WX7890",
+      "purchasePrice": "1350000",
+      "fuelType": "Petrol",
+      "engineNumber": "mg456opq789",
+      "chassisNumber": "mg123rst456",
+      "kilometers": "22000",
+      "color": "maroon",
+      "owner": "Sourav Ganguly",
+      "phone": "8765432109",
+      "address": "Kolkata, West Bengal",
+      "insurance": {
+        "policyNumber": "12154",
+        "insurer": "hdfc",
+        "policytype": "Third Party",
+        "startDate": "2025-06-12",
+        "endDate": "2026-07-08",
+        "payment": "bank account",
+        "issueDate": "2025-06-10",
+        "premiumAmount": "2300"
+      },
+      "claims": [
+        {
+          "claimDate": "2024-11-25",
+          "claimAmount": "42000",
+          "reason": "major collision",
+          "status": "Rejected"
+        }
+      ]
+    },
+    {
+      "id": "o0r4",
+      "make": "jeep",
+      "model": "compass",
+      "purchaseDate": "2022-02-28",
+      "registrationNumber": "OR02YZ1234",
+      "purchasePrice": "1850000",
+      "fuelType": "Diesel",
+      "engineNumber": "jeep789uvw456",
+      "chassisNumber": "jeep123xyz789",
+      "kilometers": "12000",
+      "color": "navy",
+      "owner": "Biju Patnaik",
+      "phone": "7654321098",
+      "address": "Bhubaneswar, Odisha",
+      "insurance": {
+        "policyNumber": "321654",
+        "insurer": "Cholamandalam MS",
+        "policytype": "Liability",
+        "startDate": "2024-07-01",
+        "endDate": "2025-06-30",
+        "payment": "upi",
+        "issueDate": "2024-06-20",
+        "premiumAmount": "20000"
+      }
+    },
+    {
+      "id": "p1s5",
+      "make": "bmw",
+      "model": "x1",
+      "purchaseDate": "2020-10-15",
+      "registrationNumber": "MH01AB5678",
+      "purchasePrice": "3200000",
+      "fuelType": "Petrol",
+      "engineNumber": "bmw456abc123",
+      "chassisNumber": "bmw789def456",
+      "kilometers": "28000",
+      "color": "white",
+      "owner": "Ratan Tata",
+      "phone": "6543210987",
+      "address": "Mumbai, Maharashtra",
+      "insurance": {
+        "policyNumber": "987456",
+        "insurer": "Bajaj Allianz",
+        "policytype": "Comprehensive",
+        "startDate": "2024-11-01",
+        "endDate": "2025-10-31",
+        "payment": "card",
+        "issueDate": "2024-10-25",
+        "premiumAmount": "35000"
+      },
+      "claims": [
+        {
+          "claimDate": "2025-01-10",
+          "claimAmount": "85000",
+          "reason": "luxury car damage",
+          "status": "Approved"
+        }
+      ]
+    },
+    {
+      "id": "q2t6",
+      "make": "audi",
+      "model": "a4",
+      "purchaseDate": "2021-05-20",
+      "registrationNumber": "DL02CD9012",
+      "purchasePrice": "4500000",
+      "fuelType": "Petrol",
+      "engineNumber": "audi123ghi789",
+      "chassisNumber": "audi456jkl123",
+      "kilometers": "18000",
+      "color": "black",
+      "owner": "Mukesh Ambani",
+      "phone": "5432109876",
+      "address": "New Delhi, Delhi",
+      "insurance": {
+        "policyNumber": "654789",
+        "insurer": "ICICI Lombard",
+        "policytype": "Comprehensive",
+        "startDate": "2024-12-01",
+        "endDate": "2025-11-30",
+        "payment": "bank account",
+        "issueDate": "2024-11-20",
+        "premiumAmount": "45000"
+      }
+    },
+    {
+      "id": "r3u7",
+      "make": "mercedes",
+      "model": "c-class",
+      "purchaseDate": "2019-08-12",
+      "registrationNumber": "KA04EF3456",
+      "purchasePrice": "5200000",
+      "fuelType": "Diesel",
+      "engineNumber": "mercedes789mno456",
+      "chassisNumber": "mercedes123pqr789",
+      "kilometers": "32000",
+      "color": "silver",
+      "owner": "Narayana Murthy",
+      "phone": "4321098765",
+      "address": "Bangalore, Karnataka",
+      "insurance": {
+        "policyNumber": "147963",
+        "insurer": "HDFC Ergo",
+        "policytype": "Comprehensive",
+        "startDate": "2024-10-01",
+        "endDate": "2025-09-30",
+        "payment": "card",
+        "issueDate": "2024-09-15",
+        "premiumAmount": "55000"
+      },
+      "claims": [
+        {
+          "claimDate": "2024-12-05",
+          "claimAmount": "120000",
+          "reason": "premium car repair",
+          "status": "Rejected"
+        }
+      ]
+    },
+    {
+      "id": "s4v8",
+      "make": "land rover",
+      "model": "discovery",
+      "purchaseDate": "2022-06-30",
+      "registrationNumber": "TN03GH7890",
+      "purchasePrice": "8500000",
+      "fuelType": "Diesel",
+      "engineNumber": "landrover456stu123",
+      "chassisNumber": "landrover789vwx456",
+      "kilometers": "8000",
+      "color": "green",
+      "owner": "Lakshmi Mittal",
+      "phone": "3210987654",
+      "address": "Chennai, Tamil Nadu",
+      "insurance": {
+        "policyNumber": "963147",
+        "insurer": "Reliance General",
+        "policytype": "Comprehensive",
+        "startDate": "2024-08-01",
+        "endDate": "2025-07-31",
+        "payment": "upi",
+        "issueDate": "2024-07-20",
+        "premiumAmount": "75000"
+      }
+    },
+    {
+      "id": "t5w9",
+      "make": "jaguar",
+      "model": "xe",
+      "purchaseDate": "2021-12-03",
+      "registrationNumber": "AP06IJ1234",
+      "purchasePrice": "6800000",
+      "fuelType": "Petrol",
+      "engineNumber": "jaguar123yza789",
+      "chassisNumber": "jaguar456bcd123",
+      "kilometers": "15000",
+      "color": "blue",
+      "owner": "Azim Premji",
+      "phone": "2109876543",
+      "address": "Hyderabad, Telangana",
+      "insurance": {
+        "policyNumber": "741369",
+        "insurer": "SBI General",
+        "policytype": "Liability",
+        "startDate": "2024-09-01",
+        "endDate": "2025-08-31",
+        "payment": "cash",
+        "issueDate": "2024-08-25",
+        "premiumAmount": "65000"
+      },
+      "claims": [
+        {
+          "claimDate": "2024-11-15",
+          "claimAmount": "180000",
+          "reason": "luxury vehicle damage",
+          "status": "Pending"
+        }
+      ]
+    },
+    {
+      "id": "u6x0",
+      "make": "volvo",
+      "model": "xc60",
+      "purchaseDate": "2020-04-25",
+      "registrationNumber": "GJ02KL5678",
+      "purchasePrice": "5500000",
+      "fuelType": "Hybrid",
+      "engineNumber": "volvo789efg123",
+      "chassisNumber": "volvo123hij456",
+      "kilometers": "25000",
+      "color": "red",
+      "owner": "Kumar Mangalam Birla",
+      "phone": "1098765432",
+      "address": "Ahmedabad, Gujarat",
+      "insurance": {
+        "policyNumber": "369741",
+        "insurer": "Tata AIG",
+        "policytype": "Comprehensive",
+        "startDate": "2024-11-01",
+        "endDate": "2025-10-31",
+        "payment": "bank account",
+        "issueDate": "2024-10-20",
+        "premiumAmount": "60000"
+      }
+    },
+    {
+      "id": "v7y1",
+      "make": "lexus",
+      "model": "es",
+      "purchaseDate": "2022-01-10",
+      "registrationNumber": "UP33MN9012",
+      "purchasePrice": "7200000",
+      "fuelType": "Hybrid",
+      "engineNumber": "lexus456klm789",
+      "chassisNumber": "lexus789nop123",
+      "kilometers": "10000",
+      "color": "white",
+      "owner": "Sunil Mittal",
+      "phone": "0987654321",
+      "address": "Lucknow, Uttar Pradesh",
+      "insurance": {
+        "policyNumber": "852147",
+        "insurer": "New India Assurance",
+        "policytype": "Comprehensive",
+        "startDate": "2024-10-01",
+        "endDate": "2025-09-30",
+        "payment": "card",
+        "issueDate": "2024-09-20",
+        "premiumAmount": "70000"
+      },
+      "claims": [
+        {
+          "claimDate": "2024-12-10",
+          "claimAmount": "250000",
+          "reason": "premium hybrid repair",
+          "status": "Approved"
+        }
+      ]
+    },
+    {
+      "id": "w8z2",
+      "make": "datsun",
+      "model": "go",
+      "purchaseDate": "2019-07-15",
+      "registrationNumber": "KL07BC3456",
+      "purchasePrice": "380000",
+      "fuelType": "Petrol",
+      "engineNumber": "datsun123qrs456",
+      "chassisNumber": "datsun789tuv123",
+      "kilometers": "75000",
+      "color": "beige",
+      "owner": "Manoj Pillai",
+      "phone": "9876543210",
+      "address": "Kochi, Kerala"
+    },
+    {
+      "id": "x9a3",
+      "make": "force",
+      "model": "gurkha",
+      "purchaseDate": "2020-12-08",
+      "registrationNumber": "GA01DE7890",
+      "purchasePrice": "1200000",
+      "fuelType": "Diesel",
+      "engineNumber": "force456wxy789",
+      "chassisNumber": "force123zab456",
+      "kilometers": "35000",
+      "color": "olive",
+      "owner": "Francisco Costa",
+      "phone": "8765432109",
+      "address": "Panaji, Goa"
+    },
+    {
+      "id": "y0b4",
+      "make": "isuzu",
+      "model": "d-max",
+      "purchaseDate": "2021-08-22",
+      "registrationNumber": "AS03FG1234",
+      "purchasePrice": "1650000",
+      "fuelType": "Diesel",
+      "engineNumber": "isuzu789cde123",
+      "chassisNumber": "isuzu456fgh789",
+      "kilometers": "28000",
+      "color": "bronze",
+      "owner": "Rajesh Gogoi",
+      "phone": "7654321098",
+      "address": "Guwahati, Assam"
+    },
+    {
+      "id": "z1c5",
+      "make": "citroen",
+      "model": "c5",
+      "purchaseDate": "2022-03-30",
+      "registrationNumber": "PB03HI5678",
+      "purchasePrice": "2800000",
+      "fuelType": "Petrol",
+      "engineNumber": "citroen123ijk456",
+      "chassisNumber": "citroen789lmn123",
+      "kilometers": "12000",
+      "color": "lavender",
+      "owner": "Gurpreet Singh",
+      "phone": "6543210987",
+      "address": "Amritsar, Punjab"
+    },
+    {
+      "id": "a2d6",
+      "make": "peugeot",
+      "model": "2008",
+      "purchaseDate": "2021-11-12",
+      "registrationNumber": "HR07JK9012",
+      "purchasePrice": "1850000",
+      "fuelType": "Petrol",
+      "engineNumber": "peugeot456opq789",
+      "chassisNumber": "peugeot123rst456",
+      "kilometers": "18000",
+      "color": "coral",
+      "owner": "Priya Malhotra",
+      "phone": "5432109876",
+      "address": "Faridabad, Haryana"
     }
   ]
 }

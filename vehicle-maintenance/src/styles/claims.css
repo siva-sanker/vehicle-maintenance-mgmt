@@ -205,9 +205,11 @@
 }
 
 .search-input-wrapper {
+  width: 30%;
   position: relative;
   display: flex;
   align-items: center;
+  /* border: 1px solid black; */
 }
 
 .search-icon {

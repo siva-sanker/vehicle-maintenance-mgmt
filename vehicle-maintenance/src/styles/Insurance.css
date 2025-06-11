@@ -161,7 +161,7 @@
   padding: 1rem 0.75rem;
   border-bottom: 1px solid #f1f3f4;
   color: #333;
-  font-size: 0.9rem;
+  /* font-size: 0.9rem; */
   vertical-align: middle;
 }
 
@@ -197,13 +197,12 @@
 .reg-number {
   font-weight: 600;
   color: #0d92ae;
-  font-family: 'Courier New', monospace;
+  /* font-family: 'Courier New', monospace; */
 }
 
 .policy-number {
-  font-weight: 600;
-  color: #28a745;
-  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  /* font-family: 'Courier New', monospace; */
 }
 
 .policy-type {
@@ -213,13 +212,13 @@
 
 .date-cell {
   color: #495057;
-  font-family: 'Courier New', monospace;
+  /* font-family: 'Courier New', monospace; */
 }
 
 .premium-amount {
   font-weight: 600;
   color: #28a745;
-  font-family: 'Courier New', monospace;
+  /* font-family: 'Courier New', monospace; */  
 }
 
 .payment-mode {

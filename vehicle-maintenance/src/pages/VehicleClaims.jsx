@@ -204,6 +204,7 @@ const InsuranceClaims = () => {
                   onChange={handleChange}
                   required
                   disabled={!!vehicleIdFromURL}
+                  className='text-uppercase'
                 >
                   <option value="" disabled>Select Vehicle</option>
                   {vehicles.map(vehicle => (
@@ -269,8 +270,8 @@ const InsuranceClaims = () => {
                   onChange={handleChange}
                 >
                   <option value="Pending">Pending</option>
-                  <option value="Approved">Approved</option>
-                  <option value="Rejected">Rejected</option>
+                  {/* <option value="Approved">Approved</option>
+                  <option value="Rejected">Rejected</option> */}
                 </select>
               </div>
 

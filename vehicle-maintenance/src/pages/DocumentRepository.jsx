@@ -43,7 +43,6 @@ const DocumentRepository = () => {
       <div className="document-repository-header">
         <div className="header-content">
           <h1 className="page-title">
-            <FileText className="page-icon" />
             Document Repository
           </h1>
           <p className="page-subtitle">Upload and manage your vehicle documents</p>
@@ -59,7 +58,6 @@ const DocumentRepository = () => {
         <form className="upload-form">
           <div className="form-group">
             <label>
-              <Upload className="input-icon" />
               Upload PDF
             </label>
             <input
@@ -72,7 +70,6 @@ const DocumentRepository = () => {
 
           <div className="form-group">
             <label>
-              <FileText className="input-icon" />
               Custom File Name
             </label>
             <input
@@ -85,11 +82,10 @@ const DocumentRepository = () => {
 
           <div className="form-group">
             <label>
-              <FileText className="input-icon" />
               Select Category
             </label>
             <select value={category} onChange={(e) => setCategory(e.target.value)}>
-              <option value="">Choose...</option>
+              <option value="" selected disabled>Choose...</option>
               {categories.map((cat, idx) => (
                 <option key={idx} value={cat}>{cat}</option>
               ))}
