@@ -7,6 +7,7 @@ import VehicleRegistration from './pages/VehicleRegistration';
 import VehicleList from './pages/VehicleList';
 import InsuranceManagement from './pages/InsuranceManagement';
 import DocumentRepository from './pages/DocumentRepository';
+import VehicleClaims from './pages/VehicleClaims';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
               <Route path="/vehicle-list" element={<VehicleList />} />
               <Route path="/insurance" element={<InsuranceManagement />} />
               <Route path="/documents" element={<DocumentRepository />} />
+              <Route path="/claims" element={<VehicleClaims />} />
             </Routes>
           </div>
         </div>

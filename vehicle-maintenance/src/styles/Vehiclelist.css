@@ -1,3 +1,510 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+  font-family: "Poppins", sans-serif;
+  font-size: 12px;
+  box-sizing: border-box;
+}
+
+/* Vehicle List Container */
+.vehicle-list-container {
+  min-height: 100vh;
+  background-color: #d9e0e7;
+  padding: 2rem;
+}
+
+/* Header */
+.vehicle-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background-color: white;
+  border: 1px solid white;
+  border-top: 5px solid #0d92ae;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+  flex: 1;
+}
+
+.page-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #0d92ae;
+  margin: 0 0 0.5rem 0;
+}
+
+.page-icon {
+  color: #0d92ae;
+}
+
+.page-subtitle {
+  font-size: 1rem;
+  color: #6c757d;
+  margin: 0;
+  font-weight: 400;
+}
+
+.header-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-primary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #37a9be;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #0d92ae;
+  transform: translateY(-1px);
+}
+
+/* Empty State */
+.empty-state {
+  background-color: white;
+  border: 1px solid #eeeeee;
+  border-radius: 4px;
+  padding: 4rem 2rem;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.empty-icon {
+  color: #0d92ae;
+  margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #0d92ae;
+  margin: 0 0 0.5rem 0;
+}
+
+.empty-state p {
+  font-size: 1rem;
+  color: #6c757d;
+  margin: 0 0 2rem 0;
+}
+
+/* Vehicles Grid */
+.vehicles-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.8rem;
+}
+
+/* Vehicle Card */
+.vehicle-card {
+  background-color: white;
+  border: 1px solid #eeeeee;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.vehicle-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.vehicle-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.vehicle-info {
+  flex: 1;
+}
+
+.vehicle-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #0d92ae;
+  margin: 0 0 0.25rem 0;
+}
+
+.vehicle-registration {
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin: 0;
+  font-weight: 500;
+}
+
+.vehicle-year {
+  background-color: #0d92ae;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.vehicle-card-body {
+  padding: 1rem;
+}
+
+/* Info Sections */
+.info-section {
+  margin-bottom: 1rem;
+}
+
+.info-section:last-child {
+  margin-bottom: 0;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.section-icon {
+  color: #0d92ae;
+}
+
+.section-header h6 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #0d92ae;
+  margin: 0;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.info-item.full-width {
+  grid-column: 1 / -1;
+}
+
+.info-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #6c757d;
+}
+
+.info-value {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #1e293b;
+}
+
+/* Fuel Badge */
+.fuel-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.fuel-badge.petrol {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.fuel-badge.diesel {
+  background-color: #fff3e0;
+  color: #f57c00;
+}
+
+.fuel-badge.electric {
+  background-color: #e8f5e8;
+  color: #388e3c;
+}
+
+.fuel-badge.hybrid {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.fuel-badge.cng {
+  background-color: #fff8e1;
+  color: #fbc02d;
+}
+
+/* No Insurance */
+.no-insurance {
+  text-align: center;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  border: 1px dashed #dee2e6;
+}
+
+.no-insurance p {
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin: 0 0 1rem 0;
+}
+
+.btn-secondary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+  transform: translateY(-1px);
+}
+
+/* Vehicle Actions */
+.vehicle-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eeeeee;
+}
+
+.btn-action {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background-color: #f8f9fa;
+  color: #0d92ae;
+  border: 2px solid #0d92ae;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+  justify-content: center;
+  text-decoration: none;
+  user-select: none;
+  min-height: 40px;
+}
+
+.btn-action:hover {
+  background-color: #0d92ae;
+  color: white;
+  transform: translateY(-1px);
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background-color: rgba(0, 0, 0, 0.7) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 99999 !important;
+  padding: 1rem !important;
+  backdrop-filter: blur(2px) !important;
+  pointer-events: auto !important;
+}
+
+.modal {
+  background-color: white !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+  max-width: 600px !important;
+  width: 100% !important;
+  max-height: fit-content !important;
+  overflow-y: auto !important;
+  border: 1px solid #e0e0e0 !important;
+  position: relative !important;
+  z-index: 100000 !important;
+  transform: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  display: block !important;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.modal-header h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0d92ae;
+  margin: 0;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #6c757d;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close:hover {
+  color: #0d92ae;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #0d92ae;
+}
+
+.form-group input,
+.form-group select {
+  padding: 0.75rem;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #0d92ae;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-top: 1px solid #eeeeee;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .vehicles-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .vehicles-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .vehicle-list-container {
+    padding: 1rem;
+  }
+
+  .vehicle-list-header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  .page-title {
+    font-size: 1.75rem;
+  }
+
+  .vehicles-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vehicle-actions {
+    flex-direction: column;
+  }
+
+  .modal {
+    margin: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 1.5rem;
+  }
+
+  .vehicle-card-header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 h2 {
   border: 1px dashed rgb(184, 181, 181);
 }
@@ -68,13 +575,110 @@ span {
 }
 
 .fuel-badge.cng {
-  background-color: #2ecc71; /* A soft, modern green (like in Flat UI) */
+  background-color: #2ecc71;
+  /* A soft, modern green (like in Flat UI) */
   color: #ffffff;
 }
 
-.vehicleListImg{
-    width: 20px;
-    height: 20px;
-    object-fit: contain;
-    /* display: inline-flex; */
+.vehicleListImg {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  /* display: inline-flex; */
+}
+
+/* Claims Modal Styles */
+.claims-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.claim-item {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.claim-item:last-child {
+  margin-bottom: 0;
+}
+
+.claim-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.claim-header h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0d92ae;
+  margin: 0;
+}
+
+.claim-status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.claim-status.approved {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.claim-status.pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.claim-status.rejected {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.claim-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.claim-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.claim-info .info-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #6c757d;
+}
+
+.claim-info .info-value {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #1e293b;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #6c757d;
+  font-size: 1rem;
+}
+
+.error {
+  text-align: center;
+  padding: 2rem;
+  color: #dc3545;
+  font-size: 1rem;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
 }

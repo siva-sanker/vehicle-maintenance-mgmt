@@ -16,6 +16,7 @@ const SideBar = () => {
           <li><NavLink to="/vehicle-list" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}> <TriangleRightIcon size={24} />Vehicle List</NavLink></li>
           <li><NavLink to="/insurance" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}> <TriangleRightIcon size={24} />Insurance Management</NavLink></li>
           <li><NavLink to="/documents" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}> <TriangleRightIcon size={24} />Document Repository</NavLink></li>
+          <li><NavLink to="/claims" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}> <TriangleRightIcon size={24} />Claims</NavLink></li>
         </ul>
       </nav>
     </div>

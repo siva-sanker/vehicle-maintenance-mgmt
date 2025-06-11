@@ -1,0 +1,64 @@
+{
+  "vehicles": [
+    {
+      "id": "a4e4",
+      "make": "toyota",
+      "model": "innova",
+      "purchaseDate": "2004-02-03",
+      "registrationNumber": "KL28UH231",
+      "purchasePrice": "800000",
+      "fuelType": "Diesel",
+      "engineNumber": "47a47b47c47d",
+      "chassisNumber": "32s32d32rf23",
+      "kilometers": "65000",
+      "color": "black",
+      "owner": "siva",
+      "phone": "9865784963",
+      "address": "tvm",
+      "insurance": {
+        "policyNumber": "2454",
+        "insurer": "tata",
+        "policytype": "Third Party",
+        "startDate": "2025-06-01",
+        "endDate": "2026-06-02",
+        "payment": "cash",
+        "issueDate": "2025-06-12",
+        "premiumAmount": "15000"
+      }
+    },
+    {
+      "id": "6b1e",
+      "make": "suzuki",
+      "model": "swift",
+      "purchaseDate": "2004-02-03",
+      "registrationNumber": "tn01tb2323",
+      "purchasePrice": "6500000",
+      "fuelType": "Electric",
+      "engineNumber": "ied9322rn084sa",
+      "chassisNumber": "32s32d32rf32f",
+      "kilometers": "68000",
+      "color": "white",
+      "owner": "Jane Smith",
+      "phone": "9748569785",
+      "address": "adsff",
+      "insurance": {
+        "policyNumber": "692356",
+        "insurer": "abcd",
+        "policytype": "Comprehensive",
+        "startDate": "2025-06-11",
+        "endDate": "2026-08-10",
+        "payment": "upi",
+        "issueDate": "2025-06-12",
+        "premiumAmount": "7500"
+      },
+      "claims": [
+        {
+          "claimDate": "2025-06-12",
+          "claimAmount": "12500",
+          "reason": "accident",
+          "status": "Approved"
+        }
+      ]
+    }
+  ]
+}

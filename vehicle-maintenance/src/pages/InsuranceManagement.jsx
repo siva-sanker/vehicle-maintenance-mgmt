@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { Search, FileText, Car, Calendar, DollarSign, Shield, CreditCard } from 'lucide-react';
 import '../styles/insurance.css';
 
 const InsuranceManagement = () => {
   const [vehicles, setVehicles] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [insuranceData, setInsuranceData] = useState({
     policyNumber: '',
     insurer: '',
@@ -19,66 +21,126 @@ const InsuranceManagement = () => {
     paymentMode: ''
   });
 
+  const filteredVehicles = vehicles.filter((v) =>
+    v.registrationNumber.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   useEffect(() => {
-    const storedVehicles = JSON.parse(localStorage.getItem('vehicles') || '[]');
-    setVehicles(storedVehicles);
+    fetch('http://localhost:4000/vehicles')
+      .then((res) => res.json())
+      .then((data) => setVehicles(data))
+      .catch((err) => console.error(err));
   }, []);
 
   return (
-    <div className="container-fluid my-3">
-      <h2 className="insurance mb-4 p-2 mt-2">📑 Insurance Management</h2>
+    <div className="insurance-container">
+      <div className="insurance-header">
+        <div className="header-content">
+          <h1 className="page-title">
+            <FileText className="page-icon" />
+            Insurance Management
+          </h1>
+          <p className="page-subtitle">Manage vehicle insurance policies and details</p>
+        </div>
+        <div className="header-actions">
+          <div className="search-container">
+            <Search className="search-icon" size={20} />
+            <input
+              type="search"
+              name="searchVehicle"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search by registration number..."
+              className="search-input"
+            />
+          </div>
+        </div>
+      </div>
 
-      {/* Insurance Table */}
-      <div className="table-responsive">
-        <h4 className="insurance mb-3 p-2">Vehicle Insurance Details</h4>
-        <table className="table table-bordered table-hover text-center">
-          <thead className="table">
-            <tr>
-              <th>#</th>
-              <th>Make</th>
-              <th>Model</th>
-              <th>Reg. Number</th>
-              <th>Policy #</th>
-              <th>Insurer</th>
-              <th>Type</th>
-              <th>Start</th>
-              <th>End</th>
-              <th>Premium</th>
-              {/* <th>Vehicle Type</th> */}
-              <th>Chassis</th>
-              <th>Engine</th>
-              <th>Issue Date</th>
-              <th>Payment</th>
-            </tr>
-          </thead>
-          <tbody>
-            {vehicles.length === 0 ? (
+      <div className="insurance-content">
+        <div className="content-header">
+          <div className="section-header">
+            <Shield size={20} className="section-icon" />
+            <h3>Vehicle Insurance Details</h3>
+          </div>
+        </div>
+
+        <div className="table-container">
+          <table className="insurance-table">
+            <thead>
               <tr>
-                <td colSpan="15" className="text-center">No vehicles found.</td>
+                <th>#</th>
+                <th>
+                  <Car size={16} className="table-icon" />
+                  Make
+                </th>
+                <th>
+                  <Car size={16} className="table-icon" />
+                  Model
+                </th>
+                <th>Reg. Number</th>
+                <th>
+                  <FileText size={16} className="table-icon" />
+                  Policy #
+                </th>
+                <th>Insurer</th>
+                <th>Type</th>
+                <th>
+                  <Calendar size={16} className="table-icon" />
+                  Start
+                </th>
+                <th>
+                  <Calendar size={16} className="table-icon" />
+                  End
+                </th>
+                <th>
+                  <DollarSign size={16} className="table-icon" />
+                  Premium
+                </th>
+                <th>Chassis</th>
+                <th>Engine</th>
+                <th>Issue Date</th>
+                <th>
+                  <CreditCard size={16} className="table-icon" />
+                  Payment
+                </th>
               </tr>
-            ) : (
-              vehicles.map((v, idx) => (
-                <tr key={idx}>
-                  <td>{idx + 1}</td>
-                  <td className='text-capitalize'>{v.make}</td>
-                  <td className='text-capitalize'>{v.model}</td>
-                  <td className='text-uppercase'>{v.registrationNumber}</td>
-                  <td className='text-uppercase'>{v.insurance?.policyNumber || '-'}</td>
-                  <td className='text-capitalize'>{v.insurance?.insurer || '-'}</td>
-                  <td>{v.insurance?.policyType || '-'}</td>
-                  <td>{v.insurance?.startDate || '-'}</td>
-                  <td>{v.insurance?.endDate || '-'}</td>
-                  <td>{v.insurance?.premiumAmount ? `${v.insurance.premiumAmount} /-` : '-'}</td>
-                  {/* <td className='text-capitalize'>{v.insurance?.vehicleType || '-'}</td> */}
-                  <td className='text-uppercase'>{v?.chassisNumber || '-'}</td>
-                  <td className='text-uppercase'>{v?.engineNumber || '-'}</td>
-                  <td>{v.insurance?.issueDate || '-'}</td>
-                  <td>{v.insurance?.paymentMode || '-'}</td>
+            </thead>
+            <tbody>
+              {filteredVehicles.length === 0 ? (
+                <tr>
+                  <td colSpan="15" className="no-data">
+                    <div className="no-data-content">
+                      <FileText size={48} className="no-data-icon" />
+                      <p>No vehicles found matching your search criteria.</p>
+                    </div>
+                  </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                filteredVehicles.map((v, idx) => (
+                  <tr key={idx} className="table-row">
+                    <td className="row-number">{idx + 1}</td>
+                    <td className="text-capitalize">{v.make}</td>
+                    <td className="text-capitalize">{v.model}</td>
+                    <td className="text-uppercase reg-number">{v.registrationNumber}</td>
+                    <td className="text-uppercase policy-number">{v.insurance?.policyNumber || '-'}</td>
+                    <td className="text-capitalize">{v.insurance?.insurer || '-'}</td>
+                    <td className="policy-type">{v.insurance?.policytype || '-'}</td>
+                    <td className="date-cell">{v.insurance?.startDate || '-'}</td>
+                    <td className="date-cell">{v.insurance?.endDate || '-'}</td>
+                    <td className="premium-amount">
+                      {v.insurance?.premiumAmount ? `₹${v.insurance.premiumAmount}` : '-'}
+                    </td>
+                    <td className="text-uppercase">{v?.chassisNumber || '-'}</td>
+                    <td className="text-uppercase">{v?.engineNumber || '-'}</td>
+                    <td className="date-cell">{v.insurance?.issueDate || '-'}</td>
+                    <td className="text-capitalize payment-mode">{v.insurance?.payment || '-'}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

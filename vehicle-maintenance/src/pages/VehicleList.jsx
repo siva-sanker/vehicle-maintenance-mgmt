@@ -1,22 +1,39 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import {
+  Car,
+  Calendar,
+  User,
+  Phone,
+  MapPin,
+  FileText,
+  Fuel,
+  Settings,
+  DollarSign,
+  Plus,
+  Eye
+} from 'lucide-react';
 import '../styles/Vehiclelist.css';
-import calender from '../assets/calendar.png';
-import boss from '../assets/boss.png';
-import key from '../assets/key.png';
-import paper from '../assets/paper.png';
-import fuel from '../assets/fuel.png';
 
 const VehicleList = () => {
+  const [claimsModalOpen, setClaimsModalOpen] = useState(false);
+  const [claims, setClaims] = useState([]);
+  const [loadingClaims, setLoadingClaims] = useState(false);
+  const [claimsError, setClaimsError] = useState('');
+
   const [vehicles, setVehicles] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [insuranceData, setInsuranceData] = useState({
     policyNumber: '',
     insurer: '',
-    policytype:'',
+    policytype: '',
     startDate: '',
     endDate: '',
-    issueDate:'',
+    payment:'',
+    issueDate: '',
     premiumAmount: '',
   });
 
@@ -35,133 +52,271 @@ const VehicleList = () => {
     return age;
   };
 
+  const navigate = useNavigate();
+  const goToClaims = (vehicleId) => {
+    navigate(`/claims?vehicleId=${vehicleId}`);
+  };
+
   useEffect(() => {
-    const storedVehicles = JSON.parse(localStorage.getItem('vehicles') || '[]');
-    setVehicles(storedVehicles);
+    fetch('http://localhost:4000/vehicles')
+      .then((res) => res.json())
+      .then((data) => setVehicles(data))
+      .catch((err) => console.error(err));
   }, []);
 
-  const handleAddInsurance = () => {
-    const updatedVehicles = vehicles.map((v) =>
-      v.registrationNumber === selectedVehicle.registrationNumber
-        ? { ...v, insurance: insuranceData }
-        : v
-    );
-    setVehicles(updatedVehicles);
-    localStorage.setItem('vehicles', JSON.stringify(updatedVehicles));
-    setShowModal(false);
+  // Debug useEffect for modal states
+  useEffect(() => {
+    console.log('showModal changed to:', showModal);
+  }, [showModal]);
+
+  useEffect(() => {
+    console.log('claimsModalOpen changed to:', claimsModalOpen);
+  }, [claimsModalOpen]);
+
+  useEffect(() => {
+    console.log('selectedVehicle changed to:', selectedVehicle);
+  }, [selectedVehicle]);
+
+  const viewClaims = async (vehicleId) => {
+    console.log('viewClaims called with vehicleId:', vehicleId);
+    // Find the vehicle to check insurance
+    const vehicle = vehicles.find(v => v.id === vehicleId);
+    console.log('Found vehicle:', vehicle);
+
+    // Check if vehicle has insurance
+    if (!vehicle.insurance) {
+      toast.error("Vehicle does not have insurance");
+      return;
+    }
+
+    setLoadingClaims(true);
+    setClaimsError('');
+    try {
+      // Set the vehicle as selectedVehicle
+      setSelectedVehicle(vehicle);
+
+      // Get claims from the vehicle object since they're stored there
+      const vehicleClaims = vehicle?.claims || [];
+      console.log('Vehicle claims:', vehicleClaims);
+      setClaims(vehicleClaims);
+    } catch (err) {
+      console.error('Error loading claims:', err);
+      setClaimsError('Failed to load claims');
+      setClaims([]);
+    } finally {
+      setLoadingClaims(false);
+      setClaimsModalOpen(true);
+      console.log('claimsModalOpen set to true');
+    }
+  };
+
+  const handleAddInsurance = async () => {
+    if (!selectedVehicle?.id) {
+      console.error("Selected vehicle is missing an ID.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:4000/vehicles/${selectedVehicle.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          insurance: insuranceData
+        })
+      });
+
+      if (response.ok) {
+        const updatedVehicle = await response.json();
+        const updatedVehicles = vehicles.map((v) =>
+          v.id === updatedVehicle.id ? updatedVehicle : v
+        );
+        setVehicles(updatedVehicles);
+        setShowModal(false);
+      } else {
+        console.error("Failed to update insurance in db.json");
+      }
+    } catch (error) {
+      console.error("Error updating insurance:", error);
+    }
   };
 
   return (
-    <div className="container-fluid my-3">
-      <h2 className="vehiclelist mb-4 mt-2 p-2">📃 Registered Vehicles</h2>
+    <div className="vehicle-list-container">
+      <div className="vehicle-list-header">
+        <div className="header-content">
+          <h1 className="page-title">
+            <Car className="page-icon" />
+            Registered Vehicles
+          </h1>
+          <p className="page-subtitle">Manage and view all your registered vehicles</p>
+        </div>
+        <div className="header-actions">
+          <button className="btn-primary" onClick={() => navigate('/register-vehicle')}>
+            <Plus size={16} />
+            Add Vehicle
+          </button>
+        </div>
+      </div>
 
       {vehicles.length === 0 ? (
-        <div className="alert alert-info text-center fs-5">
-          No vehicles registered yet.
+        <div className="empty-state">
+          <Car size={64} className="empty-icon" />
+          <h3>No vehicles registered yet</h3>
+          <p>Start by adding your first vehicle to the system</p>
+          <button className="btn-primary" onClick={() => navigate('/register-vehicle')}>
+            <Plus size={16} />
+            Register Vehicle
+          </button>
         </div>
       ) : (
-        <div className="row">
+        <div className="vehicles-grid">
           {vehicles.map((vehicle, index) => (
-            <div className="col-md-6 col-lg-3 mb-4" key={index}>
-              <div className="card shadow-sm h-100">
-                <div className="card-header d-flex justify-content-between align-items-center">
-                  <div>
-                    <h5 className="mb-0 text-capitalize">{vehicle.make} {vehicle.model}</h5>
-                    <small className="text-muted text-uppercase">Reg: {vehicle.registrationNumber}</small>
+            <div className="vehicle-card" key={index}>
+              <div className="vehicle-card-header">
+                <div className="vehicle-info">
+                  <h3 className="vehicle-name text-capitalize">{vehicle.make} {vehicle.model}</h3>
+                  <p className="vehicle-registration text-uppercase">{vehicle.registrationNumber}</p>
+                </div>
+                <span className="vehicle-year">
+                  {new Date(vehicle.purchaseDate).getFullYear()}
+                </span>
+              </div>
+
+              <div className="vehicle-card-body">
+                <div className="info-section">
+                  <div className="section-header">
+                    <Calendar size={16} className="section-icon" />
+                    <h6>Basic Info</h6>
                   </div>
-                  <span className="badge bg-light text-dark border">
-                    {new Date(vehicle.purchaseDate).getFullYear()}
-                  </span>
+                  <div className="info-grid">
+                    <div className="info-item">
+                      <span className="info-label">Color:</span>
+                      <span className="info-value">{vehicle.color}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Age:</span>
+                      <span className="info-value">{calculateVehicleAge(vehicle.purchaseDate)} years</span>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="card-body">
-                  <div className="row">
-                    <div className="d-flex align-items-center mb-2">
-                      <img src={calender} alt="Calendar" className="vehicleListImg me-1" />
-                      <h6 className="mb-0">Basic Info</h6>
-                    </div>
-                    <div className="col-6"><strong>Color:</strong> {vehicle.color}</div>
-                    <div className="col-6"><strong>Age:</strong> {calculateVehicleAge(vehicle.purchaseDate)} years</div>
+                <div className="info-section">
+                  <div className="section-header">
+                    <Fuel size={16} className="section-icon" />
+                    <h6>Fuel Type</h6>
+                    <span className={`fuel-badge ${vehicle.fuelType.toLowerCase()}`}>
+                      {vehicle.fuelType}
+                    </span>
                   </div>
+                </div>
 
-                  <hr />
-                  <div className="row">
-                    <div className="col-6">
-                      <div className="d-flex align-items-center">
-                        <img src={fuel} alt="fuel" className="vehicleListImg me-2" />
-                        <h6 className="mb-0 me-2">Fuel Type:</h6>
-                        <span className={`badge fuel-badge ${vehicle.fuelType.toLowerCase()}`}>
-                          {vehicle.fuelType}
-                        </span>
+                <div className="info-section">
+                  <div className="section-header">
+                    <Settings size={16} className="section-icon" />
+                    <h6>Engine Info</h6>
+                  </div>
+                  <div className="info-grid">
+                    <div className="info-item">
+                      <span className="info-label">Engine No.:</span>
+                      <span className="info-value">{vehicle.engineNumber}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Chassis No.:</span>
+                      <span className="info-value">{vehicle.chassisNumber}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Price:</span>
+                      <span className="info-value">₹{vehicle.purchasePrice}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="info-section">
+                  <div className="section-header">
+                    <User size={16} className="section-icon" />
+                    <h6>Owner Info</h6>
+                  </div>
+                  <div className="info-grid">
+                    <div className="info-item">
+                      <span className="info-label">Owner:</span>
+                      <span className="info-value">{vehicle.owner}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Phone:</span>
+                      <span className="info-value">{vehicle.phone}</span>
+                    </div>
+                    <div className="info-item full-width">
+                      <span className="info-label">Address:</span>
+                      <span className="info-value">{vehicle.address}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {vehicle.insurance ? (
+                  <div className="info-section">
+                    <div className="section-header">
+                      <FileText size={16} className="section-icon" />
+                      <h6>Insurance Info</h6>
+                    </div>
+                    <div className="info-grid">
+                      <div className="info-item">
+                        <span className="info-label">Policy #:</span>
+                        <span className="info-value">{vehicle.insurance.policyNumber}</span>
+                      </div>
+                      <div className="info-item">
+                        <span className="info-label">Insurer:</span>
+                        <span className="info-value">{vehicle.insurance.insurer}</span>
+                      </div>
+                      <div className="info-item">
+                        <span className="info-label">Type:</span>
+                        <span className="info-value">{vehicle.insurance.policytype}</span>
+                      </div>
+                      <div className="info-item">
+                        <span className="info-label">Premium:</span>
+                        <span className="info-value">₹{vehicle.insurance.premiumAmount}</span>
                       </div>
                     </div>
                   </div>
-
-                  <hr />
-                  <div className="d-flex align-items-center mb-2">
-                    <img src={key} alt="Key" className="vehicleListImg me-1" />
-                    <h6 className="mb-0">Purchase Info</h6>
+                ) : (
+                  <div className="info-section">
+                    <div className="section-header">
+                      <FileText size={16} className="section-icon" />
+                      <h6>Insurance Info</h6>
+                    </div>
+                    <div className="no-insurance">
+                      <p>No insurance information available</p>
+                    </div>
                   </div>
+                )}
 
-                  <div className="row">
-                    <div className="col-6"><strong>Engine No.:</strong> {vehicle.engineNumber}</div>
-                    <div className="col-6"><strong>Chassis No.:</strong> {vehicle.chassisNumber}</div>
-                    <div className="col-6 mt-2"><strong>Price:</strong> ${vehicle.purchasePrice}</div>
-                  </div>
-
-                  <hr />
-                  <div className="d-flex align-items-center mb-2">
-                    <img src={boss} alt="Owner" className="vehicleListImg me-1" />
-                    <h6 className="mb-0">Owner Info</h6>
-                  </div>
-                  
-                  <div className="row">
-                    <div className="col-6"><strong>Owner:</strong> {vehicle.owner}</div>
-                    <div className="col-6"><strong>Phone:</strong> {vehicle.phone}</div>
-                  </div>
-                  <div className="mt-2"><strong>Address:</strong> {vehicle.address}</div>
-
-                  {vehicle.insurance ? (
-                    <>
-                      <hr />
-                      <div>
-                        <div className="d-flex align-items-center mb-2">
-                          <img src={paper} alt="Owner" className="vehicleListImg me-1" />
-                          <h6 className="mb-0">Insurance Info</h6>
-                        </div>
-                        <div className="row">
-                          <div className='col-4'><strong>Policy #:</strong> {vehicle.insurance.policyNumber}</div>
-                          <div className='col-4'><strong>Insurer:</strong> {vehicle.insurance.insurer}</div>
-                          <div className='col-4'><strong>Premium:</strong> ₹{vehicle.insurance.premiumAmount}</div>
-                        </div>
-                        <div className="row">
-                          <div className='col-6'><strong>Start:</strong> {vehicle.insurance.startDate}</div>
-                          <div className='col-6'><strong>End:</strong> {vehicle.insurance.endDate}</div>
-                          <div className='col-6'><strong>Issue:</strong> {vehicle.insurance.issueDate}</div>
-                        </div>
-                      </div>
-                    </>
-                  ):(<p className='text-danger'>No insurance</p>)}
-                </div>
-
-                <div className="card-footer d-flex justify-content-between align-items-center">
-                  <strong>Purchase Date:</strong> {vehicle.purchaseDate}
+                <div className="vehicle-actions">
                   <button
-                    className='btn btn-outline-primary ms-auto'
+                    className="btn-action"
                     onClick={() => {
-                      setSelectedVehicle(vehicle);
-                      setShowModal(true);
-                      setInsuranceData({
-                        policyNumber: '',
-                        insurer: '',
-                        startDate: '',
-                        endDate: '',
-                        issueDate:'',
-                        premiumAmount: '',
-                      });
+                      console.log('View Claims clicked for vehicle:', vehicle.id);
+                      if (vehicle.insurance) {
+                        viewClaims(vehicle.id);
+                      } else {
+                        toast.error("Vehicle has no insurance");
+                      }
                     }}
                   >
-                    Add Insurance
+                    <Eye size={16} />
+                    View Claims
+                  </button>
+                  <button
+                    className="btn-action"
+                    onClick={() => {
+                      console.log('Add/Update Insurance clicked for vehicle:', vehicle.id);
+                      setSelectedVehicle(vehicle);
+                      setShowModal(true);
+                      console.log('showModal set to true, selectedVehicle:', vehicle);
+                    }}
+                  >
+                    <FileText size={16} />
+                    {vehicle.insurance ? 'Update Insurance' : 'Add Insurance'}
                   </button>
                 </div>
               </div>
@@ -171,78 +326,175 @@ const VehicleList = () => {
       )}
 
       {/* Insurance Modal */}
-      {selectedVehicle && (
-        <div className={`modal fade ${showModal ? 'show d-block' : ''}`} tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Add Insurance for {selectedVehicle.registrationNumber}</h5>
-                <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
-              </div>
-              <div className="modal-body">
-                <p><strong>Engine No:</strong> {selectedVehicle.engineNumber}</p>
-                <p><strong>Chassis No:</strong> {selectedVehicle.chassisNumber}</p>
-
-                <div className="mb-2">
-                  <label>Policy Type:</label>
-                  <select className='form-control' value={insuranceData.policyType} 
-                    onChange={(e)=>setInsuranceData({...insuranceData,policyType:e.target.value})}>
-                      <option value="">Select</option>
-                      <option value="Third Party">Third Party</option>
-                      <option value="Comprehensive">Comprehensive</option>
-                      <option value="Full Cover">Full Cover</option>
+      {showModal && (
+        <div className="modal-overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {console.log('Rendering insurance modal, showModal:', showModal, 'selectedVehicle:', selectedVehicle)}
+          <div className="modal" style={{
+            backgroundColor: 'white',
+            padding: '20px',
+            border: '1px solid #e0e0e0',
+            maxWidth: '600px',
+            width: '90%',
+            maxHeight: '70vh',
+            overflowY: 'auto'
+          }}>
+            <div className="modal-header">
+              <h3>Add Insurance for {selectedVehicle?.make} {selectedVehicle?.model}</h3>
+              <button className="modal-close" onClick={() => setShowModal(false)}>×</button>
+            </div>
+            <div className="modal-body">
+              <div className="form-grid">
+                <div className="form-group">
+                  <label>Policy Number</label>
+                  <input
+                    type="text"
+                    value={insuranceData.policyNumber}
+                    onChange={(e) => setInsuranceData({ ...insuranceData, policyNumber: e.target.value })}
+                    placeholder="Enter policy number"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Insurer</label>
+                  <input
+                    type="text"
+                    value={insuranceData.insurer}
+                    onChange={(e) => setInsuranceData({ ...insuranceData, insurer: e.target.value })}
+                    placeholder="Enter insurer name" 
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Policy Type</label>
+                  <select
+                    value={insuranceData.policytype}
+                    onChange={(e) => setInsuranceData({ ...insuranceData, policytype: e.target.value })}
+                  >
+                    <option value="" selected disabled>Select policy type</option>
+                    <option value="Comprehensive">Comprehensive</option>
+                    <option value="Third Party">Third Party</option>
+                    <option value="Liability">Liability</option>
                   </select>
                 </div>
+                <div className="form-group">
+                  <label>Start Date</label>
+                  <input
+                    type="date"
+                    value={insuranceData.startDate}
+                    onChange={(e) => setInsuranceData({ ...insuranceData, startDate: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>End Date</label>
+                  <input
+                    type="date"
+                    value={insuranceData.endDate}
+                    onChange={(e) => setInsuranceData({ ...insuranceData, endDate: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Issue Date</label>
+                  <input
+                    type="date"
+                    value={insuranceData.issueDate}
+                    onChange={(e) => setInsuranceData({ ...insuranceData, issueDate: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Premium Amount</label>
+                  <input
+                    type="number"
+                    value={insuranceData.premiumAmount}
+                    onChange={(e) => setInsuranceData({ ...insuranceData, premiumAmount: e.target.value })}
+                    placeholder="Enter premium amount"
+                  />
+                </div>
 
-                <div className="mb-2">
-                  <label>Policy Number:</label>
-                  <input className="form-control" type="text" value={insuranceData.policyNumber} onChange={(e) => setInsuranceData({ ...insuranceData, policyNumber: e.target.value })} />
-                </div>
-                <div className="mb-2">
-                  <label>Insurer:</label>
-                  <input className="form-control" type="text" value={insuranceData.insurer} onChange={(e) => setInsuranceData({ ...insuranceData, insurer: e.target.value })} />
-                </div>
-                <div className="mb-2">
-                  <label>Start Date:</label>
-                  <input className="form-control" type="date" value={insuranceData.startDate} onChange={(e) => setInsuranceData({ ...insuranceData, startDate: e.target.value })} />
-                </div>
-                <div className="mb-2">
-                  <label>End Date:</label>
-                  <input className="form-control" type="date" value={insuranceData.endDate} onChange={(e) => setInsuranceData({ ...insuranceData, endDate: e.target.value })} />
-                </div>
-                <div className="mb-2">
-                  <label>Issue Date:</label>
-                  <input className="form-control" type="date" value={insuranceData.issueDate} onChange={(e) => setInsuranceData({ ...insuranceData, issueDate: e.target.value })} />
-                </div>
-                <div className="mb-2">
-                  <label>Premium Amount:</label>
-                  <input className="form-control" type="number" value={insuranceData.premiumAmount} onChange={(e) => setInsuranceData({ ...insuranceData, premiumAmount: e.target.value })} />
-                </div>
-                <div className="mb-2">
-                  <label>Payment Mode:</label>
+                <div className="form-group">
+                  <label>Payment mode</label>
                   <select
-                    className="form-control"
-                    value={insuranceData.paymentMode || ''}
-                    onChange={(e) =>
-                      setInsuranceData({ ...insuranceData, paymentMode: e.target.value })
-                    }
+                    value={insuranceData.payment}
+                    onChange={(e) => setInsuranceData({ ...insuranceData, payment: e.target.value })}
                   >
-                    <option value="">Select</option>
-                    <option value="Cash">Cash</option>
-                    <option value="Card">Card</option>
-                    <option value="UPI">UPI</option>
-                    <option value="Bank Transfer">Bank Transfer</option>
-                  </select> 
-                  </div>
+                    <option value="" selected disabled>Select payment mode</option>
+                    <option value="cash">Cash</option>
+                    <option value="card">Card</option>
+                    <option value="upi">UPI</option>
+                    <option value="bank account">Bank Account</option>
+                  </select>
+                </div>
               </div>
-              <div className="modal-footer">
-                <button className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
-                <button className="btn btn-primary" onClick={handleAddInsurance}>Save Insurance</button>
-              </div>
+            </div>
+            <div className="modal-footer">
+              <button className="btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
+              <button className="btn-primary" onClick={handleAddInsurance}>Add Insurance</button>
             </div>
           </div>
         </div>
       )}
+
+      {/* Claims Modal */}
+      {claimsModalOpen && (
+        <div className="modal-overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {console.log('Rendering claims modal, claimsModalOpen:', claimsModalOpen, 'selectedVehicle:', selectedVehicle)}
+          <div className="modal" style={{
+            backgroundColor: 'white',
+            padding: '20px',
+            border: '1px solid #e0e0e0',
+            maxWidth: '500px',
+            width: '90%',
+            overflowY: 'auto'
+          }}>
+            <div className="modal-header">
+              <h3>Claims History - {selectedVehicle?.make} {selectedVehicle?.model}</h3>
+              <button className="modal-close" onClick={() => setClaimsModalOpen(false)}>×</button>
+            </div>
+            <div className="modal-body">
+              {loadingClaims ? (
+                <div className="loading">Loading claims...</div>
+              ) : claimsError ? (
+                <div className="error">{claimsError}</div>
+              ) : claims.length === 0 ? (
+                <div className="empty-state">
+                  <FileText size={48} className="empty-icon" />
+                  <h4>No claims found</h4>
+                  <p>This vehicle has no claims history.</p>
+                </div>
+              ) : (
+                <div className="claims-list">
+                  {claims.map((claim, index) => (
+                    <div key={index} className="claim-item">
+                      <div className="claim-header">
+                        <h4>Claim #{index + 1}</h4>
+                        <span className={`claim-status ${claim.status.toLowerCase()}`}>
+                          {claim.status}
+                        </span>
+                      </div>
+                      <div className="claim-details">
+                        <div className="claim-info">
+                          <span className="info-label">Date:</span>
+                          <span className="info-value">{claim.claimDate}</span>
+                        </div>
+                        <div className="claim-info">
+                          <span className="info-label">Amount:</span>
+                          <span className="info-value">₹{claim.claimAmount}</span>
+                        </div>
+                        <div className="claim-info">
+                          <span className="info-label">Reason:</span>
+                          <span className="info-value">{claim.reason}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div className="modal-footer">
+              <button className="btn-secondary" onClick={() => setClaimsModalOpen(false)}>Close</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <ToastContainer />
     </div>
   );
 };

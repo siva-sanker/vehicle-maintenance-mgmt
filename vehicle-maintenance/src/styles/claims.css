@@ -1,0 +1,473 @@
+/* claims.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+  font-family: "Poppins", sans-serif;
+  font-size: 12px;
+  box-sizing: border-box;
+}
+
+/* Claims Container */
+.claims-container {
+  min-height: 100vh;
+  background-color: #d9e0e7;
+  padding: 2rem;
+}
+
+/* Header */
+.claims-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background-color: white;
+  border: 1px solid white;
+  border-top: 5px solid #0d92ae;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+  flex: 1;
+}
+
+.page-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #0d92ae;
+  margin: 0 0 0.5rem 0;
+}
+
+.page-icon {
+  color: #0d92ae;
+}
+
+.page-subtitle {
+  font-size: 1rem;
+  color: #6c757d;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Claims Layout */
+.claims-layout {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+}
+
+/* Form Section */
+.claims-form-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-card {
+  background-color: white;
+  border: 1px solid #eeeeee;
+  border-radius: 4px;
+  padding: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f8f9fa;
+}
+
+.form-header h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0d92ae;
+  margin: 0 0 0.5rem 0;
+}
+
+.form-header p {
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin: 0;
+}
+
+/* Form Styles */
+.claim-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #0d92ae;
+}
+
+.input-icon {
+  color: #0d92ae;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 0.75rem;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  background-color: #fff;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #0d92ae;
+  box-shadow: 0 0 0 3px rgba(13, 146, 174, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.btn-primary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #37a9be;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  justify-content: center;
+}
+
+.btn-primary:hover {
+  background-color: #0d92ae;
+  transform: translateY(-1px);
+}
+
+/* History Section */
+.claims-history-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.history-card {
+  background-color: white;
+  border: 1px solid #eeeeee;
+  border-radius: 4px;
+  padding: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.history-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f8f9fa;
+}
+
+.history-header h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0d92ae;
+  margin: 0 0 0.5rem 0;
+}
+
+.history-header p {
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin: 0;
+}
+
+/* Search */
+.search-container {
+  margin-bottom: 2rem;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.75rem;
+  color: #6c757d;
+  z-index: 1;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #0d92ae;
+  box-shadow: 0 0 0 3px rgba(13, 146, 174, 0.1);
+}
+
+/* Table */
+.claims-table-container {
+  overflow-x: auto;
+}
+
+.claims-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.claims-table thead {
+  background-color: #f8f9fa;
+}
+
+.claims-table th {
+  padding: 1rem 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  color: #0d92ae;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.claims-table td {
+  padding: 1rem 0.75rem;
+  border-bottom: 1px solid #f1f3f4;
+  vertical-align: middle;
+}
+
+.claims-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.vehicle-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+}
+
+.vehicle-cell svg {
+  color: #0d92ae;
+}
+
+.amount-cell {
+  font-weight: 600;
+  color: #28a745;
+}
+
+.reason-cell {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Status Badges */
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.status-approved {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-rejected {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.status-icon {
+  flex-shrink: 0;
+}
+
+.status-icon.pending {
+  color: #ffc107;
+}
+
+.status-icon.approved {
+  color: #28a745;
+}
+
+.status-icon.rejected {
+  color: #dc3545;
+}
+
+/* Empty State */
+.empty-claims {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: #6c757d;
+}
+
+.empty-icon {
+  color: #0d92ae;
+  margin-bottom: 1rem;
+}
+
+.empty-claims h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #0d92ae;
+  margin: 0 0 0.5rem 0;
+}
+
+.empty-claims p {
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .claims-layout {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .claims-container {
+    padding: 1rem;
+  }
+
+  .claims-header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  .page-title {
+    font-size: 1.75rem;
+  }
+
+  .form-card,
+  .history-card {
+    padding: 1.5rem;
+  }
+
+  .claims-table {
+    font-size: 0.8rem;
+  }
+
+  .claims-table th,
+  .claims-table td {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .reason-cell {
+    max-width: 150px;
+    word-wrap: break-word;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 1.5rem;
+  }
+
+  .claims-table {
+    font-size: 0.75rem;
+  }
+
+  .claims-table th,
+  .claims-table td {
+    padding: 0.5rem 0.25rem;
+  }
+
+  .status-badge {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+  }
+
+  .reason-cell {
+    max-width: 100px;
+  }
+}
+
+/* Status Action Buttons */
+.status-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-buttons {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.status-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.approve-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.approve-btn:hover {
+  background-color: #218838;
+  transform: scale(1.1);
+}
+
+.reject-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.reject-btn:hover {
+  background-color: #c82333;
+  transform: scale(1.1);
+}
+
+.status-btn:active {
+  transform: scale(0.95);
+}

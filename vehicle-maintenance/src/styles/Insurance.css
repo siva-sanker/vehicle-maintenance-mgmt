@@ -1,22 +1,324 @@
-.insurance{
-    color: #0d92ae;
-    border: 1px solid #eeeeee;
-    border-left: 5px solid #0d92ae;
-    border-radius: 4px;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+  font-family: "Poppins", sans-serif;
+  font-size: 12px;
+  box-sizing: border-box;
 }
-.insurance:hover{
-    color: #8de6ff;
-    cursor: pointer;
+
+/* Insurance Container */
+.insurance-container {
+  min-height: 100vh;
+  background-color: #d9e0e7;
+  padding: 2rem;
 }
-.insuranceBtn{
-    background-color: #37a9be;
-    color: white;
+
+/* Header */
+.insurance-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background-color: white;
+  border: 1px solid white;
+  border-top: 5px solid #0d92ae;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
-.insuranceBtn:hover{
-    background-color: #37a9be;
-    color: white;
+
+.header-content {
+  flex: 1;
 }
-.insuranceForm{
-    border: 1px solid #eeeeee;
-    border-radius: 4px;
+
+.page-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #0d92ae;
+  margin: 0 0 0.5rem 0;
+}
+
+.page-icon {
+  color: #0d92ae;
+}
+
+.page-subtitle {
+  font-size: 1rem;
+  color: #6c757d;
+  margin: 0;
+  font-weight: 400;
+}
+
+.header-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+/* Search Container */
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  color: #6c757d;
+  z-index: 1;
+}
+
+.search-input {
+  padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  width: 300px;
+  background-color: white;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #0d92ae;
+  box-shadow: 0 0 0 2px rgba(13, 146, 174, 0.1);
+}
+
+.search-input::placeholder {
+  color: #6c757d;
+}
+
+/* Content */
+.insurance-content {
+  background-color: white;
+  border: 1px solid #eeeeee;
+  border-radius: 4px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.content-header {
+  margin-bottom: 1.5rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #f8f9fa;
+}
+
+.section-icon {
+  color: #0d92ae;
+}
+
+.section-header h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0d92ae;
+  margin: 0;
+}
+
+/* Table Container */
+.table-container {
+  overflow-x: auto;
+  border-radius: 4px;
+  border: 1px solid #dee2e6;
+}
+
+/* Table Styles */
+.insurance-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  font-size: 0.9rem;
+}
+
+.insurance-table thead {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.insurance-table th {
+  padding: 1rem 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  color: #0d92ae;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #dee2e6;
+  white-space: nowrap;
+}
+
+.insurance-table td {
+  padding: 1rem 0.75rem;
+  border-bottom: 1px solid #f1f3f4;
+  color: #333;
+  font-size: 0.9rem;
+  vertical-align: middle;
+}
+
+.insurance-table tbody tr {
+  transition: all 0.2s ease;
+}
+
+.insurance-table tbody tr:hover {
+  background-color: #f8f9fa;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.insurance-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Table Icons */
+.table-icon {
+  color: #0d92ae;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+/* Row Styling */
+.row-number {
+  font-weight: 600;
+  color: #0d92ae;
+  text-align: center;
+  width: 50px;
+}
+
+.reg-number {
+  font-weight: 600;
+  color: #0d92ae;
+  font-family: 'Courier New', monospace;
+}
+
+.policy-number {
+  font-weight: 600;
+  color: #28a745;
+  font-family: 'Courier New', monospace;
+}
+
+.policy-type {
+  font-weight: 500;
+  color: #6c757d;
+}
+
+.date-cell {
+  color: #495057;
+  font-family: 'Courier New', monospace;
+}
+
+.premium-amount {
+  font-weight: 600;
+  color: #28a745;
+  font-family: 'Courier New', monospace;
+}
+
+.payment-mode {
+  font-weight: 500;
+  color: #6c757d;
+}
+
+/* No Data State */
+.no-data {
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.no-data-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.no-data-icon {
+  color: #dee2e6;
+}
+
+.no-data-content p {
+  color: #6c757d;
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Text Utilities */
+.text-capitalize {
+  text-transform: capitalize;
+}
+
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .insurance-container {
+    padding: 1rem;
+  }
+
+  .insurance-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .search-input {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .insurance-container {
+    padding: 0.5rem;
+  }
+
+  .insurance-header {
+    padding: 1rem;
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+  }
+
+  .insurance-content {
+    padding: 1rem;
+  }
+
+  .insurance-table {
+    font-size: 0.8rem;
+  }
+
+  .insurance-table th,
+  .insurance-table td {
+    padding: 0.75rem 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 1.25rem;
+  }
+
+  .section-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .insurance-table {
+    font-size: 0.75rem;
+  }
+
+  .insurance-table th,
+  .insurance-table td {
+    padding: 0.5rem 0.25rem;
+  }
 }
