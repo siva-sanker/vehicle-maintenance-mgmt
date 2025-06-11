@@ -112,12 +112,12 @@ const VehicleRegistration = () => {
           <div className="col-md-4 mb-3">
             <label className="form-label">Fuel Type</label>
             <select className="form-select" name="fuelType" value={formData.fuelType} onChange={handleChange}>
-              <option value="">Select</option>
+              <option value="" selected disabled>Select</option>
               <option value="Petrol">Petrol</option>
               <option value="Diesel">Diesel</option>
               <option value="Electric">Electric</option>
               <option value="Hybrid">Hybrid</option>
-              <option value="Other">Other</option>
+              <option value="CNG">CNG</option>
             </select>
           </div>
 

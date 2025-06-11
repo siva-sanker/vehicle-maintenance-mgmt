@@ -15,14 +15,14 @@ const TopNavBar = () => {
           <input type="search" name="search" placeholder="Search" />
         </div>
         <li className='button btn'><NavLink to="/dashboard" activeClassName="active">Dashboard</NavLink></li>
-        <li className='button btn'><NavLink to="/register-vehicle" activeClassName="active">Vehicle Registration</NavLink></li>
-        <a href="/vehicles" className="nav-link text-white" title="Vehicle List">
+        <li className='button btn'><NavLink to="/register-vehicle" activeClassName="active">Add Vehicle</NavLink></li>
+        <a href="/vehicle-list" className="nav-link text-white" title="Vehicle List">
           <i className="fas fa-car fa-2x mt-1"></i>
         </a>
-        <a href="/add" className="nav-link text-white" title="Add Vehicle">
+        <a href="#" className="nav-link text-white" title="Add Vehicle">
           <i className="fas fa-plus-circle fa-2x mt-1"></i>
         </a>
-        <a href="/settings" className="nav-link text-white" title="Settings">
+        <a href="#" className="nav-link text-white" title="Settings">
           <i className="fas fa-cog fa-2x mt-1"></i>
         </a>
         {/* <li className='button btn'><NavLink to="/vehicle-list" activeClassName="active">Vehicle List</NavLink></li>

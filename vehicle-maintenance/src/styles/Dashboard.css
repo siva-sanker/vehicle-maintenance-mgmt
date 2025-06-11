@@ -50,3 +50,10 @@ body{
     border: 1px solid #ccc;
     outline: none;
 }
+.dashboard-card{
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 12px;
+}

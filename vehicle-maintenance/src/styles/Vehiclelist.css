@@ -66,6 +66,12 @@ span {
   background-color: #dcd6f7;
   color: #4b4b91;
 }
+
+.fuel-badge.cng {
+  background-color: #2ecc71; /* A soft, modern green (like in Flat UI) */
+  color: #ffffff;
+}
+
 .vehicleListImg{
     width: 20px;
     height: 20px;

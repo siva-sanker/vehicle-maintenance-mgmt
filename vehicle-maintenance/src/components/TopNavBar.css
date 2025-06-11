@@ -36,7 +36,6 @@
   font-weight: 500;
 }
 
-.nav-list li a.active,
 .nav-list li a:hover {
   color: lightblue;
 }

@@ -83,33 +83,38 @@ const VehicleList = () => {
                     <div className="col-6"><strong>Color:</strong> {vehicle.color}</div>
                     <div className="col-6"><strong>Age:</strong> {calculateVehicleAge(vehicle.purchaseDate)} years</div>
                   </div>
+
                   <hr />
                   <div className="row">
                     <div className="col-6">
-                      <div className="d-flex align-items-center mb-2">
-                        <img src={fuel} alt="fuel" className="vehicleListImg me-1" />
-                        <h6 className="mb-0">Fuel Type</h6>
+                      <div className="d-flex align-items-center">
+                        <img src={fuel} alt="fuel" className="vehicleListImg me-2" />
+                        <h6 className="mb-0 me-2">Fuel Type:</h6>
+                        <span className={`badge fuel-badge ${vehicle.fuelType.toLowerCase()}`}>
+                          {vehicle.fuelType}
+                        </span>
                       </div>
-                      <span className={`badge fuel-badge ${vehicle.fuelType.toLowerCase()}`}>
-                        {vehicle.fuelType}
-                      </span>
                     </div>
                   </div>
+
                   <hr />
                   <div className="d-flex align-items-center mb-2">
                     <img src={key} alt="Key" className="vehicleListImg me-1" />
                     <h6 className="mb-0">Purchase Info</h6>
                   </div>
+
                   <div className="row">
                     <div className="col-6"><strong>Engine No.:</strong> {vehicle.engineNumber}</div>
                     <div className="col-6"><strong>Chassis No.:</strong> {vehicle.chassisNumber}</div>
                     <div className="col-6 mt-2"><strong>Price:</strong> ${vehicle.purchasePrice}</div>
                   </div>
+
                   <hr />
                   <div className="d-flex align-items-center mb-2">
                     <img src={boss} alt="Owner" className="vehicleListImg me-1" />
                     <h6 className="mb-0">Owner Info</h6>
                   </div>
+                  
                   <div className="row">
                     <div className="col-6"><strong>Owner:</strong> {vehicle.owner}</div>
                     <div className="col-6"><strong>Phone:</strong> {vehicle.phone}</div>

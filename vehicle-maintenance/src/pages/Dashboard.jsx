@@ -36,37 +36,37 @@ const Dashboard = () => {
       {/* Stats Cards */}
       <div className="row g-4">
         <div className="col-xl-3 col-lg-4 col-md-6 col-sm-12">
-          <div className="card text-bg-light shadow-sm h-100">
+          <div className="card text-bg-light shadow-sm h-100 py-4">
             <div className="card-body">
-              <h5 className="card-title">Total Vehicles</h5>
-              <p className="card-text fs-4 fw-bold text-primary">{totalVehicles}</p>
+              <h5 className="card-title text-muted fs-3">Total Vehicles</h5>
+              <p className="card-text fs-3 fw-bold text-primary">{totalVehicles}</p>
             </div>
           </div>
         </div>
 
         <div className="col-xl-3 col-lg-4 col-md-6 col-sm-12">
-          <div className="card text-bg-light shadow-sm h-100">
+          <div className="card text-bg-light shadow-sm h-100 py-4">
             <div className="card-body">
-              <h5 className="card-title">Active Claims</h5>
-              <p className="card-text fs-4 fw-bold text-danger">{activeClaims}</p>
+              <h5 className="card-title text-muted fs-3">Active Claims</h5>
+              <p className="card-text fs-3 fw-bold text-danger">{activeClaims}</p>
             </div>
           </div>
         </div>
 
         <div className="col-xl-3 col-lg-4 col-md-6 col-sm-12">
-          <div className="card text-bg-light shadow-sm h-100">
+          <div className="card text-bg-light shadow-sm h-100 py-4">
             <div className="card-body">
-              <h5 className="card-title">Insurance Policies</h5>
-              <p className="card-text fs-4 fw-bold text-success">{insurancePolicies}</p>
+              <h5 className="card-title text-muted fs-3">Total Insurance Policies</h5>
+              <p className="card-text fs-3 fw-bold text-success">{insurancePolicies}</p>
             </div>
           </div>
         </div>
 
         <div className="col-xl-3 col-lg-4 col-md-6 col-sm-12">
-          <div className="card text-bg-light shadow-sm h-100">
+          <div className="card text-bg-light shadow-sm h-100 py-4">
             <div className="card-body">
-              <h5 className="card-title">Documents</h5>
-              <p className="card-text fs-4 fw-bold text-info">{documentCount}</p>
+              <h5 className="card-title text-muted fs-3">Documents</h5>
+              <p className="card-text fs-3 fw-bold text-info">{documentCount}</p>
             </div>
           </div>
         </div>
