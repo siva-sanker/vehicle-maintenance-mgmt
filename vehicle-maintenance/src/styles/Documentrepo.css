@@ -9,7 +9,7 @@
 /* Document Repository Container */
 .document-repository-container {
   min-height: 100vh;
-  background-color: #d9e0e7;
+  /* background-color: #d9e0e7; */
   padding: 2rem;
 }
 

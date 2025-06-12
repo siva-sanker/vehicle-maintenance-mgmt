@@ -18,6 +18,7 @@ import {
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';
+import { vehicleAPI } from '../services/api';
 import '../styles/Vehiclelist.css';
 
 const VehicleList = () => {
@@ -30,6 +31,9 @@ const VehicleList = () => {
   const [showModal, setShowModal] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState(null);
+
+  // Search state
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -168,11 +172,22 @@ const VehicleList = () => {
   // Pagination logic
   const indexOfLastVehicle = currentPage * vehiclesPerPage;
   const indexOfFirstVehicle = indexOfLastVehicle - vehiclesPerPage;
-  const currentVehicles = vehicles.slice(indexOfFirstVehicle, indexOfLastVehicle);
-  const totalPages = Math.ceil(vehicles.length / vehiclesPerPage);
+
+  // Filter vehicles based on search term
+  const filteredVehicles = vehicles.filter(vehicle =>
+    vehicle.registrationNumber.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const currentVehicles = filteredVehicles.slice(indexOfFirstVehicle, indexOfLastVehicle);
+  const totalPages = Math.ceil(filteredVehicles.length / vehiclesPerPage);
 
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Reset to first page when search term changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
 
   const navigate = useNavigate();
   const goToClaims = (vehicleId) => {
@@ -180,10 +195,15 @@ const VehicleList = () => {
   };
 
   useEffect(() => {
-    fetch('http://localhost:4000/vehicles')
-      .then((res) => res.json())
-      .then((data) => setVehicles(data))
-      .catch((err) => console.error(err));
+    const fetchVehicles = async () => {
+      try {
+        const data = await vehicleAPI.getAllVehicles();
+        setVehicles(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchVehicles();
   }, []);
 
   // Debug useEffect for modal states
@@ -246,18 +266,11 @@ const VehicleList = () => {
 
     setIsSubmitting(true);
     try {
-      const response = await fetch(`http://localhost:4000/vehicles/${selectedVehicle.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          insurance: insuranceData
-        })
+      const updatedVehicle = await vehicleAPI.patchVehicle(selectedVehicle.id, {
+        insurance: insuranceData
       });
 
-      if (response.ok) {
-        const updatedVehicle = await response.json();
+      if (updatedVehicle) {
         const updatedVehicles = vehicles.map((v) =>
           v.id === updatedVehicle.id ? updatedVehicle : v
         );
@@ -352,6 +365,16 @@ const VehicleList = () => {
         </div>
       ) : (
         <div className="table-container">
+          <div className="searchBar2">
+            <input
+              type="search"
+              name="search"
+              id="search"
+              placeholder='Search by registration number...'
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
           <table className="vehicles-table">
             <thead>
               <tr>
@@ -398,10 +421,11 @@ const VehicleList = () => {
       )}
 
       {/* Pagination Controls */}
-      {vehicles.length > vehiclesPerPage && (
+      {filteredVehicles.length > vehiclesPerPage && (
         <div className="pagination-container">
           <div className="pagination-info">
-            Showing {indexOfFirstVehicle + 1} to {Math.min(indexOfLastVehicle, vehicles.length)} of {vehicles.length} vehicles
+            Showing {indexOfFirstVehicle + 1} to {Math.min(indexOfLastVehicle, filteredVehicles.length)} of {filteredVehicles.length} vehicles
+            {searchTerm && ` (filtered from ${vehicles.length} total)`}
           </div>
           <div className="pagination-controls">
             <button

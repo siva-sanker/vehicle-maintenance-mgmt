@@ -8,6 +8,7 @@ import VehicleList from './pages/VehicleList';
 import InsuranceManagement from './pages/InsuranceManagement';
 import DocumentRepository from './pages/DocumentRepository';
 import VehicleClaims from './pages/VehicleClaims';
+import ApiExample from './components/ApiExample';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
               <Route path="/insurance" element={<InsuranceManagement />} />
               <Route path="/documents" element={<DocumentRepository />} />
               <Route path="/claims" element={<VehicleClaims />} />
+              <Route path="/api" element={<ApiExample />} />
             </Routes>
           </div>
         </div>

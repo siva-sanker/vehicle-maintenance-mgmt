@@ -14,12 +14,15 @@ import {
   Check,
   X
 } from 'lucide-react';
+import { vehicleAPI } from '../services/api';
 import '../styles/claims.css';
 
 const InsuranceClaims = () => {
   const [claims, setClaims] = useState([]);
   const [vehicles, setVehicles] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const [formData, setFormData] = useState({
     vehicleId: '',
     claimDate: '',
@@ -28,14 +31,18 @@ const InsuranceClaims = () => {
     status: 'Pending',
   });
 
-  useEffect(() => {
-    fetch('http://localhost:4000/vehicles')
-      .then(res => res.json())
-      .then(data => setVehicles(data));
+  const fetchData = async () => {
+    try {
+      const vehiclesData = await vehicleAPI.getAllVehicles();
+      setVehicles(vehiclesData);
+      // Note: Claims are stored within vehicles, so we don't need a separate claims fetch
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
-    fetch('http://localhost:4000/claims')
-      .then(res => res.json())
-      .then(data => setClaims(data));
+  useEffect(() => {
+    fetchData();
   }, []);
 
   const location = useLocation();
@@ -86,8 +93,17 @@ const InsuranceClaims = () => {
 
     try {
       // Get the current vehicle
-      const res = await fetch(`http://localhost:4000/vehicles/${vehicleId}`);
-      const vehicle = await res.json();
+      const vehicle = await vehicleAPI.getVehicleById(vehicleId);
+
+      // Check if vehicle has insurance
+      if (!vehicle.insurance || !vehicle.insurance.hasInsurance) {
+        setErrorMessage('This vehicle does not have insurance. Please add insurance before submitting a claim.');
+        // Clear error message after 5 seconds
+        setTimeout(() => {
+          setErrorMessage('');
+        }, 5000);
+        return;
+      }
 
       // Create new claim
       const newClaim = {
@@ -101,14 +117,17 @@ const InsuranceClaims = () => {
       const updatedClaims = vehicle.claims ? [...vehicle.claims, newClaim] : [newClaim];
 
       // Update vehicle with new claims array
-      await fetch(`http://localhost:4000/vehicles/${vehicleId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ claims: updatedClaims }),
-      });
+      await vehicleAPI.patchVehicle(vehicleId, { claims: updatedClaims });
 
-      // Update local state
-      setClaims([...claims, { ...newClaim, vehicleId }]);
+      // Show success message
+      setSuccessMessage('Claim submitted successfully!');
+
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        setSuccessMessage('');
+      }, 3000);
+
+      // Reset form
       setFormData({
         vehicleId: vehicleIdFromURL || '',
         claimDate: '',
@@ -117,28 +136,30 @@ const InsuranceClaims = () => {
         status: 'Pending',
       });
 
+      // Refresh data to show updated claims in the table
+      fetchData();
+
     } catch (error) {
-      // console.error('Error adding claim:', error);
-      alert('Error submitting claim. Please try again.');
+      console.error('Error adding claim:', error);
+      setErrorMessage('Error submitting claim. Please try again.');
+      // Clear error message after 5 seconds
+      setTimeout(() => {
+        setErrorMessage('');
+      }, 5000);
     }
   };
 
   const handleStatusChange = async (vehicleId, claimIndex, newStatus) => {
     try {
       // Get the current vehicle
-      const res = await fetch(`http://localhost:4000/vehicles/${vehicleId}`);
-      const vehicle = await res.json();
+      const vehicle = await vehicleAPI.getVehicleById(vehicleId);
 
       // Update the specific claim status
       const updatedClaims = [...vehicle.claims];
       updatedClaims[claimIndex].status = newStatus;
 
       // Update vehicle with updated claims array
-      await fetch(`http://localhost:4000/vehicles/${vehicleId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ claims: updatedClaims }),
-      });
+      await vehicleAPI.patchVehicle(vehicleId, { claims: updatedClaims });
 
       // Update local state
       setVehicles(prevVehicles =>
@@ -187,6 +208,22 @@ const InsuranceClaims = () => {
           <p className="page-subtitle">Manage and track vehicle insurance claims</p>
         </div>
       </div>
+
+      {/* Success Message */}
+      {successMessage && (
+        <div className="success-message">
+          <CheckCircle size={20} />
+          {successMessage}
+        </div>
+      )}
+
+      {/* Error Message */}
+      {errorMessage && (
+        <div className="error-message">
+          <AlertTriangle size={20} />
+          {errorMessage}
+        </div>
+      )}
 
       <div className="claims-layout">
         <div className="claims-form-section">
@@ -261,14 +298,14 @@ const InsuranceClaims = () => {
               </div>
 
               <div className="form-group">
-                <label>
+                <label hidden>
 
                   Status
                 </label>
                 <select
                   name="status"
                   value={formData.status}
-                  onChange={handleChange}
+                  onChange={handleChange} hidden
                 >
                   <option value="Pending">Pending</option>
                   {/* <option value="Approved">Approved</option>
@@ -320,12 +357,13 @@ const InsuranceClaims = () => {
                       <th>Amount</th>
                       <th>Reason</th>
                       <th>Status</th>
+                      {/* <th>Actions</th> */}
                     </tr>
                   </thead>
                   <tbody>
                     {filteredClaims.map((claim, idx) => (
                       <tr key={idx}>
-                        <td className="vehicle-cell">
+                        <td className="vehicle-cell text-uppercase">
                           <Car size={14} />
                           {claim.registrationNumber}
                         </td>

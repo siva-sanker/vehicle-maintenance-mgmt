@@ -24,6 +24,7 @@ import {
   Calendar,
   Users
 } from 'lucide-react';
+import { vehicleAPI } from '../services/api';
 import '../styles/Dashboard.css';
 
 ChartJS.register(
@@ -57,9 +58,9 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('http://localhost:4000/vehicles')
-      .then((res) => res.json())
-      .then((data) => {
+    const fetchDashboardData = async () => {
+      try {
+        const data = await vehicleAPI.getAllVehicles();
         setVehicles(data);
         setTotalVehicles(data.length);
 
@@ -127,11 +128,13 @@ const Dashboard = () => {
 
         setDocumentCount(230); // Mock data
         setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
         setLoading(false);
-      });
+      }
+    };
+
+    fetchDashboardData();
   }, []);
 
   // Chart configurations

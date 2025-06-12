@@ -10,7 +10,7 @@
       "fuelType": "Diesel",
       "engineNumber": "47a47b47c47d",
       "chassisNumber": "32s32d32rf23",
-      "kilometers": "65000",
+      "kilometers": "60000",
       "color": "black",
       "owner": "siva",
       "phone": "9865784963",
@@ -24,7 +24,15 @@
         "payment": "cash",
         "issueDate": "2025-06-12",
         "premiumAmount": "15000"
-      }
+      },
+      "claims": [
+        {
+          "claimDate": "2025-02-04",
+          "claimAmount": "12000",
+          "reason": "accident",
+          "status": "Pending"
+        }
+      ]
     },
     {
       "id": "6b1e",
@@ -795,6 +803,32 @@
       "owner": "Priya Malhotra",
       "phone": "5432109876",
       "address": "Faridabad, Haryana"
+    },
+    {
+      "id": "bd58",
+      "make": "benz",
+      "model": "c class",
+      "purchaseDate": "2023-02-07",
+      "registrationNumber": "ga03tn3231",
+      "purchasePrice": "25648958",
+      "fuelType": "CNG",
+      "engineNumber": "1234455",
+      "chassisNumber": "124320er32",
+      "kilometers": "156892",
+      "color": "grey",
+      "owner": "sivaherd",
+      "phone": "1369878549",
+      "address": "ertyui",
+      "insurance": {
+        "policyNumber": "1155054",
+        "insurer": "eryt",
+        "policytype": "Comprehensive",
+        "startDate": "2025-06-15",
+        "endDate": "2026-06-15",
+        "payment": "upi",
+        "issueDate": "2025-06-02",
+        "premiumAmount": "35698"
+      }
     }
   ]
 }

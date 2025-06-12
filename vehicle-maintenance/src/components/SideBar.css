@@ -3,7 +3,7 @@
   height: 100vh;
   background-color: #1f1f1f;
   /* padding: 20px; */
-  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .sidebar-title {
@@ -34,6 +34,7 @@
 .nav-item {
   display: flex;
   align-items: center;
+  gap: 12px;
   padding: 10px;
   /* margin: 4px 0; */
   text-decoration: none;
@@ -53,4 +54,9 @@
   background-color: #80def7;
   color: black;
   border-right: 4px solid #0d92ae;
+}
+
+.nav-item svg {
+  margin-right: 8px;
+  flex-shrink: 0;
 }

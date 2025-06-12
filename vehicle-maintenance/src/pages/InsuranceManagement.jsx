@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Search, FileText, Car, Calendar, DollarSign, Shield, CreditCard } from 'lucide-react';
+import { vehicleAPI } from '../services/api';
 import '../styles/insurance.css';
 
 const InsuranceManagement = () => {
@@ -26,10 +27,15 @@ const InsuranceManagement = () => {
   );
 
   useEffect(() => {
-    fetch('http://localhost:4000/vehicles')
-      .then((res) => res.json())
-      .then((data) => setVehicles(data))
-      .catch((err) => console.error(err));
+    const fetchVehicles = async () => {
+      try {
+        const data = await vehicleAPI.getAllVehicles();
+        setVehicles(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchVehicles();
   }, []);
 
   return (
