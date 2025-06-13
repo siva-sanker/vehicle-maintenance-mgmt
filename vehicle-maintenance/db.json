@@ -32,7 +32,14 @@
           "reason": "accident",
           "status": "Pending"
         }
-      ]
+      ],
+      "currentLocation": {
+        "latitude": 12.965019229955242,
+        "longitude": 77.59316564360695,
+        "timestamp": "2025-06-12T09:59:44.143Z",
+        "address": "೧೨ನೇ ಅಡ್ಡ ರಸ್ತೆ, Sampangi Rama Nagara, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+      },
+      "lastUpdated": "2025-06-12T09:59:44.445Z"
     },
     {
       "id": "6b1e",
@@ -66,7 +73,14 @@
           "reason": "accident",
           "status": "Approved"
         }
-      ]
+      ],
+      "currentLocation": {
+        "latitude": 12.972948059259464,
+        "longitude": 77.59274949156482,
+        "timestamp": "2025-06-12T09:41:33.149Z",
+        "address": "Sampangirama Nagar, Gandhinagar, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+      },
+      "lastUpdated": "2025-06-12T09:41:33.406Z"
     },
     {
       "id": "c8f2",
@@ -106,7 +120,14 @@
           "reason": "windshield damage",
           "status": "Approved"
         }
-      ]
+      ],
+      "currentLocation": {
+        "latitude": 19.076,
+        "longitude": 72.8777,
+        "timestamp": "2025-06-12T10:15:30.123Z",
+        "address": "Mumbai, Maharashtra, India"
+      },
+      "lastUpdated": "2025-06-12T10:15:30.123Z"
     },
     {
       "id": "d9g3",
@@ -132,7 +153,14 @@
         "payment": "cash",
         "issueDate": "2025-06-10",
         "premiumAmount": "1652"
-      }
+      },
+      "currentLocation": {
+        "latitude": 28.7041,
+        "longitude": 77.1025,
+        "timestamp": "2025-06-12T11:30:45.456Z",
+        "address": "New Delhi, Delhi, India"
+      },
+      "lastUpdated": "2025-06-12T11:30:45.456Z"
     },
     {
       "id": "e0h4",
@@ -166,7 +194,14 @@
           "reason": "major accident",
           "status": "Approved"
         }
-      ]
+      ],
+      "currentLocation": {
+        "latitude": 12.9716,
+        "longitude": 77.5946,
+        "timestamp": "2025-06-12T12:45:20.789Z",
+        "address": "Bangalore, Karnataka, India"
+      },
+      "lastUpdated": "2025-06-12T12:45:20.789Z"
     },
     {
       "id": "f1i5",
@@ -192,7 +227,14 @@
         "payment": "card",
         "issueDate": "2024-08-20",
         "premiumAmount": "18000"
-      }
+      },
+      "currentLocation": {
+        "latitude": 12.9716,
+        "longitude": 77.5946,
+        "timestamp": "2025-06-13T05:15:01.379Z",
+        "address": "St. Joseph's Indian High School, Vittal Mallya Road, D'Souza Layout, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+      },
+      "lastUpdated": "2025-06-13T05:15:02.058Z"
     },
     {
       "id": "g2j6",
@@ -272,7 +314,14 @@
           "reason": "tsunami",
           "status": "Pending"
         }
-      ]
+      ],
+      "currentLocation": {
+        "latitude": 12.96801622404748,
+        "longitude": 77.59335132570467,
+        "timestamp": "2025-06-12T09:41:57.094Z",
+        "address": "Sree Kanteerava Stadium, Rajaram Mohan Roy Road, Sampangirama Nagar, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+      },
+      "lastUpdated": "2025-06-12T09:41:57.824Z"
     },
     {
       "id": "i4l8",
@@ -424,7 +473,14 @@
         "payment": "bank account",
         "issueDate": "2024-08-25",
         "premiumAmount": "10000"
-      }
+      },
+      "currentLocation": {
+        "latitude": 12.968279701245054,
+        "longitude": 77.59528747390891,
+        "timestamp": "2025-06-12T09:57:54.014Z",
+        "address": "Vydehi Superspeciality Hospital, 2, Vittal Mallya Road, D'Souza Layout, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+      },
+      "lastUpdated": "2025-06-12T09:57:54.721Z"
     },
     {
       "id": "n9q3",
@@ -786,7 +842,14 @@
       "color": "lavender",
       "owner": "Gurpreet Singh",
       "phone": "6543210987",
-      "address": "Amritsar, Punjab"
+      "address": "Amritsar, Punjab",
+      "currentLocation": {
+        "latitude": 12.973842073753149,
+        "longitude": 77.59821992266714,
+        "timestamp": "2025-06-12T09:27:15.317Z",
+        "address": "Shanthala Nagar, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+      },
+      "lastUpdated": "2025-06-12T09:27:15.988Z"
     },
     {
       "id": "a2d6",
@@ -802,7 +865,14 @@
       "color": "coral",
       "owner": "Priya Malhotra",
       "phone": "5432109876",
-      "address": "Faridabad, Haryana"
+      "address": "Faridabad, Haryana",
+      "currentLocation": {
+        "latitude": 12.968900433265443,
+        "longitude": 77.59513896589918,
+        "timestamp": "2025-06-12T09:32:44.807Z",
+        "address": "St. Joseph's Indian High School, Vittal Mallya Road, D'Souza Layout, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+      },
+      "lastUpdated": "2025-06-12T09:32:45.492Z"
     },
     {
       "id": "bd58",
@@ -828,7 +898,160 @@
         "payment": "upi",
         "issueDate": "2025-06-02",
         "premiumAmount": "35698"
-      }
+      },
+      "currentLocation": {
+        "latitude": 12.968393882764596,
+        "longitude": 77.59322153217178,
+        "timestamp": "2025-06-12T09:25:41.301Z",
+        "address": "Sree Kanteerava Stadium, Rajaram Mohan Roy Road, Sampangirama Nagar, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+      },
+      "lastUpdated": "2025-06-12T09:25:41.935Z"
+    },
+    {
+      "id": "12cd",
+      "make": "ford",
+      "model": "fiesta",
+      "purchaseDate": "1993-03-03",
+      "registrationNumber": "hj05tv3435",
+      "purchasePrice": "350000",
+      "fuelType": "Diesel",
+      "engineNumber": "697869",
+      "chassisNumber": "9648356985586",
+      "kilometers": "96587",
+      "color": "maroon",
+      "owner": "Edison",
+      "phone": "9897969594",
+      "address": "evm india 123 pin: 695875"
+    }
+  ],
+  "locationHistory": [
+    {
+      "id": "loc1",
+      "vehicleId": "a4e4",
+      "latitude": 12.9716,
+      "longitude": 77.5946,
+      "timestamp": "2025-06-12T09:25:51.910Z",
+      "address": "St. Joseph's Indian High School, Vittal Mallya Road, D'Souza Layout, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+    },
+    {
+      "id": "loc2",
+      "vehicleId": "a4e4",
+      "latitude": 12.972,
+      "longitude": 77.595,
+      "timestamp": "2025-06-12T08:15:30.123Z",
+      "address": "Richmond Town, Bengaluru, Karnataka, India"
+    },
+    {
+      "id": "loc3",
+      "vehicleId": "c8f2",
+      "latitude": 19.076,
+      "longitude": 72.8777,
+      "timestamp": "2025-06-12T10:15:30.123Z",
+      "address": "Mumbai, Maharashtra, India"
+    },
+    {
+      "id": "loc4",
+      "vehicleId": "d9g3",
+      "latitude": 28.7041,
+      "longitude": 77.1025,
+      "timestamp": "2025-06-12T11:30:45.456Z",
+      "address": "New Delhi, Delhi, India"
+    },
+    {
+      "id": "loc5",
+      "vehicleId": "e0h4",
+      "latitude": 12.9716,
+      "longitude": 77.5946,
+      "timestamp": "2025-06-12T12:45:20.789Z",
+      "address": "Bangalore, Karnataka, India"
+    },
+    {
+      "id": "loc_1749720765519",
+      "vehicleId": "a2d6",
+      "latitude": 12.968900433265443,
+      "longitude": 77.59513896589918,
+      "timestamp": "2025-06-12T09:32:45.519Z",
+      "address": "St. Joseph's Indian High School, Vittal Mallya Road, D'Souza Layout, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+    },
+    {
+      "id": "loc_1749721287133",
+      "vehicleId": "6b1e",
+      "latitude": 12.9716,
+      "longitude": 77.5946,
+      "timestamp": "2025-06-12T09:41:27.133Z",
+      "address": "St. Joseph's Indian High School, Vittal Mallya Road, D'Souza Layout, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+    },
+    {
+      "id": "loc_1749721289718",
+      "vehicleId": "6b1e",
+      "latitude": 12.9716,
+      "longitude": 77.5946,
+      "timestamp": "2025-06-12T09:41:29.718Z",
+      "address": "St. Joseph's Indian High School, Vittal Mallya Road, D'Souza Layout, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+    },
+    {
+      "id": "loc_1749721293420",
+      "vehicleId": "6b1e",
+      "latitude": 12.972948059259464,
+      "longitude": 77.59274949156482,
+      "timestamp": "2025-06-12T09:41:33.420Z",
+      "address": "Sampangirama Nagar, Gandhinagar, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+    },
+    {
+      "id": "loc_1749721317834",
+      "vehicleId": "h3k7",
+      "latitude": 12.96801622404748,
+      "longitude": 77.59335132570467,
+      "timestamp": "2025-06-12T09:41:57.834Z",
+      "address": "Sree Kanteerava Stadium, Rajaram Mohan Roy Road, Sampangirama Nagar, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+    },
+    {
+      "id": "loc_1749722216235",
+      "vehicleId": "m8p2",
+      "latitude": 12.9716,
+      "longitude": 77.5946,
+      "timestamp": "2025-06-12T09:56:56.235Z",
+      "address": "St. Joseph's Indian High School, Vittal Mallya Road, D'Souza Layout, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+    },
+    {
+      "id": "loc_1749722217371",
+      "vehicleId": "m8p2",
+      "latitude": 12.9716,
+      "longitude": 77.5946,
+      "timestamp": "2025-06-12T09:56:57.371Z",
+      "address": "St. Joseph's Indian High School, Vittal Mallya Road, D'Souza Layout, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+    },
+    {
+      "id": "loc_1749722274729",
+      "vehicleId": "m8p2",
+      "latitude": 12.968279701245054,
+      "longitude": 77.59528747390891,
+      "timestamp": "2025-06-12T09:57:54.729Z",
+      "address": "Vydehi Superspeciality Hospital, 2, Vittal Mallya Road, D'Souza Layout, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+    },
+    {
+      "id": "loc_1749722375160",
+      "vehicleId": "a4e4",
+      "latitude": 12.968781414749165,
+      "longitude": 77.59518691833674,
+      "timestamp": "2025-06-12T09:59:35.160Z",
+      "address": "St. Joseph's Indian High School, Vittal Mallya Road, D'Souza Layout, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+    },
+    {
+      "id": "loc_1749722384456",
+      "vehicleId": "a4e4",
+      "latitude": 12.965019229955242,
+      "longitude": 77.59316564360695,
+      "timestamp": "2025-06-12T09:59:44.456Z",
+      "address": "೧೨ನೇ ಅಡ್ಡ ರಸ್ತೆ, Sampangi Rama Nagara, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+    },
+    {
+      "id": "loc_1749791702107",
+      "vehicleId": "f1i5",
+      "latitude": 12.9716,
+      "longitude": 77.5946,
+      "timestamp": "2025-06-13T05:15:02.107Z",
+      "address": "St. Joseph's Indian High School, Vittal Mallya Road, D'Souza Layout, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
     }
   ]
 }

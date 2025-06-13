@@ -7,7 +7,7 @@
 }
 
 body {
-    /* background-color: #d9e0e7; */
+    background-color: #d9e0e7;
     margin: 0;
     padding: 0;
 }
@@ -15,7 +15,7 @@ body {
 /* Dashboard Container */
 .dashboard-container {
     min-height: 100vh;
-    background-color: #fff;
+    background-color: #d9e0e7;
     padding: 2rem;
 }
 

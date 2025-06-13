@@ -1,22 +1,19 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 import {
   Car,
   Calendar,
-  DollarSign,
-  Fuel,
   Settings,
   User,
-  Phone,
-  MapPin,
   Plus,
-  CheckCircle,
-  AlertCircle
+  CheckCircle
 } from 'lucide-react';
 import { vehicleAPI } from '../services/api';
 import '../styles/registration.css';
 
-const VehicleRegistration = () => {
+const VehicleRegistration = ({ sidebarCollapsed, toggleSidebar }) => {
   const [formData, setFormData] = useState({
     make: '',
     model: '',
@@ -164,298 +161,302 @@ const VehicleRegistration = () => {
   };
 
   return (
-    <div className="registration-container">
-      <div className="registration-header">
-        <div className="header-content">
-          <h1 className="page-title">
-            <Car className="page-icon" />
-            Vehicle Registration
-          </h1>
-          <p className="page-subtitle">Register a new vehicle in your fleet</p>
-        </div>
-        <div className="header-actions">
-          <button className="btn-secondary" onClick={() => navigate('/vehicle-list')}>
-            View All Vehicles
-          </button>
-        </div>
-      </div>
-
-      {submitted && (
-        <div className="success-message">
-          <CheckCircle size={24} />
-          <div>
-            <h3>Vehicle registered successfully!</h3>
-            <p>Your vehicle has been added to the system.</p>
+    <>
+      <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />
+      <div className="registration-container">
+        <div className="registration-header">
+          <div className="header-content">
+            <h1 className="page-title">
+              <Car className="page-icon" />
+              Vehicle Registration
+            </h1>
+            <p className="page-subtitle">Register a new vehicle in your fleet</p>
+          </div>
+          <div className="header-actions">
+            <button className="btn-secondary" onClick={() => navigate('/vehicle-list')}>
+              View All Vehicles
+            </button>
           </div>
         </div>
-      )}
 
-      <div className="registration-form-container">
-        <form onSubmit={handleSubmit} className="registration-form">
-          <div className="form-section">
-            <div className="section-header">
-              <Car size={20} className="section-icon" />
-              <h3>Vehicle Information</h3>
-            </div>
-            <div className="form-grid">
-              <div className="form-group">
-                <label>Make</label>
-                <input
-                  type="text"
-                  name="make"
-                  placeholder="Vehicle make / Brand"
-                  value={formData.make}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={getFieldClassName('make')}
-                />
-                {touched['make'] && errors['make'] && (
-                  <div className="error-message">{errors['make']}</div>
-                )}
-              </div>
-
-              <div className="form-group">
-                <label>Model</label>
-                <input
-                  type="text"
-                  name="model"
-                  placeholder="Vehicle model"
-                  value={formData.model}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={getFieldClassName('model')}
-                />
-                {touched['model'] && errors['model'] && (
-                  <div className="error-message">{errors['model']}</div>
-                )}
-              </div>
-
-              <div className="form-group">
-                <label>Registration Number</label>
-                <input
-                  type="text"
-                  name="registrationNumber"
-                  placeholder="Registration number"
-                  value={formData.registrationNumber}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={getFieldClassName('registrationNumber')}
-                />
-                {touched['registrationNumber'] && errors['registrationNumber'] && (
-                  <div className="error-message">{errors['registrationNumber']}</div>
-                )}
-              </div>
-
-              <div className="form-group">
-                <label>Color</label>
-                <input
-                  type="text"
-                  name="color"
-                  placeholder="Vehicle Color"
-                  value={formData.color}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={getFieldClassName('color')}
-                />
-                {touched['color'] && errors['color'] && (
-                  <div className="error-message">{errors['color']}</div>
-                )}
-              </div>
+        {submitted && (
+          <div className="success-message">
+            <CheckCircle size={24} />
+            <div>
+              <h3>Vehicle registered successfully!</h3>
+              <p>Your vehicle has been added to the system.</p>
             </div>
           </div>
+        )}
 
-          <div className="form-section">
-            <div className="section-header">
-              <Calendar size={20} className="section-icon" />
-              <h3>Purchase Details</h3>
-            </div>
-            <div className="form-grid">
-              <div className="form-group">
-                <label>Purchase Date</label>
-                <input
-                  type="date"
-                  name="purchaseDate"
-                  value={formData.purchaseDate}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={getFieldClassName('purchaseDate')}
-                />
-                {touched['purchaseDate'] && errors['purchaseDate'] && (
-                  <div className="error-message">{errors['purchaseDate']}</div>
-                )}
+        <div className="registration-form-container">
+          <form onSubmit={handleSubmit} className="registration-form">
+            <div className="form-section">
+              <div className="section-header">
+                <Car size={20} className="section-icon" />
+                <h3>Vehicle Information</h3>
               </div>
+              <div className="form-grid">
+                <div className="form-group">
+                  <label>Make</label>
+                  <input
+                    type="text"
+                    name="make"
+                    placeholder="Vehicle make / Brand"
+                    value={formData.make}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={getFieldClassName('make')}
+                  />
+                  {touched['make'] && errors['make'] && (
+                    <div className="error-message">{errors['make']}</div>
+                  )}
+                </div>
 
-              <div className="form-group">
-                <label>Purchase Price</label>
-                <input
-                  type="number"
-                  name="purchasePrice"
-                  placeholder="Enter purchase price"
-                  value={formData.purchasePrice}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  min={45000}
-                  style={{ paddingLeft: '2.5rem' }}
-                  className={getFieldClassName('purchasePrice')}
-                />
-                {touched['purchasePrice'] && errors['purchasePrice'] && (
-                  <div className="error-message">{errors['purchasePrice']}</div>
-                )}
-              </div>
+                <div className="form-group">
+                  <label>Model</label>
+                  <input
+                    type="text"
+                    name="model"
+                    placeholder="Vehicle model"
+                    value={formData.model}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={getFieldClassName('model')}
+                  />
+                  {touched['model'] && errors['model'] && (
+                    <div className="error-message">{errors['model']}</div>
+                  )}
+                </div>
 
-              <div className="form-group">
-                <label>Kilometers Driven</label>
-                <input
-                  type="number"
-                  name="kilometers"
-                  placeholder="Kilometers driven"
-                  value={formData.kilometers}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={getFieldClassName('kilometers')}
-                />
-                {touched['kilometers'] && errors['kilometers'] && (
-                  <div className="error-message">{errors['kilometers']}</div>
-                )}
-              </div>
+                <div className="form-group">
+                  <label>Registration Number</label>
+                  <input
+                    type="text"
+                    name="registrationNumber"
+                    placeholder="Registration number"
+                    value={formData.registrationNumber}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={getFieldClassName('registrationNumber')}
+                  />
+                  {touched['registrationNumber'] && errors['registrationNumber'] && (
+                    <div className="error-message">{errors['registrationNumber']}</div>
+                  )}
+                </div>
 
-              <div className="form-group">
-                <label>Fuel Type</label>
-                <select
-                  name="fuelType"
-                  value={formData.fuelType}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={getFieldClassName('fuelType')}
-                >
-                  <option value="" disabled>Select fuel type</option>
-                  <option value="Petrol">Petrol</option>
-                  <option value="Diesel">Diesel</option>
-                  <option value="Electric">Electric</option>
-                  <option value="Hybrid">Hybrid</option>
-                  <option value="CNG">CNG</option>
-                </select>
-                {touched['fuelType'] && errors['fuelType'] && (
-                  <div className="error-message">{errors['fuelType']}</div>
-                )}
+                <div className="form-group">
+                  <label>Color</label>
+                  <input
+                    type="text"
+                    name="color"
+                    placeholder="Vehicle Color"
+                    value={formData.color}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={getFieldClassName('color')}
+                  />
+                  {touched['color'] && errors['color'] && (
+                    <div className="error-message">{errors['color']}</div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="form-section">
-            <div className="section-header">
-              <Settings size={20} className="section-icon" />
-              <h3>Technical Details</h3>
+            <div className="form-section">
+              <div className="section-header">
+                <Calendar size={20} className="section-icon" />
+                <h3>Purchase Details</h3>
+              </div>
+              <div className="form-grid">
+                <div className="form-group">
+                  <label>Purchase Date</label>
+                  <input
+                    type="date"
+                    name="purchaseDate"
+                    value={formData.purchaseDate}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={getFieldClassName('purchaseDate')}
+                  />
+                  {touched['purchaseDate'] && errors['purchaseDate'] && (
+                    <div className="error-message">{errors['purchaseDate']}</div>
+                  )}
+                </div>
+
+                <div className="form-group">
+                  <label>Purchase Price</label>
+                  <input
+                    type="number"
+                    name="purchasePrice"
+                    placeholder="Enter purchase price"
+                    value={formData.purchasePrice}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    min={45000}
+                    style={{ paddingLeft: '2.5rem' }}
+                    className={getFieldClassName('purchasePrice')}
+                  />
+                  {touched['purchasePrice'] && errors['purchasePrice'] && (
+                    <div className="error-message">{errors['purchasePrice']}</div>
+                  )}
+                </div>
+
+                <div className="form-group">
+                  <label>Kilometers Driven</label>
+                  <input
+                    type="number"
+                    name="kilometers"
+                    placeholder="Kilometers driven"
+                    value={formData.kilometers}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={getFieldClassName('kilometers')}
+                  />
+                  {touched['kilometers'] && errors['kilometers'] && (
+                    <div className="error-message">{errors['kilometers']}</div>
+                  )}
+                </div>
+
+                <div className="form-group">
+                  <label>Fuel Type</label>
+                  <select
+                    name="fuelType"
+                    value={formData.fuelType}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={getFieldClassName('fuelType')}
+                  >
+                    <option value="" disabled>Select fuel type</option>
+                    <option value="Petrol">Petrol</option>
+                    <option value="Diesel">Diesel</option>
+                    <option value="Electric">Electric</option>
+                    <option value="Hybrid">Hybrid</option>
+                    <option value="CNG">CNG</option>
+                  </select>
+                  {touched['fuelType'] && errors['fuelType'] && (
+                    <div className="error-message">{errors['fuelType']}</div>
+                  )}
+                </div>
+              </div>
             </div>
-            <div className="form-grid">
-              <div className="form-group">
-                <label>Engine Number</label>
-                <input
-                  type="text"
-                  name="engineNumber"
-                  placeholder="Engine Number"
-                  value={formData.engineNumber}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={getFieldClassName('engineNumber')}
-                />
-                {touched['engineNumber'] && errors['engineNumber'] && (
-                  <div className="error-message">{errors['engineNumber']}</div>
-                )}
-              </div>
 
-              <div className="form-group">
-                <label>Chassis Number</label>
-                <input
-                  type="text"
-                  name="chassisNumber"
-                  placeholder="Chassis Number"
-                  value={formData.chassisNumber}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={getFieldClassName('chassisNumber')}
-                />
-                {touched['chassisNumber'] && errors['chassisNumber'] && (
-                  <div className="error-message">{errors['chassisNumber']}</div>
-                )}
+            <div className="form-section">
+              <div className="section-header">
+                <Settings size={20} className="section-icon" />
+                <h3>Technical Details</h3>
+              </div>
+              <div className="form-grid">
+                <div className="form-group">
+                  <label>Engine Number</label>
+                  <input
+                    type="text"
+                    name="engineNumber"
+                    placeholder="Engine Number"
+                    value={formData.engineNumber}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={getFieldClassName('engineNumber')}
+                  />
+                  {touched['engineNumber'] && errors['engineNumber'] && (
+                    <div className="error-message">{errors['engineNumber']}</div>
+                  )}
+                </div>
+
+                <div className="form-group">
+                  <label>Chassis Number</label>
+                  <input
+                    type="text"
+                    name="chassisNumber"
+                    placeholder="Chassis Number"
+                    value={formData.chassisNumber}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={getFieldClassName('chassisNumber')}
+                  />
+                  {touched['chassisNumber'] && errors['chassisNumber'] && (
+                    <div className="error-message">{errors['chassisNumber']}</div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="form-section">
-            <div className="section-header">
-              <User size={20} className="section-icon" />
-              <h3>Owner Information</h3>
-            </div>
-            <div className="form-grid">
-              <div className="form-group">
-                <label>Owner Name</label>
-                <input
-                  type="text"
-                  name="owner"
-                  placeholder="Owner Name"
-                  value={formData.owner}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={getFieldClassName('owner')}
-                />
-                {touched['owner'] && errors['owner'] && (
-                  <div className="error-message">{errors['owner']}</div>
-                )}
+            <div className="form-section">
+              <div className="section-header">
+                <User size={20} className="section-icon" />
+                <h3>Owner Information</h3>
               </div>
+              <div className="form-grid">
+                <div className="form-group">
+                  <label>Owner Name</label>
+                  <input
+                    type="text"
+                    name="owner"
+                    placeholder="Owner Name"
+                    value={formData.owner}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={getFieldClassName('owner')}
+                  />
+                  {touched['owner'] && errors['owner'] && (
+                    <div className="error-message">{errors['owner']}</div>
+                  )}
+                </div>
 
-              <div className="form-group">
-                <label>Contact Number</label>
-                <input
-                  type="text"
-                  name="phone"
-                  placeholder="Owner Phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={getFieldClassName('phone')}
-                />
-                {touched['phone'] && errors['phone'] && (
-                  <div className="error-message">{errors['phone']}</div>
-                )}
-              </div>
+                <div className="form-group">
+                  <label>Contact Number</label>
+                  <input
+                    type="text"
+                    name="phone"
+                    placeholder="Owner Phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={getFieldClassName('phone')}
+                  />
+                  {touched['phone'] && errors['phone'] && (
+                    <div className="error-message">{errors['phone']}</div>
+                  )}
+                </div>
 
-              <div className="form-group full-width">
-                <div style={{ display: 'flex', alignItems: 'flex-end', gap: '1rem' }}>
-                  <div style={{ flex: 1 }}>
-                    <label>Address</label>
-                    <div className="input-with-icon">
-                      <textarea
-                        name="address"
-                        placeholder="Owner Address"
-                        rows="2"
-                        value={formData.address}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={getFieldClassName('address')}
-                      ></textarea>
+                <div className="form-group full-width">
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: '1rem' }}>
+                    <div style={{ flex: 1 }}>
+                      <label>Address</label>
+                      <div className="input-with-icon">
+                        <textarea
+                          name="address"
+                          placeholder="Owner Address"
+                          rows="2"
+                          value={formData.address}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          className={getFieldClassName('address')}
+                        ></textarea>
+                      </div>
+                      {touched['address'] && errors['address'] && (
+                        <div className="error-message">{errors['address']}</div>
+                      )}
                     </div>
-                    {touched['address'] && errors['address'] && (
-                      <div className="error-message">{errors['address']}</div>
-                    )}
-                  </div>
 
-                  <div className="form-actions">
-                    <button type="button" className="btn-secondary" onClick={() => navigate('/dashboard')}>
-                      Cancel
-                    </button>
-                    <button type="submit" className="btn-primary">
-                      <Plus size={16} />
-                      Register Vehicle
-                    </button>
+                    <div className="form-actions">
+                      <button type="button" className="btn-secondary" onClick={() => navigate('/dashboard')}>
+                        Cancel
+                      </button>
+                      <button type="submit" className="btn-primary">
+                        <Plus size={16} />
+                        Register Vehicle
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 

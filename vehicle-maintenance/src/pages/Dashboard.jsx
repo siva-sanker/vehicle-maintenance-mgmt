@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Footer from '../components/Footer';
+import Header from '../components/Header';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -40,7 +42,7 @@ ChartJS.register(
   Filler
 );
 
-const Dashboard = () => {
+const Dashboard = ({ sidebarCollapsed, toggleSidebar }) => {
   const [vehicles, setVehicles] = useState([]);
   const [totalVehicles, setTotalVehicles] = useState(0);
   const [activeClaims, setActiveClaims] = useState(0);
@@ -93,7 +95,7 @@ const Dashboard = () => {
                   rejectedClaims++;
                   break;
                 default:
-                  pendingClaims++; // Default to pending if status is not specified
+                  pendingClaims++; 
                   break;
               }
             });
@@ -232,140 +234,143 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="dashboard-container">
-      <div className="dashboard-header">
-        <div className="header-content">
-          <h1 className="dashboard-title">
-            <Car className="dashboard-icon" />
-            Vehicle Maintenance Management Dashboard
-          </h1>
-          <p className="dashboard-subtitle">Monitor your fleet performance and analytics</p>
+    <>
+      <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />
+      
+      <div className="dashboard-container">
+        <div className="dashboard-header">
+          <div className="header-content">
+            <h1 className="dashboard-title">
+              <Car className="dashboard-icon" />
+              Vehicle Maintenance Management Dashboard
+            </h1>
+            <p className="dashboard-subtitle">Monitor your fleet performance and analytics</p>
+          </div>
+          <div className="header-actions">
+            <button className="btn-primary" onClick={() => navigate('/register-vehicle')}>
+              <Car size={16} />
+              Add Vehicle
+            </button>
+          </div>
         </div>
-        <div className="header-actions">
-          <button className="btn-primary" onClick={() => navigate('/register-vehicle')}>
-            <Car size={16} />
-            Add Vehicle
-          </button>
+
+        <div className="stats-grid">
+          <div className="stat-card">
+            <div className="stat-icon vehicles">
+              <Car size={24} />
+            </div>
+            <div className="stat-content">
+              <h3 className="stat-number">{totalVehicles}</h3>
+              <p className="stat-label">Total Vehicles</p>
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <div className="stat-icon claims">
+              <AlertTriangle size={24} />
+            </div>
+            <div className="stat-content">
+              <h3 className="stat-number">{activeClaims}</h3>
+              <p className="stat-label">Active Claims</p>
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <div className="stat-icon insurance">
+              <Shield size={24} />
+            </div>
+            <div className="stat-content">
+              <h3 className="stat-number">{insurancePolicies}</h3>
+              <p className="stat-label">Insurance Policies</p>
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <div className="stat-icon documents">
+              <FileText size={24} />
+            </div>
+            <div className="stat-content">
+              <h3 className="stat-number">{documentCount}</h3>
+              <p className="stat-label">Documents</p>
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <div className="stat-icon amount">
+              <DollarSign size={24} />
+            </div>
+            <div className="stat-content">
+              <h3 className="stat-number">₹{totalClaimAmount.toLocaleString()}</h3>
+              <p className="stat-label">Total Claim Amount</p>
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <div className="stat-icon trend">
+              <TrendingUp size={24} />
+            </div>
+            <div className="stat-content">
+              <h3 className="stat-number">{((insurancePolicies / totalVehicles) * 100).toFixed(1)}%</h3>
+              <p className="stat-label">Insurance Coverage</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Charts Section */}
+        <div className="charts-grid">
+          <div className="chart-card">
+            <h3 className="chart-title">Monthly Vehicle Purchases</h3>
+            <div className="chart-container">
+              <Line data={monthlyChartData} options={lineChartOptions} />
+            </div>
+          </div>
+
+          <div className="chart-card">
+            <h3 className="chart-title">Fuel Type Distribution</h3>
+            <div className="chart-container">
+              <Doughnut data={fuelTypeChartData} options={chartOptions} />
+            </div>
+          </div>
+
+          <div className="chart-card">
+            <h3 className="chart-title">Claims by Status</h3>
+            <div className="chart-container">
+              <Bar data={claimStatusChartData} options={chartOptions} />
+            </div>
+          </div>
+        </div>
+
+        <div className="quick-actions">
+          <h3 className="section-title">Quick Actions</h3>
+          <div className="actions-grid">
+            <button className="action-card" onClick={() => navigate('/register-vehicle')}>
+              <Car size={32} />
+              <h4>Register Vehicle</h4>
+              <p>Add a new vehicle to your fleet</p>
+            </button>
+
+            <button className="action-card" onClick={() => navigate('/vehicle-list')}>
+              <Users size={32} />
+              <h4>View All Vehicles</h4>
+              <p>Manage your vehicle inventory</p>
+            </button>
+
+            <button className="action-card">
+              <Calendar size={32} />
+              <h4>Schedule Maintenance</h4>
+              <p>Plan upcoming maintenance</p>
+            </button>
+
+            <button className="action-card">
+              <FileText size={32} />
+              <h4>Generate Reports</h4>
+              <p>Create detailed analytics reports</p>
+            </button>
+          </div>
         </div>
       </div>
-
-      {/* Stats Cards */}
-      <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-icon vehicles">
-            <Car size={24} />
-          </div>
-          <div className="stat-content">
-            <h3 className="stat-number">{totalVehicles}</h3>
-            <p className="stat-label">Total Vehicles</p>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon claims">
-            <AlertTriangle size={24} />
-          </div>
-          <div className="stat-content">
-            <h3 className="stat-number">{activeClaims}</h3>
-            <p className="stat-label">Active Claims</p>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon insurance">
-            <Shield size={24} />
-          </div>
-          <div className="stat-content">
-            <h3 className="stat-number">{insurancePolicies}</h3>
-            <p className="stat-label">Insurance Policies</p>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon documents">
-            <FileText size={24} />
-          </div>
-          <div className="stat-content">
-            <h3 className="stat-number">{documentCount}</h3>
-            <p className="stat-label">Documents</p>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon amount">
-            <DollarSign size={24} />
-          </div>
-          <div className="stat-content">
-            <h3 className="stat-number">₹{totalClaimAmount.toLocaleString()}</h3>
-            <p className="stat-label">Total Claim Amount</p>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon trend">
-            <TrendingUp size={24} />
-          </div>
-          <div className="stat-content">
-            <h3 className="stat-number">{((insurancePolicies / totalVehicles) * 100).toFixed(1)}%</h3>
-            <p className="stat-label">Insurance Coverage</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Charts Section */}
-      <div className="charts-grid">
-        <div className="chart-card">
-          <h3 className="chart-title">Monthly Vehicle Purchases</h3>
-          <div className="chart-container">
-            <Line data={monthlyChartData} options={lineChartOptions} />
-          </div>
-        </div>
-
-        <div className="chart-card">
-          <h3 className="chart-title">Fuel Type Distribution</h3>
-          <div className="chart-container">
-            <Doughnut data={fuelTypeChartData} options={chartOptions} />
-          </div>
-        </div>
-
-        <div className="chart-card">
-          <h3 className="chart-title">Claims by Status</h3>
-          <div className="chart-container">
-            <Bar data={claimStatusChartData} options={chartOptions} />
-          </div>
-        </div>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="quick-actions">
-        <h3 className="section-title">Quick Actions</h3>
-        <div className="actions-grid">
-          <button className="action-card" onClick={() => navigate('/register-vehicle')}>
-            <Car size={32} />
-            <h4>Register Vehicle</h4>
-            <p>Add a new vehicle to your fleet</p>
-          </button>
-
-          <button className="action-card" onClick={() => navigate('/vehicle-list')}>
-            <Users size={32} />
-            <h4>View All Vehicles</h4>
-            <p>Manage your vehicle inventory</p>
-          </button>
-
-          <button className="action-card">
-            <Calendar size={32} />
-            <h4>Schedule Maintenance</h4>
-            <p>Plan upcoming maintenance</p>
-          </button>
-
-          <button className="action-card">
-            <FileText size={32} />
-            <h4>Generate Reports</h4>
-            <p>Create detailed analytics reports</p>
-          </button>
-        </div>
-      </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 

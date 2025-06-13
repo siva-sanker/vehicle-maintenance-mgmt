@@ -2,8 +2,10 @@
   background-color: #101010;
   padding: 8px 10px;
   display: flex;
-  justify-content: space-between; /* Separate left and right content */
-  align-items: center; /* Vertically center items */
+  justify-content: space-between;
+  /* Separate left and right content */
+  align-items: center;
+  /* Vertically center items */
 }
 
 .navItem {
@@ -13,9 +15,11 @@
 }
 
 .navItem img {
-  height: 30px; /* Optional: set logo size */
+  width: 30px;
+  height: 30px;
   /* margin-right: 10px; */
-  margin-left: 15px;
+  /* margin-left: 15px; */
+  margin-top: 5px;
 }
 
 .topNavBarTitle {
@@ -27,22 +31,58 @@
   list-style-type: none;
   margin: 0;
   padding: 0;
-  gap: 20px; /* spacing between items */
+  gap: 20px;
+  /* spacing between items */
 }
+
 
 .nav-list li a {
   color: white;
   text-decoration: none;
-  font-weight: 500;
+  /* font-weight: 500; */
+  font-size: 14px;
 }
 
 .nav-list li a:hover {
   color: lightblue;
 }
 
-.nav-link{
-  width: 30px;
+.nav-list-button {
+  background: linear-gradient(135deg, rgb(5, 130, 172), rgb(16, 85, 97));
+  width: fit-content;
+  border-radius: 3px;
+  font-size: 14px;
+  height: 30px;
+  padding-bottom: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 4px;
 }
+
+.nav-list2 {
+  display: flex;
+  list-style-type: none;
+  color: white;
+  margin: 0;
+  padding: 0;
+  gap: 20px;
+  align-items: center;
+  margin-left: 20px;
+  /* Add some space from the logo */
+}
+
+.nav-list2 li {
+  color: white !important;
+}
+
+.nav-link {
+  /* Remove fixed width to allow content to determine width */
+  min-width: fit-content;
+  /* padding: 8px 12px; */
+  display: inline-block;
+  font-size: 14px;
+}
+
 .searchBar {
   display: flex;
   justify-content: flex-end;
@@ -52,11 +92,12 @@
 }
 
 .searchBar input {
-  width: 300px;
+  width: 350px;
+  height: 33px;
   padding: 0.5rem 0.75rem;
   border: 1px solid #dee2e6;
   border-radius: 4px;
-  font-size: 0.9rem;
+  font-size: 14px;
   color: #333;
   background-color: white;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -70,4 +111,84 @@
 
 .searchBar input::placeholder {
   color: #6c757d;
+}
+
+.nav-list2 li {
+  color: white !important;
+  transition: all 0.3s ease;
+  /* Smooth transition for hover effects */
+}
+
+.nav-list2 li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-list2 li a:hover {
+  color: #0d92ae;
+  /* Consistent with search bar focus color */
+  /* background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px); */
+}
+
+/* .nav-list2 li a.active {
+  color: #0d92ae;
+  background-color: rgba(13, 146, 174, 0.2);
+  border-bottom: 2px solid #0d92ae;
+} */
+
+.nav-list2 li a::after {
+  /* content: ''; */
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  /* background-color: #0d92ae; */
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+/* .nav-list2 li a:hover::after {
+  width: 100%;
+} */
+
+.nav-div-main {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  margin-left: 10px;
+}
+
+.nav-div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(33, 37, 41);
+  width: 30px;
+  height: 30px;
+  margin-right: 1px;
+  /* Reduce gap between nav-div elements to 1px */
+  /* border: 1px solid red; */
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.nav-div a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.nav-div i {
+  font-size: 1.2rem !important;
+  /* Reduce icon size from fa-2x to smaller */
 }

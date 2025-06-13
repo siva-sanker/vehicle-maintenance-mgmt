@@ -4,6 +4,7 @@
   background-color: #1f1f1f;
   /* padding: 20px; */
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: width 0.3s ease;
 }
 
 .sidebar-title {
@@ -59,4 +60,35 @@
 .nav-item svg {
   margin-right: 8px;
   flex-shrink: 0;
+}
+
+/* Collapsed Sidebar Styles */
+.sidebar.collapsed {
+  width: 60px;
+  transition: width 0.3s ease;
+}
+
+.sidebar.collapsed .nav-item {
+  justify-content: center;
+  padding: 15px 10px;
+}
+
+.sidebar.collapsed .nav-item svg {
+  margin-right: 0;
+}
+
+.sidebar.collapsed .sidebar-title {
+  display: none;
+}
+
+.sidebar.collapsed .nav-item:hover {
+  background-color: #80def7;
+  border-right: 4px solid #0d92ae;
+  color: black;
+}
+
+.sidebar.collapsed .nav-item.active {
+  background-color: #80def7;
+  color: black;
+  border-right: 4px solid #0d92ae;
 }

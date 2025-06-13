@@ -331,6 +331,101 @@ export const claimsAPI = {
     },
 };
 
+// Location Tracking API methods
+export const locationAPI = {
+    // Get all vehicles with location data
+    getVehiclesWithLocation: async () => {
+        try {
+            const allVehicles = await api.get('/vehicles');
+            return allVehicles.filter(vehicle => vehicle.currentLocation);
+        } catch (error) {
+            console.error('Error getting vehicles with location:', error);
+            throw error;
+        }
+    },
+
+    // Get vehicles without location data
+    getVehiclesWithoutLocation: async () => {
+        try {
+            const allVehicles = await api.get('/vehicles');
+            return allVehicles.filter(vehicle => !vehicle.currentLocation);
+        } catch (error) {
+            console.error('Error getting vehicles without location:', error);
+            throw error;
+        }
+    },
+
+    // Update vehicle location
+    updateVehicleLocation: (vehicleId, locationData) => {
+        return api.patch(`/vehicles/${vehicleId}`, {
+            currentLocation: locationData,
+            lastUpdated: new Date().toISOString()
+        });
+    },
+
+    // Get location history for a vehicle
+    getLocationHistory: (vehicleId) => {
+        return api.get(`/locationHistory?vehicleId=${vehicleId}`);
+    },
+
+    // Add location history entry
+    addLocationHistory: (locationData) => {
+        return api.post('/locationHistory', {
+            ...locationData,
+            timestamp: new Date().toISOString()
+        });
+    },
+
+    // Get vehicles within radius of a point
+    getVehiclesInRadius: async (centerLat, centerLng, radiusKm) => {
+        try {
+            const allVehicles = await api.get('/vehicles');
+            const vehiclesWithLocation = allVehicles.filter(vehicle => vehicle.currentLocation);
+
+            return vehiclesWithLocation.filter(vehicle => {
+                const distance = calculateDistance(
+                    centerLat, centerLng,
+                    vehicle.currentLocation.latitude,
+                    vehicle.currentLocation.longitude
+                );
+                return distance <= radiusKm;
+            });
+        } catch (error) {
+            console.error('Error getting vehicles in radius:', error);
+            throw error;
+        }
+    },
+
+    // Get real-time location updates (simulated)
+    getRealTimeLocation: (vehicleId) => {
+        return new Promise((resolve) => {
+            // Simulate real-time updates
+            setTimeout(() => {
+                const mockLocation = {
+                    latitude: 12.9716 + (Math.random() - 0.5) * 0.1,
+                    longitude: 77.5946 + (Math.random() - 0.5) * 0.1,
+                    timestamp: new Date().toISOString(),
+                    speed: Math.random() * 60, // km/h
+                    heading: Math.random() * 360 // degrees
+                };
+                resolve(mockLocation);
+            }, 1000);
+        });
+    },
+};
+
+// Helper function to calculate distance between two points
+const calculateDistance = (lat1, lng1, lat2, lng2) => {
+    const R = 6371; // Earth's radius in kilometers
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLng = (lng2 - lng1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+};
+
 // Dashboard API methods for aggregated data
 export const dashboardAPI = {
     // Get dashboard statistics
