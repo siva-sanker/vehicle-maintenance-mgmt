@@ -1,20 +1,28 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import SideBar from './components/SideBar';
-import TopNavBar from './components/TopNavBar';  // import TopNavBar
-import Dashboard from './pages/Dashboard';
-import VehicleRegistration from './pages/VehicleRegistration';
-import VehicleList from './pages/VehicleList';
-import InsuranceManagement from './pages/InsuranceManagement';
-import DocumentRepository from './pages/DocumentRepository';
-import VehicleClaims from './pages/VehicleClaims';
-import VehicleLocation from './pages/VehicleLocation';
-import ApiExample from './components/ApiExample';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import SideBar from './components/SideBar.tsx';
+import TopNavBar from './components/TopNavBar.tsx';
+import Dashboard from './pages/Dashboard.tsx';
+import VehicleRegistration from './pages/VehicleRegistration.tsx';
+import VehicleList from './pages/VehicleList.tsx';
+import InsuranceManagement from './pages/InsuranceManagement.tsx';
+import DocumentRepository from './pages/DocumentRepository.tsx';
+import VehicleClaims from './pages/VehicleClaims.tsx';
+import VehicleLocation from './pages/VehicleLocation.tsx';
+import ApiExample from './components/ApiExample.tsx';
 
-function App() {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+// Define the props interface for components that receive sidebar props
+interface SidebarProps {
+  sidebarCollapsed: boolean;
+  toggleSidebar: () => void;
+}
 
-  const toggleSidebar = () => {
+const App: React.FC = () => {
+  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
+
+  const toggleSidebar = (): void => {
     setSidebarCollapsed(!sidebarCollapsed);
   };
 
@@ -40,9 +48,23 @@ function App() {
             </Routes>
           </div>
         </div>
+
+        {/* Toast Container for notifications */}
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </div>
     </Router>
   );
-}
+};
 
-export default App;
+export default App; 

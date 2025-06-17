@@ -1,10 +1,10 @@
 import React from 'react';
-import './Footer.css';
+import '../styles/Footer.css';
 
-const Footer = () => {
-  const toggleFullscreen = () => {
+const Footer: React.FC = () => {
+  const toggleFullscreen = (): void => {
     if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(err => {
+      document.documentElement.requestFullscreen().catch((err: Error) => {
         console.log(`Error attempting to enable fullscreen: ${err.message}`);
       });
     } else {
@@ -29,4 +29,4 @@ const Footer = () => {
   );
 };
 
-export default Footer;
+export default Footer; 

@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import './Header.css';
+import '../styles/Header.css';
 import { ChevronLeftIcon, ChevronRightIcon } from '@primer/octicons-react';
 import { Calendar, Clock, Calculator } from 'lucide-react';
 
-const Header = ({ sidebarCollapsed, toggleSidebar }) => {
-    const [currentTime, setCurrentTime] = useState(new Date());
+interface HeaderProps {
+  sidebarCollapsed: boolean;
+  toggleSidebar: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ sidebarCollapsed, toggleSidebar }) => {
+    const [currentTime, setCurrentTime] = useState<Date>(new Date());
 
     const currentDate = new Date().toLocaleDateString('en-US', {
         weekday: 'short',
@@ -59,4 +64,4 @@ const Header = ({ sidebarCollapsed, toggleSidebar }) => {
     );
 };
 
-export default Header;
+export default Header; 

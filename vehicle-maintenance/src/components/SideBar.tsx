@@ -1,16 +1,21 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import './SideBar.css';
-import { GraphIcon } from '@primer/octicons-react'
-import { PlusCircleIcon } from '@primer/octicons-react'
-import { ListUnorderedIcon } from '@primer/octicons-react'
-import { ReportIcon } from '@primer/octicons-react'
-import { ShieldCheckIcon } from '@primer/octicons-react'
-import { FileDirectoryIcon } from '@primer/octicons-react'
-import { LocationIcon } from '@primer/octicons-react'
+import '../styles/Sidebar.css';
+// import { GraphIcon } from '@primer/octicons-react'
+// import { PlusCircleIcon } from '@primer/octicons-react'
+// import { ListUnorderedIcon } from '@primer/octicons-react'
+// import { ReportIcon } from '@primer/octicons-react'
+// import { ShieldCheckIcon } from '@primer/octicons-react'
+// import { FileDirectoryIcon } from '@primer/octicons-react'
+// import { LocationIcon } from '@primer/octicons-react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCaretRight } from '@fortawesome/free-solid-svg-icons';
 
+interface SideBarProps {
+  collapsed?: boolean;
+}
 
-const SideBar = ({ collapsed = false }) => {
+const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
   return (
     <div className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
       <nav>
@@ -22,7 +27,9 @@ const SideBar = ({ collapsed = false }) => {
               className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
               title={collapsed ? "Dashboard" : ""}
             >
-              <GraphIcon size={22} />
+              <span>
+                <FontAwesomeIcon icon={faCaretRight} />
+              </span>
               {!collapsed && "Dashboard"}
             </NavLink>
           </li>
@@ -32,7 +39,9 @@ const SideBar = ({ collapsed = false }) => {
               className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
               title={collapsed ? "Vehicle Registration" : ""}
             >
-              <PlusCircleIcon size={22} />
+              <span>
+                <FontAwesomeIcon icon={faCaretRight} />
+              </span>
               {!collapsed && "Vehicle Registration"}
             </NavLink>
           </li>
@@ -42,7 +51,9 @@ const SideBar = ({ collapsed = false }) => {
               className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
               title={collapsed ? "Vehicle List" : ""}
             >
-              <ListUnorderedIcon size={22} />
+              <span>
+                <FontAwesomeIcon icon={faCaretRight} />
+              </span>
               {!collapsed && "Vehicle List"}
             </NavLink>
           </li>
@@ -52,7 +63,9 @@ const SideBar = ({ collapsed = false }) => {
               className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
               title={collapsed ? "Insurance Management" : ""}
             >
-              <FileDirectoryIcon size={22} />
+              <span>
+                <FontAwesomeIcon icon={faCaretRight} />
+              </span>
               {!collapsed && "Insurance Management"}
             </NavLink>
           </li>
@@ -62,7 +75,9 @@ const SideBar = ({ collapsed = false }) => {
               className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
               title={collapsed ? "Document Repository" : ""}
             >
-              <ShieldCheckIcon size={22} />
+              <span>
+                <FontAwesomeIcon icon={faCaretRight} />
+              </span>
               {!collapsed && "Document Repository"}
             </NavLink>
           </li>
@@ -72,7 +87,9 @@ const SideBar = ({ collapsed = false }) => {
               className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
               title={collapsed ? "Claims" : ""}
             >
-              <ReportIcon size={22} />
+              <span>
+                <FontAwesomeIcon icon={faCaretRight} />
+              </span>
               {!collapsed && "Claims"}
             </NavLink>
           </li>
@@ -82,7 +99,9 @@ const SideBar = ({ collapsed = false }) => {
               className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
               title={collapsed ? "Vehicle Location" : ""}
             >
-              <LocationIcon size={22} />
+              <span>
+                <FontAwesomeIcon icon={faCaretRight} />
+              </span>
               {!collapsed && "Vehicle Location"}
             </NavLink>
           </li>
@@ -92,4 +111,4 @@ const SideBar = ({ collapsed = false }) => {
   );
 };
 
-export default SideBar;
+export default SideBar; 

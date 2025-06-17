@@ -1,4 +1,3 @@
-// src/components/InsuranceClaims.js
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Header from '../components/Header';
@@ -12,18 +11,66 @@ import {
   XCircle,
   Car,
   Check,
-  X
+  X,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { vehicleAPI } from '../services/api';
 import '../styles/claims.css';
 
-const InsuranceClaims = ({ sidebarCollapsed, toggleSidebar }) => {
-  const [claims, setClaims] = useState([]);
-  const [vehicles, setVehicles] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [formData, setFormData] = useState({
+interface VehicleClaimsProps {
+  sidebarCollapsed: boolean;
+  toggleSidebar: () => void;
+}
+
+interface Vehicle {
+  id: string;
+  registrationNumber: string;
+  make: string;
+  model: string;
+  insurance?: {
+    hasInsurance: boolean;
+    policyNumber?: string;
+    insurer?: string;
+  };
+  claims?: Array<{
+    claimDate: string;
+    claimAmount: string;
+    reason: string;
+    status: string;
+  }>;
+}
+
+interface Claim {
+  claimDate: string;
+  claimAmount: string;
+  reason: string;
+  status: string;
+  vehicleId: string;
+  registrationNumber: string;
+  claimIndex: number;
+}
+
+interface FormData {
+  vehicleId: string;
+  claimDate: string;
+  claimAmount: string;
+  reason: string;
+  status: string;
+}
+
+const VehicleClaims: React.FC<VehicleClaimsProps> = ({ sidebarCollapsed, toggleSidebar }) => {
+  const [claims, setClaims] = useState<Claim[]>([]);
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [claimsPerPage] = useState<number>(10); // Number of claims to show per page
+  
+  const [formData, setFormData] = useState<FormData>({
     vehicleId: '',
     claimDate: '',
     claimAmount: '',
@@ -31,7 +78,7 @@ const InsuranceClaims = ({ sidebarCollapsed, toggleSidebar }) => {
     status: 'Pending',
   });
 
-  const fetchData = async () => {
+  const fetchData = async (): Promise<void> => {
     try {
       const vehiclesData = await vehicleAPI.getAllVehicles();
       setVehicles(vehiclesData);
@@ -55,17 +102,17 @@ const InsuranceClaims = ({ sidebarCollapsed, toggleSidebar }) => {
     }
   }, [vehicleIdFromURL]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>): void => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSearchChange = (e) => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setSearchTerm(e.target.value);
   };
 
   // Get all claims from all vehicles
-  const getAllClaims = () => {
-    const allClaims = [];
+  const getAllClaims = (): Claim[] => {
+    const allClaims: Claim[] = [];
     vehicles.forEach(vehicle => {
       if (vehicle.claims && vehicle.claims.length > 0) {
         vehicle.claims.forEach((claim, index) => {
@@ -86,7 +133,21 @@ const InsuranceClaims = ({ sidebarCollapsed, toggleSidebar }) => {
     claim.registrationNumber.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleSubmit = async (e) => {
+  // Pagination logic
+  const indexOfLastClaim = currentPage * claimsPerPage;
+  const indexOfFirstClaim = indexOfLastClaim - claimsPerPage;
+  const currentClaims = filteredClaims.slice(indexOfFirstClaim, indexOfLastClaim);
+  const totalPages = Math.ceil(filteredClaims.length / claimsPerPage);
+
+  // Change page
+  const paginate = (pageNumber: number): void => setCurrentPage(pageNumber);
+
+  // Reset to first page when search term changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
     const vehicleId = formData.vehicleId;
@@ -149,7 +210,7 @@ const InsuranceClaims = ({ sidebarCollapsed, toggleSidebar }) => {
     }
   };
 
-  const handleStatusChange = async (vehicleId, claimIndex, newStatus) => {
+  const handleStatusChange = async (vehicleId: string, claimIndex: number, newStatus: string): Promise<void> => {
     try {
       // Get the current vehicle
       const vehicle = await vehicleAPI.getVehicleById(vehicleId);
@@ -175,7 +236,7 @@ const InsuranceClaims = ({ sidebarCollapsed, toggleSidebar }) => {
     }
   };
 
-  const getStatusIcon = (status) => {
+  const getStatusIcon = (status: string): JSX.Element => {
     switch (status.toLowerCase()) {
       case 'approved':
         return <CheckCircle size={16} className="status-icon approved" />;
@@ -186,7 +247,7 @@ const InsuranceClaims = ({ sidebarCollapsed, toggleSidebar }) => {
     }
   };
 
-  const getStatusClass = (status) => {
+  const getStatusClass = (status: string): string => {
     switch (status.toLowerCase()) {
       case 'approved':
         return 'status-approved';
@@ -256,10 +317,7 @@ const InsuranceClaims = ({ sidebarCollapsed, toggleSidebar }) => {
                 </div>
 
                 <div className="form-group">
-                  <label>
-
-                    Claim Date
-                  </label>
+                  <label>Claim Date</label>
                   <input
                     type="date"
                     name="claimDate"
@@ -270,10 +328,7 @@ const InsuranceClaims = ({ sidebarCollapsed, toggleSidebar }) => {
                 </div>
 
                 <div className="form-group">
-                  <label>
-
-                    Claim Amount
-                  </label>
+                  <label>Claim Amount</label>
                   <input
                     type="number"
                     name="claimAmount"
@@ -285,33 +340,26 @@ const InsuranceClaims = ({ sidebarCollapsed, toggleSidebar }) => {
                 </div>
 
                 <div className="form-group">
-                  <label>
-
-                    Reason
-                  </label>
+                  <label>Reason</label>
                   <textarea
                     name="reason"
                     value={formData.reason}
                     onChange={handleChange}
                     placeholder="Describe the reason for the claim"
-                    rows="3"
+                    rows={3}
                     required
                   />
                 </div>
 
                 <div className="form-group">
-                  <label hidden>
-
-                    Status
-                  </label>
+                  <label hidden>Status</label>
                   <select
                     name="status"
                     value={formData.status}
-                    onChange={handleChange} hidden
+                    onChange={handleChange}
+                    hidden
                   >
                     <option value="Pending">Pending</option>
-                    {/* <option value="Approved">Approved</option>
-                  <option value="Rejected">Rejected</option> */}
                   </select>
                 </div>
 
@@ -351,55 +399,96 @@ const InsuranceClaims = ({ sidebarCollapsed, toggleSidebar }) => {
                     <p>No claims match your search criteria</p>
                   </div>
                 ) : (
-                  <table className="claims-table">
-                    <thead>
-                      <tr>
-                        <th>Vehicle</th>
-                        <th>Date</th>
-                        <th>Amount</th>
-                        <th>Reason</th>
-                        <th>Status</th>
-                        {/* <th>Actions</th> */}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredClaims.map((claim, idx) => (
-                        <tr key={idx}>
-                          <td className="vehicle-cell text-uppercase">
-                            <Car size={14} />
-                            {claim.registrationNumber}
-                          </td>
-                          <td>{claim.claimDate}</td>
-                          <td className="amount-cell">₹{claim.claimAmount}</td>
-                          <td className="reason-cell">{claim.reason}</td>
-                          <td>
-                            <div className="status-actions">
-                              <span className={`status-badge ${getStatusClass(claim.status)}`}>
-                                {getStatusIcon(claim.status)}
-                                {claim.status}
-                              </span>
-                              <div className="status-buttons">
-                                <button
-                                  className="status-btn approve-btn"
-                                  onClick={() => handleStatusChange(claim.vehicleId, claim.claimIndex, 'Approved')}
-                                  title="Approve Claim"
-                                >
-                                  <Check size={14} />
-                                </button>
-                                <button
-                                  className="status-btn reject-btn"
-                                  onClick={() => handleStatusChange(claim.vehicleId, claim.claimIndex, 'Rejected')}
-                                  title="Reject Claim"
-                                >
-                                  <X size={14} />
-                                </button>
-                              </div>
-                            </div>
-                          </td>
+                  <>
+                    <table className="claims-table">
+                      <thead>
+                        <tr>
+                          <th>Vehicle</th>
+                          <th>Date</th>
+                          <th>Amount</th>
+                          <th>Reason</th>
+                          <th>Status</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {currentClaims.map((claim, idx) => (
+                          <tr key={idx}>
+                            <td className="vehicle-cell text-uppercase">
+                              <Car size={14} />
+                              {claim.registrationNumber}
+                            </td>
+                            <td>{claim.claimDate}</td>
+                            <td className="amount-cell">₹{claim.claimAmount}</td>
+                            <td className="reason-cell">{claim.reason}</td>
+                            <td>
+                              <div className="status-actions">
+                                <span className={`status-badge ${getStatusClass(claim.status)}`}>
+                                  {getStatusIcon(claim.status)}
+                                  {claim.status}
+                                </span>
+                                <div className="status-buttons">
+                                  <button
+                                    className="status-btn approve-btn"
+                                    onClick={() => handleStatusChange(claim.vehicleId, claim.claimIndex, 'Approved')}
+                                    title="Approve Claim"
+                                  >
+                                    <Check size={14} />
+                                  </button>
+                                  <button
+                                    className="status-btn reject-btn"
+                                    onClick={() => handleStatusChange(claim.vehicleId, claim.claimIndex, 'Rejected')}
+                                    title="Reject Claim"
+                                  >
+                                    <X size={14} />
+                                  </button>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+
+                    {/* Pagination Controls */}
+                    {totalPages > 1 && (
+                      <div className="pagination-container">
+                        <div className="pagination-info">
+                          Showing {indexOfFirstClaim + 1} to {Math.min(indexOfLastClaim, filteredClaims.length)} of {filteredClaims.length} claims
+                        </div>
+                        <div className="pagination-controls">
+                          <button
+                            className="pagination-btn"
+                            onClick={() => paginate(currentPage - 1)}
+                            disabled={currentPage === 1}
+                          >
+                            <ChevronLeft size={16} />
+                            Previous
+                          </button>
+                          
+                          <div className="page-numbers">
+                            {Array.from({ length: totalPages }, (_, i) => i + 1).map(number => (
+                              <button
+                                key={number}
+                                className={`page-number ${currentPage === number ? 'active' : ''}`}
+                                onClick={() => paginate(number)}
+                              >
+                                {number}
+                              </button>
+                            ))}
+                          </div>
+                          
+                          <button
+                            className="pagination-btn"
+                            onClick={() => paginate(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                          >
+                            Next
+                            <ChevronRight size={16} />
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
@@ -411,4 +500,4 @@ const InsuranceClaims = ({ sidebarCollapsed, toggleSidebar }) => {
   );
 };
 
-export default InsuranceClaims;
+export default VehicleClaims; 

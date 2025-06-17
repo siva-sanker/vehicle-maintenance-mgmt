@@ -1,6 +1,6 @@
 .top-navbar {
   background-color: #101010;
-  padding: 8px 10px;
+  padding: 0;
   display: flex;
   justify-content: space-between;
   /* Separate left and right content */
@@ -15,11 +15,12 @@
 }
 
 .navItem img {
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   /* margin-right: 10px; */
-  /* margin-left: 15px; */
+  margin-left: 15px;
   margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .topNavBarTitle {
@@ -51,7 +52,8 @@
   background: linear-gradient(135deg, rgb(5, 130, 172), rgb(16, 85, 97));
   width: fit-content;
   border-radius: 3px;
-  font-size: 14px;
+  box-sizing: border-box;
+  /* font-size: 14px; */
   height: 30px;
   padding-bottom: 4px;
   padding-left: 8px;
@@ -62,39 +64,18 @@
 .nav-list2 {
   display: flex;
   list-style-type: none;
-  color: white;
   margin: 0;
   padding: 0;
-  gap: 20px;
+  gap: 10px;
   align-items: center;
   margin-left: 20px;
   /* Add some space from the logo */
 }
 
-.nav-list2 li {
-  color: white !important;
-}
-
-.nav-link {
-  /* Remove fixed width to allow content to determine width */
-  min-width: fit-content;
-  /* padding: 8px 12px; */
-  display: inline-block;
-  font-size: 14px;
-}
-
-.searchBar {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  /* padding: 1rem 1.5rem; */
-  /* background-color: ; */
-}
-
 .searchBar input {
   width: 350px;
   height: 33px;
-  padding: 0.5rem 0.75rem;
+  padding: 6px 12px 6px 12px;
   border: 1px solid #dee2e6;
   border-radius: 4px;
   font-size: 14px;
@@ -155,6 +136,12 @@
   transform: translateX(-50%);
 }
 
+.nav-buttons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 /* .nav-list2 li a:hover::after {
   width: 100%;
 } */
@@ -163,7 +150,8 @@
   display: flex;
   align-items: center;
   gap: 1px;
-  margin-left: 10px;
+  /* margin-left: 10px; */
+  margin-right: 10px;
 }
 
 .nav-div {
@@ -173,7 +161,7 @@
   background-color: rgb(33, 37, 41);
   width: 30px;
   height: 30px;
-  margin-right: 1px;
+  margin-right: 5px;
   /* Reduce gap between nav-div elements to 1px */
   /* border: 1px solid red; */
   border-radius: 4px;
@@ -191,4 +179,98 @@
 .nav-div i {
   font-size: 1.2rem !important;
   /* Reduce icon size from fa-2x to smaller */
+}
+
+/* Hamburger styles */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+  z-index: 1002;
+}
+
+.hamburger .bar {
+  width: 24px;
+  height: 3px;
+  background-color: #fff;
+  margin: 3px 0;
+  border-radius: 2px;
+  transition: 0.4s;
+}
+
+/* Collapsible nav links container */
+.nav-links-container,
+.nav-right {
+  display: flex;
+}
+
+/* Responsive styles */
+@media (max-width: 900px) {
+
+  .nav-list2,
+  .nav-list,
+  .nav-buttons,
+  .nav-div-main,
+  .searchBar {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .nav-links-container,
+  .nav-right {
+    display: none;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100vw;
+    background: #101010;
+    flex-direction: column;
+    z-index: 1001;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding-bottom: 1rem;
+  }
+
+  .nav-links-container.open,
+  .nav-right.open {
+    display: flex;
+  }
+
+  .top-navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+  }
+
+  .navItem {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .nav-list2 {
+    margin-left: 0;
+    gap: 0;
+  }
+
+  .nav-list2 li,
+  .nav-list li {
+    width: 100%;
+    margin: 0.5rem 0;
+  }
+
+  .searchBar input {
+    width: 90vw;
+    max-width: 350px;
+  }
 }

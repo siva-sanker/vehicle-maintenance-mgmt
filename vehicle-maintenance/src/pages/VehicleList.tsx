@@ -13,32 +13,62 @@ import {
   Eye,
   Info,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  DollarSign,
+  Search
 } from 'lucide-react';
-import { vehicleAPI } from '../services/api';
+import { vehicleAPI, Vehicle } from '../services/api.ts';
 import '../styles/Vehiclelist.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
-const VehicleList = ({ sidebarCollapsed, toggleSidebar }) => {
-  const [claimsModalOpen, setClaimsModalOpen] = useState(false);
-  const [claims, setClaims] = useState([]);
-  const [loadingClaims, setLoadingClaims] = useState(false);
-  const [claimsError, setClaimsError] = useState('');
+interface VehicleListProps {
+  sidebarCollapsed: boolean;
+  toggleSidebar: () => void;
+}
 
-  const [vehicles, setVehicles] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [showDetailsModal, setShowDetailsModal] = useState(false);
-  const [selectedVehicle, setSelectedVehicle] = useState(null);
+interface InsuranceData {
+  policyNumber: string;
+  insurer: string;
+  policytype: string;
+  startDate: string;
+  endDate: string;
+  payment: string;
+  issueDate: string;
+  premiumAmount: string;
+  hasInsurance: boolean;
+}
+
+interface Claim {
+  claimDate: string;
+  claimAmount: string;
+  reason: string;
+  status: string;
+}
+
+interface ValidationErrors {
+  [key: string]: string;
+}
+
+const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSidebar }) => {
+  const [claimsModalOpen, setClaimsModalOpen] = useState<boolean>(false);
+  const [claims, setClaims] = useState<Claim[]>([]);
+  const [loadingClaims, setLoadingClaims] = useState<boolean>(false);
+  const [claimsError, setClaimsError] = useState<string>('');
+
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [showDetailsModal, setShowDetailsModal] = useState<boolean>(false);
+  const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
 
   // Search state
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
   // Pagination state
-  const [currentPage, setCurrentPage] = useState(1);
-  const [vehiclesPerPage] = useState(10); // Number of vehicles to show per page
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [vehiclesPerPage] = useState<number>(10); // Number of vehicles to show per page
 
-  const [insuranceData, setInsuranceData] = useState({
+  const [insuranceData, setInsuranceData] = useState<InsuranceData>({
     policyNumber: '',
     insurer: '',
     policytype: '',
@@ -47,13 +77,14 @@ const VehicleList = ({ sidebarCollapsed, toggleSidebar }) => {
     payment: '',
     issueDate: '',
     premiumAmount: '',
+    hasInsurance: false,
   });
 
   // Validation state
-  const [validationErrors, setValidationErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-  const calculateVehicleAge = (purchaseDateString) => {
+  const calculateVehicleAge = (purchaseDateString: string): number => {
     const purchaseDate = new Date(purchaseDateString);
     const today = new Date();
 
@@ -69,7 +100,7 @@ const VehicleList = ({ sidebarCollapsed, toggleSidebar }) => {
   };
 
   // Validation functions
-  const validatePolicyNumber = (policyNumber) => {
+  const validatePolicyNumber = (policyNumber: string): string => {
     if (!policyNumber.trim()) {
       return 'Policy number is required';
     }
@@ -82,7 +113,7 @@ const VehicleList = ({ sidebarCollapsed, toggleSidebar }) => {
     return '';
   };
 
-  const validateInsurer = (insurer) => {
+  const validateInsurer = (insurer: string): string => {
     if (!insurer.trim()) {
       return 'Insurer name is required';
     }
@@ -95,14 +126,14 @@ const VehicleList = ({ sidebarCollapsed, toggleSidebar }) => {
     return '';
   };
 
-  const validatePolicyType = (policyType) => {
+  const validatePolicyType = (policyType: string): string => {
     if (!policyType) {
       return 'Policy type is required';
     }
     return '';
   };
 
-  const validateDate = (date, fieldName) => {
+  const validateDate = (date: string, fieldName: string): string => {
     if (!date) {
       return `${fieldName} is required`;
     }
@@ -119,7 +150,7 @@ const VehicleList = ({ sidebarCollapsed, toggleSidebar }) => {
     return '';
   };
 
-  const validateEndDate = (endDate, startDate) => {
+  const validateEndDate = (endDate: string, startDate: string): string => {
     if (!endDate) {
       return 'End date is required';
     }
@@ -129,7 +160,7 @@ const VehicleList = ({ sidebarCollapsed, toggleSidebar }) => {
     return '';
   };
 
-  const validatePremiumAmount = (amount) => {
+  const validatePremiumAmount = (amount: string): string => {
     if (!amount) {
       return 'Premium amount is required';
     }
@@ -143,15 +174,15 @@ const VehicleList = ({ sidebarCollapsed, toggleSidebar }) => {
     return '';
   };
 
-  const validatePaymentMode = (payment) => {
+  const validatePaymentMode = (payment: string): string => {
     if (!payment) {
       return 'Payment mode is required';
     }
     return '';
   };
 
-  const validateInsuranceForm = () => {
-    const errors = {};
+  const validateInsuranceForm = (): boolean => {
+    const errors: ValidationErrors = {};
 
     errors.policyNumber = validatePolicyNumber(insuranceData.policyNumber);
     errors.insurer = validateInsurer(insuranceData.insurer);
@@ -181,7 +212,7 @@ const VehicleList = ({ sidebarCollapsed, toggleSidebar }) => {
   const totalPages = Math.ceil(filteredVehicles.length / vehiclesPerPage);
 
   // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   // Reset to first page when search term changes
   useEffect(() => {
@@ -189,12 +220,12 @@ const VehicleList = ({ sidebarCollapsed, toggleSidebar }) => {
   }, [searchTerm]);
 
   const navigate = useNavigate();
-  const goToClaims = (vehicleId) => {
+  const goToClaims = (vehicleId: string) => {
     navigate(`/claims?vehicleId=${vehicleId}`);
   };
 
   useEffect(() => {
-    const fetchVehicles = async () => {
+    const fetchVehicles = async (): Promise<void> => {
       try {
         const data = await vehicleAPI.getAllVehicles();
         setVehicles(data);
@@ -218,14 +249,14 @@ const VehicleList = ({ sidebarCollapsed, toggleSidebar }) => {
     console.log('selectedVehicle changed to:', selectedVehicle);
   }, [selectedVehicle]);
 
-  const viewClaims = async (vehicleId) => {
+  const viewClaims = async (vehicleId: string): Promise<void> => {
     console.log('viewClaims called with vehicleId:', vehicleId);
     // Find the vehicle to check insurance
     const vehicle = vehicles.find(v => v.id === vehicleId);
     console.log('Found vehicle:', vehicle);
 
     // Check if vehicle has insurance
-    if (!vehicle.insurance) {
+    if (!vehicle?.insurance) {
       toast.error("Vehicle does not have insurance");
       return;
     }
@@ -251,7 +282,7 @@ const VehicleList = ({ sidebarCollapsed, toggleSidebar }) => {
     }
   };
 
-  const handleAddInsurance = async () => {
+  const handleAddInsurance = async (): Promise<void> => {
     if (!selectedVehicle?.id) {
       console.error("Selected vehicle is missing an ID.");
       return;
@@ -266,7 +297,10 @@ const VehicleList = ({ sidebarCollapsed, toggleSidebar }) => {
     setIsSubmitting(true);
     try {
       const updatedVehicle = await vehicleAPI.patchVehicle(selectedVehicle.id, {
-        insurance: insuranceData
+        insurance: {
+          ...insuranceData,
+          hasInsurance: true
+        }
       });
 
       if (updatedVehicle) {
@@ -285,6 +319,7 @@ const VehicleList = ({ sidebarCollapsed, toggleSidebar }) => {
           payment: '',
           issueDate: '',
           premiumAmount: '',
+          hasInsurance: false,
         });
         toast.success("Insurance information saved successfully!");
       } else {
@@ -299,7 +334,7 @@ const VehicleList = ({ sidebarCollapsed, toggleSidebar }) => {
     }
   };
 
-  const resetForm = () => {
+  const resetForm = (): void => {
     setInsuranceData({
       policyNumber: '',
       insurer: '',
@@ -309,12 +344,13 @@ const VehicleList = ({ sidebarCollapsed, toggleSidebar }) => {
       payment: '',
       issueDate: '',
       premiumAmount: '',
+      hasInsurance: false,
     });
     setValidationErrors({});
     setIsSubmitting(false);
   };
 
-  const populateFormWithExistingInsurance = (vehicle) => {
+  const populateFormWithExistingInsurance = (vehicle: Vehicle): void => {
     if (vehicle.insurance) {
       setInsuranceData({
         policyNumber: vehicle.insurance.policyNumber || '',
@@ -325,11 +361,12 @@ const VehicleList = ({ sidebarCollapsed, toggleSidebar }) => {
         payment: vehicle.insurance.payment || '',
         issueDate: vehicle.insurance.issueDate || '',
         premiumAmount: vehicle.insurance.premiumAmount || '',
+        hasInsurance: true,
       });
     }
   };
 
-  const showVehicleDetails = (vehicle) => {
+  const showVehicleDetails = (vehicle: Vehicle): void => {
     setSelectedVehicle(vehicle);
     setShowDetailsModal(true);
   };
@@ -351,6 +388,18 @@ const VehicleList = ({ sidebarCollapsed, toggleSidebar }) => {
               <Plus size={16} />
               Add Vehicle
             </button>
+            <div className="search-wrapper">
+              <Search className="search-icon" size={20} />
+              <input
+                type="search"
+                name="search"
+                id="search"
+                placeholder='Search by registration number...'
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="search-input"
+              />
+            </div>
           </div>
         </div>
 
@@ -367,55 +416,75 @@ const VehicleList = ({ sidebarCollapsed, toggleSidebar }) => {
         ) : (
           <div className="table-container">
             <div className="searchBar2">
-              <input
-                type="search"
-                name="search"
-                id="search"
-                placeholder='Search by registration number...'
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
             </div>
             <table className="vehicles-table">
               <thead>
                 <tr>
-                  <th>Make</th>
-                  <th>Model</th>
-                  <th>Registration No.</th>
-                  <th>Purchase Date</th>
+                  <th>#</th>
+                  <th>
+                    <Car size={16} className="table-icon" />
+                    Make
+                  </th>
+                  <th>
+                    <Car size={16} className="table-icon" />
+                    Model
+                  </th>
+                  <th>Reg. Number</th>
+                  <th>
+                    <Calendar size={16} className="table-icon" />
+                    Purchase Date
+                  </th>
                   <th>Color</th>
                   <th>Age</th>
-                  <th>Fuel Type</th>
-                  <th>Price</th>
+                  <th>
+                    <Fuel size={16} className="table-icon" />
+                    Fuel Type
+                  </th>
+                  <th>
+                    <DollarSign size={16} className="table-icon" />
+                    Price
+                  </th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {currentVehicles.map((vehicle, index) => (
-                  <tr key={index}>
-                    <td className="text-capitalize">{vehicle.make}</td>
-                    <td className="text-capitalize">{vehicle.model}</td>
-                    <td className='text-uppercase'>{vehicle.registrationNumber}</td>
-                    <td>{vehicle.purchaseDate}</td>
-                    <td>{vehicle.color}</td>
-                    <td>{calculateVehicleAge(vehicle.purchaseDate)} years</td>
-                    <td>
-                      <span className={`fuel-badge ${vehicle.fuelType.toLowerCase()}`}>
-                        {vehicle.fuelType}
-                      </span>
-                    </td>
-                    <td>₹{vehicle.purchasePrice}</td>
-                    <td>
-                      <button
-                        className="btn-details"
-                        onClick={() => showVehicleDetails(vehicle)}
-                      >
-                        <Info size={16} />
-                        More Details
-                      </button>
+                {currentVehicles.length === 0 ? (
+                  <tr>
+                    <td colSpan={10} className="no-data">
+                      <div className="no-data-content">
+                        <Car size={48} className="no-data-icon" />
+                        <p>No vehicles found matching your search criteria.</p>
+                      </div>
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  currentVehicles.map((vehicle, index) => (
+                    <tr key={index} className="table-row">
+                      <td className="row-number">{indexOfFirstVehicle + index + 1}</td>
+                      <td className="text-capitalize">{vehicle.make}</td>
+                      <td className="text-capitalize">{vehicle.model}</td>
+                      <td className="text-uppercase reg-number">{vehicle.registrationNumber}</td>
+                      <td className="date-cell">{vehicle.purchaseDate}</td>
+                      <td>{vehicle.color}</td>
+                      <td>{calculateVehicleAge(vehicle.purchaseDate)} years</td>
+                      <td>
+                        <span className={`fuel-badge ${vehicle.fuelType.toLowerCase()}`}>
+                          {vehicle.fuelType}
+                        </span>
+                      </td>
+                      <td className="premium-amount">₹{vehicle.purchasePrice}</td>
+                      <td>
+                        <button
+                          className="btn-details"
+                          onClick={() => showVehicleDetails(vehicle)}
+                        >
+                          <Info size={16} />
+                          More Details
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
@@ -464,187 +533,136 @@ const VehicleList = ({ sidebarCollapsed, toggleSidebar }) => {
 
         {/* Vehicle Details Modal */}
         {showDetailsModal && selectedVehicle && (
-          <div className="modal-overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <div className="modal" style={{
-              backgroundColor: 'white',
-              padding: '20px',
-              border: '1px solid #e0e0e0',
-              maxWidth: '600px',
-              width: '90%',
-              maxHeight: '80vh',
-              overflowY: 'auto'
-            }}>
-              <div className="modal-header">
-                <h3>Vehicle Details - {selectedVehicle.make} {selectedVehicle.model}</h3>
-                <button className="modal-close" onClick={() => setShowDetailsModal(false)}>×</button>
-              </div>
-              <div className="modal-body">
-                <div className="vehicle-details-card">
-                  <div className="vehicle-card-header">
-                    <div className="vehicle-info">
-                      <h3 className="vehicle-name text-capitalize">{selectedVehicle.make} {selectedVehicle.model}</h3>
-                      <p className="vehicle-registration text-uppercase">{selectedVehicle.registrationNumber}</p>
-                    </div>
-                    <span className="vehicle-year">
-                      {new Date(selectedVehicle.purchaseDate).getFullYear()}
-                    </span>
-                  </div>
-
-                  <div className="vehicle-card-body">
-                    <div className="info-section">
-                      <div className="section-header">
-                        <Calendar size={16} className="section-icon" />
-                        <h6>Basic Info</h6>
-                      </div>
-                      <div className="info-grid">
-                        <div className="info-item">
-                          <span className="info-label">Color:</span>
-                          <span className="info-value">{selectedVehicle.color}</span>
-                        </div>
-                        <div className="info-item">
-                          <span className="info-label">Age:</span>
-                          <span className="info-value">{calculateVehicleAge(selectedVehicle.purchaseDate)} years</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="info-section">
-                      <div className="section-header">
-                        <Fuel size={16} className="section-icon" />
-                        <h6>Fuel Type</h6>
-                        <span className={`fuel-badge ${selectedVehicle.fuelType.toLowerCase()}`}>
-                          {selectedVehicle.fuelType}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="info-section">
-                      <div className="section-header">
-                        <Settings size={16} className="section-icon" />
-                        <h6>Engine Info</h6>
-                      </div>
-                      <div className="info-grid">
-                        <div className="info-item">
-                          <span className="info-label">Engine No.:</span>
-                          <span className="info-value">{selectedVehicle.engineNumber}</span>
-                        </div>
-                        <div className="info-item">
-                          <span className="info-label">Chassis No.:</span>
-                          <span className="info-value">{selectedVehicle.chassisNumber}</span>
-                        </div>
-                        <div className="info-item">
-                          <span className="info-label">Price:</span>
-                          <span className="info-value">₹{selectedVehicle.purchasePrice}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="info-section">
-                      <div className="section-header">
-                        <User size={16} className="section-icon" />
-                        <h6>Owner Info</h6>
-                      </div>
-                      <div className="info-grid">
-                        <div className="info-item">
-                          <span className="info-label">Owner:</span>
-                          <span className="info-value">{selectedVehicle.owner}</span>
-                        </div>
-                        <div className="info-item">
-                          <span className="info-label">Phone:</span>
-                          <span className="info-value">{selectedVehicle.phone}</span>
-                        </div>
-                        <div className="info-item full-width">
-                          <span className="info-label">Address:</span>
-                          <span className="info-value">{selectedVehicle.address}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {selectedVehicle.insurance ? (
-                      <div className="info-section">
-                        <div className="section-header">
-                          <FileText size={16} className="section-icon" />
-                          <h6>Insurance Info</h6>
-                        </div>
-                        <div className="info-grid">
-                          <div className="info-item">
-                            <span className="info-label">Policy #:</span>
-                            <span className="info-value">{selectedVehicle.insurance.policyNumber}</span>
-                          </div>
-                          <div className="info-item">
-                            <span className="info-label">Insurer:</span>
-                            <span className="info-value">{selectedVehicle.insurance.insurer}</span>
-                          </div>
-                          <div className="info-item">
-                            <span className="info-label">Type:</span>
-                            <span className="info-value">{selectedVehicle.insurance.policytype}</span>
-                          </div>
-                          <div className="info-item">
-                            <span className="info-label">Premium:</span>
-                            <span className="info-value">₹{selectedVehicle.insurance.premiumAmount}</span>
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="info-section">
-                        <div className="section-header">
-                          <FileText size={16} className="section-icon" />
-                          <h6>Insurance Info</h6>
-                        </div>
-                        <div className="no-insurance">
-                          <p>No insurance information available</p>
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="vehicle-actions">
-                      <button
-                        className="btn-action"
-                        onClick={() => {
-                          console.log('View Claims clicked for vehicle:', selectedVehicle.id);
-                          if (selectedVehicle.insurance) {
-                            viewClaims(selectedVehicle.id);
-                            setShowDetailsModal(false);
-                          } else {
-                            toast.error("Vehicle has no insurance");
-                          }
-                        }}
-                      >
-                        <Eye size={16} />
-                        View Claims
-                      </button>
-                      <button
-                        className="btn-action"
-                        onClick={() => {
-                          console.log('Add/Update Insurance clicked for vehicle:', selectedVehicle.id);
-                          setShowDetailsModal(false);
-                          if (selectedVehicle.insurance) {
-                            populateFormWithExistingInsurance(selectedVehicle);
-                          } else {
-                            resetForm();
-                          }
-                          setShowModal(true);
-                          console.log('showModal set to true, selectedVehicle:', selectedVehicle);
-                        }}
-                      >
-                        <FileText size={16} />
-                        {selectedVehicle.insurance ? 'Update Insurance' : 'Add Insurance'}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="modal-footer">
-                <button className="btn-secondary" onClick={() => setShowDetailsModal(false)}>Close</button>
-              </div>
+  <div className="modal-overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <div className="vehicle-details-modal">
+      <div className="modal-header">
+        <span className="modal-title">
+          Vehicle Details - {selectedVehicle.make} {selectedVehicle.model}
+        </span>
+        <button className="modal-close" onClick={() => setShowDetailsModal(false)}>×</button>
+      </div>
+      <div className="vehicle-details-card">
+        <div className="vehicle-details-top">
+          <div>
+            <h3 className="vehicle-name">{selectedVehicle.make} {selectedVehicle.model}</h3>
+            <div className="vehicle-reg">{selectedVehicle.registrationNumber}</div>
+          </div>
+          <span className="year-badge">{new Date(selectedVehicle.purchaseDate).getFullYear()}</span>
+        </div>
+        <div className="info-section">
+          <div className="info-grid">
+            <div>
+              <span className="info-label">Color:</span>
+              <span>{selectedVehicle.color}</span>
+            </div>
+            <div>
+              <span className="info-label">Age:</span>
+              <span>{calculateVehicleAge(selectedVehicle.purchaseDate)} years</span>
+            </div>
+            <div>
+              <span className="info-label">Fuel Type:</span>
+              <span className={`fuel-badge ${selectedVehicle.fuelType.toLowerCase()}`}>{selectedVehicle.fuelType}</span>
             </div>
           </div>
-        )}
+        </div>
+        <div className="info-section">
+          <div className="info-grid">
+            <div>
+              <span className="info-label">Engine No.:</span>
+              <span>{selectedVehicle.engineNumber}</span>
+            </div>
+            <div>
+              <span className="info-label">Chassis No.:</span>
+              <span>{selectedVehicle.chassisNumber}</span>
+            </div>
+            <div>
+              <span className="info-label">Price:</span>
+              <span>₹{selectedVehicle.purchasePrice}</span>
+            </div>
+          </div>
+        </div>
+        <div className="info-section">
+          <div className="info-grid">
+            <div>
+              <span className="info-label">Owner:</span>
+              <span>{selectedVehicle.owner}</span>
+            </div>
+            <div>
+              <span className="info-label">Phone:</span>
+              <span>{selectedVehicle.phone}</span>
+            </div>
+            <div className="full-width">
+              <span className="info-label">Address:</span>
+              <span>{selectedVehicle.address}</span>
+            </div>
+          </div>
+        </div>
+        <div className="info-section">
+          <div className="info-grid">
+            {selectedVehicle.insurance ? (
+              <>
+                <div>
+                  <span className="info-label">Policy #:</span>
+                  <span>{selectedVehicle.insurance.policyNumber}</span>
+                </div>
+                <div>
+                  <span className="info-label">Insurer:</span>
+                  <span>{selectedVehicle.insurance.insurer}</span>
+                </div>
+                <div>
+                  <span className="info-label">Type:</span>
+                  <span>{selectedVehicle.insurance.policytype}</span>
+                </div>
+                <div>
+                  <span className="info-label">Premium:</span>
+                  <span>₹{selectedVehicle.insurance.premiumAmount}</span>
+                </div>
+              </>
+            ) : (
+              <div className="no-insurance">No insurance information available</div>
+            )}
+          </div>
+        </div>
+        <div className="vehicle-details-actions">
+          <button
+            className="btn-outline"
+            onClick={() => {
+              if (selectedVehicle.insurance) {
+                viewClaims(selectedVehicle.id);
+                setShowDetailsModal(false);
+              } else {
+                toast.error("Vehicle has no insurance");
+              }
+            }}
+          >
+            View Claims
+          </button>
+          <button
+            className="btn-outline"
+            onClick={() => {
+              setShowDetailsModal(false);
+              if (selectedVehicle.insurance) {
+                populateFormWithExistingInsurance(selectedVehicle);
+              } else {
+                resetForm();
+              }
+              setShowModal(true);
+            }}
+          >
+            {selectedVehicle.insurance ? 'Update Insurance' : 'Add Insurance'}
+          </button>
+        </div>
+      </div>
+      <div className="modal-footer">
+        <button className="btn-secondary" onClick={() => setShowDetailsModal(false)}>Close</button>
+      </div>
+    </div>
+  </div>
+)}
 
         {/* Insurance Modal */}
         {showModal && (
           <div className="modal-overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            {console.log('Rendering insurance modal, showModal:', showModal, 'selectedVehicle:', selectedVehicle)}
             <div className="modal" style={{
               backgroundColor: 'white',
               padding: '20px',
@@ -836,7 +854,6 @@ const VehicleList = ({ sidebarCollapsed, toggleSidebar }) => {
         {/* Claims Modal */}
         {claimsModalOpen && (
           <div className="modal-overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            {console.log('Rendering claims modal, claimsModalOpen:', claimsModalOpen, 'selectedVehicle:', selectedVehicle)}
             <div className="modal" style={{
               backgroundColor: 'white',
               padding: '20px',
@@ -903,4 +920,4 @@ const VehicleList = ({ sidebarCollapsed, toggleSidebar }) => {
   );
 };
 
-export default VehicleList;
+export default VehicleList; 

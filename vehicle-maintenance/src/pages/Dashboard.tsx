@@ -26,7 +26,7 @@ import {
   Calendar,
   Users
 } from 'lucide-react';
-import { vehicleAPI } from '../services/api';
+import { vehicleAPI, Vehicle } from '../services/api';
 import '../styles/Dashboard.css';
 
 ChartJS.register(
@@ -42,32 +42,52 @@ ChartJS.register(
   Filler
 );
 
-const Dashboard = ({ sidebarCollapsed, toggleSidebar }) => {
-  const [vehicles, setVehicles] = useState([]);
-  const [totalVehicles, setTotalVehicles] = useState(0);
-  const [activeClaims, setActiveClaims] = useState(0);
-  const [insurancePolicies, setInsurancePolicies] = useState(0);
-  const [documentCount, setDocumentCount] = useState(0);
-  const [totalClaimAmount, setTotalClaimAmount] = useState(0);
-  const [fuelTypeData, setFuelTypeData] = useState({});
-  const [monthlyData, setMonthlyData] = useState({});
-  const [claimStatusData, setClaimStatusData] = useState({
+// Define interfaces for the data types
+interface DashboardProps {
+  sidebarCollapsed: boolean;
+  toggleSidebar: () => void;
+}
+
+interface ClaimStatusData {
+  pending: number;
+  approved: number;
+  rejected: number;
+}
+
+interface FuelTypeData {
+  [key: string]: number;
+}
+
+interface MonthlyData {
+  [key: string]: number;
+}
+
+const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed, toggleSidebar }) => {
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [totalVehicles, setTotalVehicles] = useState<number>(0);
+  const [activeClaims, setActiveClaims] = useState<number>(0);
+  const [insurancePolicies, setInsurancePolicies] = useState<number>(0);
+  const [documentCount, setDocumentCount] = useState<number>(0);
+  const [totalClaimAmount, setTotalClaimAmount] = useState<number>(0);
+  const [fuelTypeData, setFuelTypeData] = useState<FuelTypeData>({});
+  const [monthlyData, setMonthlyData] = useState<MonthlyData>({});
+  const [claimStatusData, setClaimStatusData] = useState<ClaimStatusData>({
     pending: 0,
     approved: 0,
     rejected: 0
   });
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchDashboardData = async () => {
+    const fetchDashboardData = async (): Promise<void> => {
       try {
         const data = await vehicleAPI.getAllVehicles();
         setVehicles(data);
         setTotalVehicles(data.length);
 
         // Calculate insurance policies
-        const insuranceCount = data.filter(v => v.insurance && typeof v.insurance === 'object').length;
+        const insuranceCount = data.filter((v: Vehicle) => v.insurance && typeof v.insurance === 'object').length;
         setInsurancePolicies(insuranceCount);
 
         // Calculate active claims, total claim amount, and claim statuses
@@ -77,10 +97,10 @@ const Dashboard = ({ sidebarCollapsed, toggleSidebar }) => {
         let approvedClaims = 0;
         let rejectedClaims = 0;
 
-        data.forEach(vehicle => {
+        data.forEach((vehicle: Vehicle) => {
           if (vehicle.claims && Array.isArray(vehicle.claims)) {
             claimsCount += vehicle.claims.length;
-            vehicle.claims.forEach(claim => {
+            vehicle.claims.forEach((claim: any) => {
               totalClaims += parseFloat(claim.claimAmount) || 0;
 
               // Count claims by status
@@ -111,16 +131,16 @@ const Dashboard = ({ sidebarCollapsed, toggleSidebar }) => {
         });
 
         // Calculate fuel type distribution
-        const fuelTypes = {};
-        data.forEach(vehicle => {
+        const fuelTypes: FuelTypeData = {};
+        data.forEach((vehicle: Vehicle) => {
           const fuelType = vehicle.fuelType || 'Unknown';
           fuelTypes[fuelType] = (fuelTypes[fuelType] || 0) + 1;
         });
         setFuelTypeData(fuelTypes);
 
         // Calculate monthly purchase data
-        const monthlyPurchases = {};
-        data.forEach(vehicle => {
+        const monthlyPurchases: MonthlyData = {};
+        data.forEach((vehicle: Vehicle) => {
           if (vehicle.purchaseDate) {
             const month = new Date(vehicle.purchaseDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
             monthlyPurchases[month] = (monthlyPurchases[month] || 0) + 1;
@@ -200,13 +220,10 @@ const Dashboard = ({ sidebarCollapsed, toggleSidebar }) => {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'bottom',
+        position: 'bottom' as const,
         labels: {
-          usePointStyle: true,
           padding: 20,
-          font: {
-            size: 12
-          }
+          usePointStyle: true
         }
       }
     }
@@ -226,9 +243,13 @@ const Dashboard = ({ sidebarCollapsed, toggleSidebar }) => {
 
   if (loading) {
     return (
-      <div className="dashboard-loading">
-        <div className="loading-spinner"></div>
-        <p>Loading dashboard data...</p>
+      <div className="dashboard-container">
+        <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Loading dashboard data...</p>
+        </div>
+        <Footer />
       </div>
     );
   }
@@ -236,42 +257,33 @@ const Dashboard = ({ sidebarCollapsed, toggleSidebar }) => {
   return (
     <>
       <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />
+    <div className="dashboard-container">
       
-      <div className="dashboard-container">
+      <div className="dashboard-content">
         <div className="dashboard-header">
           <div className="header-content">
             <h1 className="dashboard-title">
-              <Car className="dashboard-icon" />
-              Vehicle Maintenance Management Dashboard
+              Dashboard
             </h1>
-            <p className="dashboard-subtitle">Monitor your fleet performance and analytics</p>
+            <p className="dashboard-subtitle">Vehicle Maintenance Management System Overview</p>
           </div>
           <div className="header-actions">
-            <button className="btn-primary" onClick={() => navigate('/register-vehicle')}>
+            <button onClick={() => navigate('/register-vehicle')} className="btn-primary">
               <Car size={16} />
               Add Vehicle
             </button>
           </div>
         </div>
 
+        {/* Stats Cards */}
         <div className="stats-grid">
           <div className="stat-card">
             <div className="stat-icon vehicles">
               <Car size={24} />
             </div>
             <div className="stat-content">
-              <h3 className="stat-number">{totalVehicles}</h3>
-              <p className="stat-label">Total Vehicles</p>
-            </div>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-icon claims">
-              <AlertTriangle size={24} />
-            </div>
-            <div className="stat-content">
-              <h3 className="stat-number">{activeClaims}</h3>
-              <p className="stat-label">Active Claims</p>
+              <h3 className='stat-number'>{totalVehicles}</h3>
+              <p>Total Vehicles</p>
             </div>
           </div>
 
@@ -280,18 +292,18 @@ const Dashboard = ({ sidebarCollapsed, toggleSidebar }) => {
               <Shield size={24} />
             </div>
             <div className="stat-content">
-              <h3 className="stat-number">{insurancePolicies}</h3>
-              <p className="stat-label">Insurance Policies</p>
+              <h3 className='stat-number'>{insurancePolicies}</h3>
+              <p>Insurance Policies</p>
             </div>
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon documents">
+            <div className="stat-icon claims">
               <FileText size={24} />
             </div>
             <div className="stat-content">
-              <h3 className="stat-number">{documentCount}</h3>
-              <p className="stat-label">Documents</p>
+              <h3 className='stat-number'>{activeClaims}</h3>
+              <p>Active Claims</p>
             </div>
           </div>
 
@@ -300,18 +312,28 @@ const Dashboard = ({ sidebarCollapsed, toggleSidebar }) => {
               <DollarSign size={24} />
             </div>
             <div className="stat-content">
-              <h3 className="stat-number">₹{totalClaimAmount.toLocaleString()}</h3>
-              <p className="stat-label">Total Claim Amount</p>
+              <h3 className='stat-number'>₹{totalClaimAmount.toLocaleString()}</h3>
+              <p>Total Claim Amount</p>
             </div>
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon trend">
+            <div className="stat-icon documents">
+              <AlertTriangle size={24} />
+            </div>
+            <div className="stat-content">
+              <h3 className='stat-number'>{documentCount}</h3>
+              <p>Documents</p>
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <div className="stat-icon amount">
               <TrendingUp size={24} />
             </div>
             <div className="stat-content">
-              <h3 className="stat-number">{((insurancePolicies / totalVehicles) * 100).toFixed(1)}%</h3>
-              <p className="stat-label">Insurance Coverage</p>
+            <h3 className='stat-number'>{((insurancePolicies / totalVehicles) * 100).toFixed(1)}%</h3>
+              <p>Insurance Coverage</p>
             </div>
           </div>
         </div>
@@ -319,59 +341,55 @@ const Dashboard = ({ sidebarCollapsed, toggleSidebar }) => {
         {/* Charts Section */}
         <div className="charts-grid">
           <div className="chart-card">
-            <h3 className="chart-title">Monthly Vehicle Purchases</h3>
-            <div className="chart-container">
-              <Line data={monthlyChartData} options={lineChartOptions} />
-            </div>
-          </div>
-
-          <div className="chart-card">
-            <h3 className="chart-title">Fuel Type Distribution</h3>
+            <h3>Fuel Type Distribution</h3>
             <div className="chart-container">
               <Doughnut data={fuelTypeChartData} options={chartOptions} />
             </div>
           </div>
 
           <div className="chart-card">
-            <h3 className="chart-title">Claims by Status</h3>
+            <h3>Monthly Vehicle Purchases</h3>
+            <div className="chart-container">
+              <Line data={monthlyChartData} options={lineChartOptions} />
+            </div>
+          </div>
+
+          <div className="chart-card">
+            <h3>Claim Status Distribution</h3>
             <div className="chart-container">
               <Bar data={claimStatusChartData} options={chartOptions} />
             </div>
           </div>
         </div>
 
+        {/* Quick Actions */}
         <div className="quick-actions">
-          <h3 className="section-title">Quick Actions</h3>
-          <div className="actions-grid">
-            <button className="action-card" onClick={() => navigate('/register-vehicle')}>
-              <Car size={32} />
-              <h4>Register Vehicle</h4>
-              <p>Add a new vehicle to your fleet</p>
+          <h3>Quick Actions</h3>
+          <div className="action-buttons">
+            <button onClick={() => navigate('/register-vehicle')} className="action-btn">
+              <Car size={20} />
+              Register Vehicle
             </button>
-
-            <button className="action-card" onClick={() => navigate('/vehicle-list')}>
-              <Users size={32} />
-              <h4>View All Vehicles</h4>
-              <p>Manage your vehicle inventory</p>
+            <button onClick={() => navigate('/vehicle-list')} className="action-btn">
+              <FileText size={20} />
+              View Vehicles
             </button>
-
-            <button className="action-card">
-              <Calendar size={32} />
-              <h4>Schedule Maintenance</h4>
-              <p>Plan upcoming maintenance</p>
+            <button onClick={() => navigate('/claims')} className="action-btn">
+              <AlertTriangle size={20} />
+              Manage Claims
             </button>
-
-            <button className="action-card">
-              <FileText size={32} />
-              <h4>Generate Reports</h4>
-              <p>Create detailed analytics reports</p>
+            <button onClick={() => navigate('/insurance')} className="action-btn">
+              <Shield size={20} />
+              Insurance
             </button>
           </div>
         </div>
       </div>
+
       <Footer />
+    </div>
     </>
   );
 };
 
-export default Dashboard;
+export default Dashboard; 

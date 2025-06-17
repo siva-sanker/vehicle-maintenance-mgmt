@@ -30,16 +30,16 @@
           "claimDate": "2025-02-04",
           "claimAmount": "12000",
           "reason": "accident",
-          "status": "Pending"
+          "status": "Rejected"
         }
       ],
       "currentLocation": {
-        "latitude": 12.965019229955242,
-        "longitude": 77.59316564360695,
-        "timestamp": "2025-06-12T09:59:44.143Z",
-        "address": "೧೨ನೇ ಅಡ್ಡ ರಸ್ತೆ, Sampangi Rama Nagara, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+        "latitude": 12.97122850357431,
+        "longitude": 77.58438822933415,
+        "timestamp": "2025-06-17T04:40:54.752Z",
+        "address": "Taluk Office, Kempegowda Road, Cubbonpet, Gandhinagar, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
       },
-      "lastUpdated": "2025-06-12T09:59:44.445Z"
+      "lastUpdated": "2025-06-13T08:21:17.340Z"
     },
     {
       "id": "6b1e",
@@ -75,10 +75,10 @@
         }
       ],
       "currentLocation": {
-        "latitude": 12.972948059259464,
-        "longitude": 77.59274949156482,
-        "timestamp": "2025-06-12T09:41:33.149Z",
-        "address": "Sampangirama Nagar, Gandhinagar, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+        "latitude": 12.964354253569049,
+        "longitude": 77.59554324710415,
+        "timestamp": "2025-06-17T04:37:21.928Z",
+        "address": "Woodlands, Sri Ram Mandir Road, Sampangi Rama Nagara, Shanti Nagar, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
       },
       "lastUpdated": "2025-06-12T09:41:33.406Z"
     },
@@ -155,10 +155,10 @@
         "premiumAmount": "1652"
       },
       "currentLocation": {
-        "latitude": 28.7041,
-        "longitude": 77.1025,
-        "timestamp": "2025-06-12T11:30:45.456Z",
-        "address": "New Delhi, Delhi, India"
+        "latitude": 28.703302758351427,
+        "longitude": 77.10271469105481,
+        "timestamp": "2025-06-17T04:51:55.856Z",
+        "address": "Sector 3, Rohini, Rohini Tehsil, North West Delhi, Delhi, 110085, India"
       },
       "lastUpdated": "2025-06-12T11:30:45.456Z"
     },
@@ -274,7 +274,13 @@
           "reason": "fell in river",
           "status": "Pending"
         }
-      ]
+      ],
+      "currentLocation": {
+        "latitude": 12.96996266696826,
+        "longitude": 77.58983877609221,
+        "timestamp": "2025-06-17T04:50:09.903Z",
+        "address": "Unknown location"
+      }
     },
     {
       "id": "h3k7",
@@ -447,7 +453,14 @@
           "reason": "bumper damage",
           "status": "Rejected"
         }
-      ]
+      ],
+      "currentLocation": {
+        "latitude": 12.969554853565063,
+        "longitude": 77.59905854416311,
+        "timestamp": "2025-06-13T10:06:59.893Z",
+        "address": "Bishop Cotton Boys School, Saint Mark's Road, Shanthala Nagar, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+      },
+      "lastUpdated": "2025-06-13T10:07:00.161Z"
     },
     {
       "id": "m8p2",
@@ -514,7 +527,13 @@
           "reason": "major collision",
           "status": "Rejected"
         }
-      ]
+      ],
+      "currentLocation": {
+        "latitude": 12.975076749106497,
+        "longitude": 77.59107133960151,
+        "timestamp": "2025-06-17T06:48:49.076Z",
+        "address": "Cubbon Park Circle, Doctor B R Ambedkar Veedhi, Fair Field Layout, Gandhinagar, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+      }
     },
     {
       "id": "o0r4",
@@ -540,6 +559,12 @@
         "payment": "upi",
         "issueDate": "2024-06-20",
         "premiumAmount": "20000"
+      },
+      "currentLocation": {
+        "latitude": 12.966758199452437,
+        "longitude": 77.59057483735717,
+        "timestamp": "2025-06-17T04:49:05.929Z",
+        "address": "Cross Road, Sampangi Rama Nagara, Shanti Nagar, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
       }
     },
     {
@@ -694,7 +719,13 @@
           "reason": "luxury vehicle damage",
           "status": "Pending"
         }
-      ]
+      ],
+      "currentLocation": {
+        "latitude": 12.976171632927615,
+        "longitude": 77.5899459582894,
+        "timestamp": "2025-06-17T04:47:12.673Z",
+        "address": "Government Secretariat Club - KGSC, Doctor B R Ambedkar Veedhi, Fair Field Layout, Gandhinagar, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+      }
     },
     {
       "id": "u6x0",
@@ -922,6 +953,38 @@
       "owner": "Edison",
       "phone": "9897969594",
       "address": "evm india 123 pin: 695875"
+    },
+    {
+      "id": "fe87",
+      "make": "hummer",
+      "model": "ev",
+      "purchaseDate": "2000-06-13",
+      "registrationNumber": "tj254rhr",
+      "purchasePrice": "48000000",
+      "fuelType": "CNG",
+      "engineNumber": "152535",
+      "chassisNumber": "1525354555",
+      "kilometers": "132000",
+      "color": "red",
+      "owner": "derik",
+      "phone": "7695828458",
+      "address": "erenelmoriaritymukk"
+    },
+    {
+      "id": "01e4",
+      "make": "hyundai",
+      "model": "i10",
+      "purchaseDate": "2002-03-15",
+      "registrationNumber": "ih03ih1212",
+      "purchasePrice": "600000",
+      "fuelType": "Electric",
+      "engineNumber": "789586",
+      "chassisNumber": "4985698758",
+      "kilometers": "165489",
+      "color": "red",
+      "owner": "heb",
+      "phone": "1986597485",
+      "address": "abc"
     }
   ],
   "locationHistory": [
@@ -1052,6 +1115,30 @@
       "longitude": 77.5946,
       "timestamp": "2025-06-13T05:15:02.107Z",
       "address": "St. Joseph's Indian High School, Vittal Mallya Road, D'Souza Layout, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+    },
+    {
+      "id": "loc_1749802877358",
+      "vehicleId": "a4e4",
+      "latitude": 12.969902923936484,
+      "longitude": 77.59556670903353,
+      "timestamp": "2025-06-13T08:21:17.358Z",
+      "address": "St. Joseph's Indian High School, Vittal Mallya Road, D'Souza Layout, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+    },
+    {
+      "id": "loc_1749809217854",
+      "vehicleId": "l7o1",
+      "latitude": 12.9716,
+      "longitude": 77.5946,
+      "timestamp": "2025-06-13T10:06:57.854Z",
+      "address": "St. Joseph's Indian High School, Vittal Mallya Road, D'Souza Layout, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+    },
+    {
+      "id": "loc_1749809220166",
+      "vehicleId": "l7o1",
+      "latitude": 12.969554853565063,
+      "longitude": 77.59905854416311,
+      "timestamp": "2025-06-13T10:07:00.166Z",
+      "address": "Bishop Cotton Boys School, Saint Mark's Road, Shanthala Nagar, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
     }
   ]
 }

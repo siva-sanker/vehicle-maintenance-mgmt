@@ -89,7 +89,8 @@
 }
 .header-span{
     color: #888888;
-    font-size: 14px;;
+    font-size: 14px;
+    width: fit-content;
 }
 .header-icon{
     background-color: white;

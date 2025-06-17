@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import {
@@ -7,14 +9,42 @@ import {
   Calendar,
   Settings,
   User,
-  Plus,
-  CheckCircle
+  Plus
 } from 'lucide-react';
 import { vehicleAPI } from '../services/api';
 import '../styles/registration.css';
 
-const VehicleRegistration = ({ sidebarCollapsed, toggleSidebar }) => {
-  const [formData, setFormData] = useState({
+interface VehicleRegistrationProps {
+  sidebarCollapsed: boolean;
+  toggleSidebar: () => void;
+}
+
+interface FormData {
+  make: string;
+  model: string;
+  purchaseDate: string;
+  registrationNumber: string;
+  purchasePrice: string;
+  fuelType: string;
+  engineNumber: string;
+  chassisNumber: string;
+  kilometers: string;
+  color: string;
+  owner: string;
+  phone: string;
+  address: string;
+}
+
+interface FormErrors {
+  [key: string]: string;
+}
+
+interface FormTouched {
+  [key: string]: boolean;
+}
+
+const VehicleRegistration: React.FC<VehicleRegistrationProps> = ({ sidebarCollapsed, toggleSidebar }) => {
+  const [formData, setFormData] = useState<FormData>({
     make: '',
     model: '',
     purchaseDate: '',
@@ -30,13 +60,12 @@ const VehicleRegistration = ({ sidebarCollapsed, toggleSidebar }) => {
     address: ''
   });
 
-  const [errors, setErrors] = useState({});
-  const [touched, setTouched] = useState({});
-  const [submitted, setSubmitted] = useState(false);
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [touched, setTouched] = useState<FormTouched>({});
   const navigate = useNavigate();
 
   // Validation functions
-  const validateField = (name, value) => {
+  const validateField = (name: string, value: string): string => {
     switch (name) {
       case 'make':
         return value.trim().length < 2 ? 'Make must be at least 2 characters' : '';
@@ -45,9 +74,9 @@ const VehicleRegistration = ({ sidebarCollapsed, toggleSidebar }) => {
       case 'registrationNumber':
         return value.trim().length < 5 ? 'Registration number must be at least 5 characters' : '';
       case 'purchasePrice':
-        return !value || value < 45000 ? 'Purchase price must be at least ₹45,000' : '';
+        return !value || parseFloat(value) < 45000 ? 'Purchase price must be at least ₹45,000' : '';
       case 'kilometers':
-        return !value || value < 0 ? 'Kilometers must be a positive number' : '';
+        return !value || parseFloat(value) < 0 ? 'Kilometers must be a positive number' : '';
       case 'fuelType':
         return !value ? 'Please select a fuel type' : '';
       case 'engineNumber':
@@ -73,7 +102,7 @@ const VehicleRegistration = ({ sidebarCollapsed, toggleSidebar }) => {
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>): void => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
 
@@ -83,7 +112,7 @@ const VehicleRegistration = ({ sidebarCollapsed, toggleSidebar }) => {
     }
   };
 
-  const handleBlur = (e) => {
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>): void => {
     const { name, value } = e.target;
     setTouched(prev => ({ ...prev, [name]: true }));
 
@@ -91,10 +120,10 @@ const VehicleRegistration = ({ sidebarCollapsed, toggleSidebar }) => {
     setErrors(prev => ({ ...prev, [name]: error }));
   };
 
-  const validateForm = () => {
-    const newErrors = {};
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {};
     Object.keys(formData).forEach(key => {
-      const error = validateField(key, formData[key]);
+      const error = validateField(key, formData[key as keyof FormData]);
       if (error) {
         newErrors[key] = error;
       }
@@ -103,18 +132,18 @@ const VehicleRegistration = ({ sidebarCollapsed, toggleSidebar }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
     // Mark all fields as touched
-    const allTouched = {};
+    const allTouched: FormTouched = {};
     Object.keys(formData).forEach(key => {
       allTouched[key] = true;
     });
     setTouched(allTouched);
 
     if (!validateForm()) {
-      alert('Please fix the errors in the form before submitting.');
+      toast.error('Please fix the errors in the form before submitting.');
       return;
     }
 
@@ -122,7 +151,7 @@ const VehicleRegistration = ({ sidebarCollapsed, toggleSidebar }) => {
       const response = await vehicleAPI.createVehicle(formData);
 
       if (response) {
-        setSubmitted(true);
+        toast.success('Vehicle registered successfully!');
         setFormData({
           make: '',
           model: '',
@@ -141,20 +170,20 @@ const VehicleRegistration = ({ sidebarCollapsed, toggleSidebar }) => {
         setErrors({});
         setTouched({});
       } else {
-        alert('Failed to register vehicle.');
+        toast.error('Failed to register vehicle.');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('An error occurred while submitting the form.');
+      toast.error('An error occurred while submitting the form.');
     }
   };
 
-  const getFieldClassName = (fieldName) => {
+  const getFieldClassName = (fieldName: string): string => {
     const baseClass = 'form-input';
     if (touched[fieldName] && errors[fieldName]) {
       return `${baseClass} error`;
     }
-    if (touched[fieldName] && !errors[fieldName] && formData[fieldName]) {
+    if (touched[fieldName] && !errors[fieldName] && formData[fieldName as keyof FormData]) {
       return `${baseClass} valid`;
     }
     return baseClass;
@@ -178,16 +207,6 @@ const VehicleRegistration = ({ sidebarCollapsed, toggleSidebar }) => {
             </button>
           </div>
         </div>
-
-        {submitted && (
-          <div className="success-message">
-            <CheckCircle size={24} />
-            <div>
-              <h3>Vehicle registered successfully!</h3>
-              <p>Your vehicle has been added to the system.</p>
-            </div>
-          </div>
-        )}
 
         <div className="registration-form-container">
           <form onSubmit={handleSubmit} className="registration-form">
@@ -427,7 +446,7 @@ const VehicleRegistration = ({ sidebarCollapsed, toggleSidebar }) => {
                         <textarea
                           name="address"
                           placeholder="Owner Address"
-                          rows="2"
+                          rows={2}
                           value={formData.address}
                           onChange={handleChange}
                           onBlur={handleBlur}
@@ -460,4 +479,4 @@ const VehicleRegistration = ({ sidebarCollapsed, toggleSidebar }) => {
   );
 };
 
-export default VehicleRegistration;
+export default VehicleRegistration; 

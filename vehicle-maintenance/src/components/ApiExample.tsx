@@ -7,16 +7,93 @@ import {
     dashboardAPI
 } from '../services/api';
 
-const ApiExample = () => {
-    const [vehicles, setVehicles] = useState([]);
-    const [maintenance, setMaintenance] = useState([]);
-    const [dashboardStats, setDashboardStats] = useState(null);
-    const [insuredVehicles, setInsuredVehicles] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+// Define interfaces for the data types
+interface Vehicle {
+    id: string;
+    make: string;
+    model: string;
+    registrationNumber: string;
+    purchaseDate: string;
+    purchasePrice: string;
+    fuelType: string;
+    engineNumber: string;
+    chassisNumber: string;
+    kilometers: string;
+    color: string;
+    owner: string;
+    phone: string;
+    address: string;
+    insurance?: {
+        policyNumber: string;
+        insurer: string;
+        policytype: string;
+        startDate: string;
+        endDate: string;
+        payment: string;
+        issueDate: string;
+        premiumAmount: string;
+    };
+}
+
+interface Maintenance {
+    id: string;
+    vehicleId: string;
+    serviceDate: string;
+    serviceType: string;
+    description: string;
+    cost: number;
+    nextServiceDate: string;
+    serviceCenter: string;
+    technician: string;
+    status: string;
+    odometerReading: number;
+}
+
+interface DashboardStats {
+    totalVehicles: number;
+    totalMaintenance: number;
+    totalExpenses: number;
+    insuredVehicles: number;
+}
+
+interface FuelLog {
+    id: string;
+    vehicleId: string;
+    fuelDate: string;
+    fuelType: string;
+    quantity: number;
+    cost: number;
+    odometerReading: number;
+    fuelStation: string;
+    location: string;
+}
+
+interface Expense {
+    id: string;
+    vehicleId: string;
+    expenseDate: string;
+    category: string;
+    description: string;
+    amount: number;
+    paymentMethod: string;
+    receiptNumber: string;
+}
+
+interface ApiExampleProps {
+    sidebarCollapsed?: boolean;
+    toggleSidebar?: () => void;
+}
+
+const ApiExample: React.FC<ApiExampleProps> = ({ sidebarCollapsed, toggleSidebar }) => {
+    const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+    const [maintenance, setMaintenance] = useState<Maintenance[]>([]);
+    const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
+    const [insuredVehicles, setInsuredVehicles] = useState<Vehicle[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
 
     // Example: Fetch all vehicles
-    const fetchVehicles = async () => {
+    const fetchVehicles = async (): Promise<void> => {
         try {
             setLoading(true);
             const data = await vehicleAPI.getAllVehicles();
@@ -31,7 +108,7 @@ const ApiExample = () => {
     };
 
     // Example: Fetch maintenance records
-    const fetchMaintenance = async () => {
+    const fetchMaintenance = async (): Promise<void> => {
         try {
             setLoading(true);
             const data = await maintenanceAPI.getAllMaintenance();
@@ -46,7 +123,7 @@ const ApiExample = () => {
     };
 
     // Example: Fetch dashboard statistics
-    const fetchDashboardStats = async () => {
+    const fetchDashboardStats = async (): Promise<void> => {
         try {
             setLoading(true);
             const stats = await dashboardAPI.getDashboardStats();
@@ -61,8 +138,8 @@ const ApiExample = () => {
     };
 
     // Example: Create a new vehicle
-    const createNewVehicle = async () => {
-        const newVehicle = {
+    const createNewVehicle = async (): Promise<void> => {
+        const newVehicle: Omit<Vehicle, 'id'> = {
             make: "Honda",
             model: "City",
             registrationNumber: "KL01CD1234",
@@ -104,13 +181,13 @@ const ApiExample = () => {
     };
 
     // Example: Add maintenance record
-    const addMaintenanceRecord = async () => {
+    const addMaintenanceRecord = async (): Promise<void> => {
         if (vehicles.length === 0) {
             setError('No vehicles available. Please fetch vehicles first.');
             return;
         }
 
-        const newMaintenance = {
+        const newMaintenance: Omit<Maintenance, 'id'> = {
             vehicleId: vehicles[0].id,
             serviceDate: "2024-12-25",
             serviceType: "Regular Service",
@@ -139,13 +216,13 @@ const ApiExample = () => {
     };
 
     // Example: Add fuel log
-    const addFuelLog = async () => {
+    const addFuelLog = async (): Promise<void> => {
         if (vehicles.length === 0) {
             setError('No vehicles available. Please fetch vehicles first.');
             return;
         }
 
-        const newFuelLog = {
+        const newFuelLog: Omit<FuelLog, 'id'> = {
             vehicleId: vehicles[0].id,
             fuelDate: "2024-12-25",
             fuelType: "Petrol",
@@ -170,13 +247,13 @@ const ApiExample = () => {
     };
 
     // Example: Add expense
-    const addExpense = async () => {
+    const addExpense = async (): Promise<void> => {
         if (vehicles.length === 0) {
             setError('No vehicles available. Please fetch vehicles first.');
             return;
         }
 
-        const newExpense = {
+        const newExpense: Omit<Expense, 'id'> = {
             vehicleId: vehicles[0].id,
             expenseDate: "2024-12-25",
             category: "Maintenance",
@@ -200,7 +277,7 @@ const ApiExample = () => {
     };
 
     // Example: Update vehicle
-    const updateVehicle = async () => {
+    const updateVehicle = async (): Promise<void> => {
         if (vehicles.length === 0) {
             setError('No vehicles available. Please fetch vehicles first.');
             return;
@@ -224,7 +301,7 @@ const ApiExample = () => {
     };
 
     // Example: Get vehicles with insurance
-    const getVehiclesWithInsurance = async () => {
+    const getVehiclesWithInsurance = async (): Promise<void> => {
         try {
             setLoading(true);
             const insuredVehicles = await vehicleAPI.getVehiclesWithInsurance();
@@ -240,7 +317,7 @@ const ApiExample = () => {
     };
 
     // Example: Get monthly expenses
-    const getMonthlyExpenses = async () => {
+    const getMonthlyExpenses = async (): Promise<void> => {
         try {
             setLoading(true);
             const monthlyExpenses = await dashboardAPI.getMonthlyExpenses(2024, 12);
@@ -401,14 +478,9 @@ const ApiExample = () => {
                             <h3>Current Stats</h3>
                             <div style={{ fontSize: '14px' }}>
                                 <div>Total Vehicles: {dashboardStats.totalVehicles}</div>
-                                <div>With Insurance: {dashboardStats.vehiclesWithInsurance}</div>
-                                <div>Without Insurance: {dashboardStats.vehiclesWithoutInsurance}</div>
-                                <div>Total Maintenance Cost: ₹{dashboardStats.totalMaintenanceCost}</div>
+                                <div>With Insurance: {dashboardStats.insuredVehicles}</div>
+                                <div>Total Maintenance: {dashboardStats.totalMaintenance}</div>
                                 <div>Total Expenses: ₹{dashboardStats.totalExpenses}</div>
-                                <div>Total Fuel Cost: ₹{dashboardStats.totalFuelCost}</div>
-                                <div>Total Cost: ₹{dashboardStats.totalCost}</div>
-                                <div>Upcoming Services: {dashboardStats.upcomingServicesCount}</div>
-                                <div>High Priority Services: {dashboardStats.highPriorityServicesCount}</div>
                             </div>
                         </div>
                     )}
