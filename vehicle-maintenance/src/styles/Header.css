@@ -22,8 +22,8 @@
 /* Sidebar Toggle Button */
 .sidebar-toggle-btn {
     background: none;
-    border: 1px solid #dee2e6;
-    color: #0d92ae;
+    /* border: 1px solid #dee2e6; */
+    /* color: #0d92ae; */
     cursor: pointer;
     padding: 8px;
     border-radius: 4px;
@@ -32,18 +32,10 @@
     justify-content: center;
     transition: all 0.3s ease;
 }
-
-.sidebar-toggle-btn:hover {
-    background-color: #0d92ae;
-    color: white;
-    border-color: #0d92ae;
-    transform: scale(1.05);
+.sidebar-toggle-btn:hover{
+    border: none;
 }
 
-.sidebar-toggle-btn:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(13, 146, 174, 0.3);
-}
 
 /* Header Div with Icons */
 .header-div {

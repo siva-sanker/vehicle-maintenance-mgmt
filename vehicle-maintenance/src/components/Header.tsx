@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/Header.css';
-import { ChevronLeftIcon, ChevronRightIcon } from '@primer/octicons-react';
+// import { ChevronLeftIcon, ChevronRightIcon } from '@primer/octicons-react';
+import leftarrow from '../assets/lefthand.png';
+import rightarrow from '../assets/righthand.png';
 import { Calendar, Clock, Calculator } from 'lucide-react';
 
 interface HeaderProps {
@@ -41,7 +43,7 @@ const Header: React.FC<HeaderProps> = ({ sidebarCollapsed, toggleSidebar }) => {
                 onClick={toggleSidebar}
                 title={sidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
             >
-                {sidebarCollapsed ? <ChevronRightIcon size={20} /> : <ChevronLeftIcon size={20} />}
+                {sidebarCollapsed ? <img src={rightarrow} alt="leftarrow" /> : <img src={leftarrow} alt="rightarrow" />}
             </button>
             <h1></h1>
             <div className="header-div ">
