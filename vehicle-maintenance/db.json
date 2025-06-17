@@ -34,10 +34,10 @@
         }
       ],
       "currentLocation": {
-        "latitude": 12.97122850357431,
-        "longitude": 77.58438822933415,
-        "timestamp": "2025-06-17T04:40:54.752Z",
-        "address": "Taluk Office, Kempegowda Road, Cubbonpet, Gandhinagar, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+        "latitude": 12.975054416461083,
+        "longitude": 77.58935635548296,
+        "timestamp": "2025-06-17T10:19:18.148Z",
+        "address": "Gandhinagar, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
       },
       "lastUpdated": "2025-06-13T08:21:17.340Z"
     },
@@ -620,12 +620,21 @@
         "policyNumber": "654789",
         "insurer": "ICICI Lombard",
         "policytype": "Comprehensive",
-        "startDate": "2024-12-01",
-        "endDate": "2025-11-30",
-        "payment": "bank account",
-        "issueDate": "2024-11-20",
-        "premiumAmount": "45000"
-      }
+        "startDate": "2025-07-02",
+        "endDate": "2026-12-16",
+        "payment": "card",
+        "issueDate": "2025-06-01",
+        "premiumAmount": "45000",
+        "hasInsurance": true
+      },
+      "claims": [
+        {
+          "claimDate": "2025-06-18",
+          "claimAmount": "123",
+          "reason": "12d",
+          "status": "Pending"
+        }
+      ]
     },
     {
       "id": "r3u7",
@@ -984,7 +993,42 @@
       "color": "red",
       "owner": "heb",
       "phone": "1986597485",
-      "address": "abc"
+      "address": "abc",
+      "insurance": {
+        "policyNumber": "552535",
+        "insurer": "tata",
+        "policytype": "Third Party",
+        "startDate": "2025-06-18",
+        "endDate": "2026-06-09",
+        "payment": "cash",
+        "issueDate": "2025-06-02",
+        "premiumAmount": "3698",
+        "hasInsurance": true
+      },
+      "claims": [
+        {
+          "claimDate": "2025-06-18",
+          "claimAmount": "123",
+          "reason": "eee",
+          "status": "Pending"
+        }
+      ]
+    },
+    {
+      "id": "9be8",
+      "make": "neoq",
+      "model": "i5",
+      "purchaseDate": "2000-01-10",
+      "registrationNumber": "32423",
+      "purchasePrice": "253232",
+      "fuelType": "Electric",
+      "engineNumber": "124222",
+      "chassisNumber": "12491049110",
+      "kilometers": "7887",
+      "color": "dsaf",
+      "owner": "SI",
+      "phone": "1236985478",
+      "address": "DSFS"
     }
   ],
   "locationHistory": [
@@ -1139,6 +1183,31 @@
       "longitude": 77.59905854416311,
       "timestamp": "2025-06-13T10:07:00.166Z",
       "address": "Bishop Cotton Boys School, Saint Mark's Road, Shanthala Nagar, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+    }
+  ],
+  "drivers": [
+    {
+      "id": "d1",
+      "name": "John Doe",
+      "licenseNumber": "DL1234567890",
+      "phone": "9876543210",
+      "address": "123 Main St, City, State",
+      "assignedVehicleIds": [
+        "a4e4",
+        "6b1e"
+      ]
+    },
+    {
+      "id": "1d2d",
+      "name": "shibu",
+      "licenseNumber": "123914912",
+      "phone": "09873048170",
+      "address": "abcd",
+      "assignedVehicleIds": [
+        "d9g3",
+        "6b1e",
+        "a4e4"
+      ]
     }
   ]
 }

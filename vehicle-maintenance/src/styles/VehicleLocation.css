@@ -16,7 +16,7 @@ body {
 .vehicle-location-container {
     min-height: 100vh;
     background-color: #d9e0e7;
-    padding: 2rem;
+    /* padding: 2rem; */
 }
 
 /* Loading State */

@@ -86,12 +86,22 @@ interface DashboardStats {
     highPriorityServicesCount: number;
 }
 
+// Driver type definition
+interface Driver {
+    id: string;
+    name: string;
+    licenseNumber: string;
+    phone: string;
+    address: string;
+    assignedVehicleIds: string[];
+}
+
 // Configuration for different environments
 const getBaseURL = (): string => {
     // Check if we're in development or production
     if (import.meta.env.DEV) {
         // In development, use network IP for cross-system access
-        return 'http://localhost:4000';
+        return 'http://192.168.50.137:4000';
     } else {
         // In production, use the actual server URL
         // You can set this via environment variable
@@ -338,5 +348,23 @@ export const dashboardAPI = {
     getMonthlyExpenses: (year: number, month: number): Promise<Expense[]> => api.get<Expense[]>(`/expenses?year=${year}&month=${month}`),
 };
 
+// Driver API methods
+export const driverAPI = {
+    // Get all drivers
+    getAllDrivers: (): Promise<Driver[]> => api.get<Driver[]>('/drivers'),
+
+    // Get driver by ID
+    getDriverById: (id: string): Promise<Driver> => api.get<Driver>(`/drivers/${id}`),
+
+    // Create new driver
+    createDriver: (driverData: Omit<Driver, 'id'>): Promise<Driver> => api.post<Driver>('/drivers', driverData),
+
+    // Update driver
+    updateDriver: (id: string, driverData: Partial<Driver>): Promise<Driver> => api.put<Driver>(`/drivers/${id}`, driverData),
+
+    // Delete driver
+    deleteDriver: (id: string): Promise<void> => api.delete<void>(`/drivers/${id}`),
+};
+
 // Export types for use in other files
-export type { Vehicle, Maintenance, FuelLog, Expense, DashboardStats };
+export type { Vehicle, Maintenance, FuelLog, Expense, DashboardStats, Driver };

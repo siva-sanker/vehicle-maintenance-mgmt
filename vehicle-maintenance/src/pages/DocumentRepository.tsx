@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FileText, Upload, Eye } from 'lucide-react';
 import '../styles/Documentrepo.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { vehicleAPI, Vehicle } from '../services/api';
 
 interface DocumentRepositoryProps {
   sidebarCollapsed: boolean;
@@ -31,11 +32,17 @@ const DocumentRepository: React.FC<DocumentRepositoryProps> = ({ sidebarCollapse
     "Registration PDF": [],
     "Pollution PDF": []
   });
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [selectedVehicleId, setSelectedVehicleId] = useState<string>('');
 
   const categories = ["Driver's License", "Insurance PDF", "Registration PDF", "Pollution PDF"];
 
+  useEffect(() => {
+    vehicleAPI.getAllVehicles().then(setVehicles).catch(() => setVehicles([]));
+  }, []);
+
   const handleUpload = (): void => {
-    if (!selectedFile || !category || !customName.trim()) {
+    if (!selectedFile || !category || !customName.trim() || !selectedVehicleId) {
       alert('Please fill in all fields.');
       return;
     }
@@ -80,6 +87,22 @@ const DocumentRepository: React.FC<DocumentRepositoryProps> = ({ sidebarCollapse
           </div>
 
           <form className="upload-form">
+            <div className="form-group">
+              <label>Select Vehicle</label>
+              <select
+                value={selectedVehicleId}
+                onChange={e => setSelectedVehicleId(e.target.value)}
+                required
+              >
+                <option value="" disabled>Choose Vehicle...</option>
+                {vehicles.map((v) => (
+                  <option key={v.id} value={v.id} className='text-uppercase'>
+                    {v.registrationNumber} - {v.make} {v.model}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             <div className="form-group">
               <label>
                 Upload PDF

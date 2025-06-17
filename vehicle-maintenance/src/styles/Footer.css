@@ -12,12 +12,15 @@
 }
 
 .footer-left {
+    width: fit-content;
     display: flex;
     align-items: center;
     gap: 10px;
     flex: 1;
 }
-
+span{
+    width: fit-content;
+}
 .footer-right {
     display: flex;
     align-items: center;

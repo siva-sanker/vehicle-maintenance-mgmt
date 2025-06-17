@@ -459,7 +459,12 @@ const VehicleRegistration: React.FC<VehicleRegistrationProps> = ({ sidebarCollap
                     </div>
 
                     <div className="form-actions">
-                      <button type="button" className="btn-secondary" onClick={() => navigate('/dashboard')}>
+                      <button
+                        type="button"
+                        className="btn-primary"
+                        style={{ backgroundColor: '#e53935', borderColor: '#e53935' }}
+                        onClick={() => navigate('/dashboard')}
+                      >
                         Cancel
                       </button>
                       <button type="submit" className="btn-primary">

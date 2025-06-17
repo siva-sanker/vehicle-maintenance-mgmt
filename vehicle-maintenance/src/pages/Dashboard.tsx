@@ -366,19 +366,19 @@ const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed, toggleSidebar }
         <div className="quick-actions">
           <h3>Quick Actions</h3>
           <div className="action-buttons">
-            <button onClick={() => navigate('/register-vehicle')} className="action-btn">
+            <button onClick={() => navigate('/register-vehicle')} className="action-card">
               <Car size={20} />
               Register Vehicle
             </button>
-            <button onClick={() => navigate('/vehicle-list')} className="action-btn">
+            <button onClick={() => navigate('/vehicle-list')} className="action-card">
               <FileText size={20} />
               View Vehicles
             </button>
-            <button onClick={() => navigate('/claims')} className="action-btn">
+            <button onClick={() => navigate('/claims')} className="action-card">
               <AlertTriangle size={20} />
               Manage Claims
             </button>
-            <button onClick={() => navigate('/insurance')} className="action-btn">
+            <button onClick={() => navigate('/insurance')} className="action-card">
               <Shield size={20} />
               Insurance
             </button>

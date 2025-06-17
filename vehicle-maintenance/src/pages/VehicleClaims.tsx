@@ -236,27 +236,27 @@ const VehicleClaims: React.FC<VehicleClaimsProps> = ({ sidebarCollapsed, toggleS
     }
   };
 
-  const getStatusIcon = (status: string): JSX.Element => {
-    switch (status.toLowerCase()) {
-      case 'approved':
-        return <CheckCircle size={16} className="status-icon approved" />;
-      case 'rejected':
-        return <XCircle size={16} className="status-icon rejected" />;
-      default:
-        return <AlertTriangle size={16} className="status-icon pending" />;
-    }
-  };
+  // const getStatusIcon = (status: string): JSX.Element => {
+  //   switch (status.toLowerCase()) {
+  //     case 'approved':
+  //       return <CheckCircle size={16} className="status-icon approved" />;
+  //     case 'rejected':
+  //       return <XCircle size={16} className="status-icon rejected" />;
+  //     default:
+  //       return <AlertTriangle size={16} className="status-icon pending" />;
+  //   }
+  // };
 
-  const getStatusClass = (status: string): string => {
-    switch (status.toLowerCase()) {
-      case 'approved':
-        return 'status-approved';
-      case 'rejected':
-        return 'status-rejected';
-      default:
-        return 'status-pending';
-    }
-  };
+  // const getStatusClass = (status: string): string => {
+  //   switch (status.toLowerCase()) {
+  //     case 'approved':
+  //       return 'status-approved';
+  //     case 'rejected':
+  //       return 'status-rejected';
+  //     default:
+  //       return 'status-pending';
+  //   }
+  // };
 
   return (
     <>
@@ -407,7 +407,7 @@ const VehicleClaims: React.FC<VehicleClaimsProps> = ({ sidebarCollapsed, toggleS
                           <th>Date</th>
                           <th>Amount</th>
                           <th>Reason</th>
-                          <th>Status</th>
+                          {/* <th>Status</th> */}
                         </tr>
                       </thead>
                       <tbody>
@@ -420,7 +420,7 @@ const VehicleClaims: React.FC<VehicleClaimsProps> = ({ sidebarCollapsed, toggleS
                             <td>{claim.claimDate}</td>
                             <td className="amount-cell">₹{claim.claimAmount}</td>
                             <td className="reason-cell">{claim.reason}</td>
-                            <td>
+                            {/* <td>
                               <div className="status-actions">
                                 <span className={`status-badge ${getStatusClass(claim.status)}`}>
                                   {getStatusIcon(claim.status)}
@@ -443,7 +443,7 @@ const VehicleClaims: React.FC<VehicleClaimsProps> = ({ sidebarCollapsed, toggleS
                                   </button>
                                 </div>
                               </div>
-                            </td>
+                            </td> */}
                           </tr>
                         ))}
                       </tbody>

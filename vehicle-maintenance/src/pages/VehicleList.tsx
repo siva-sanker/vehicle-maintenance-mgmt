@@ -141,9 +141,9 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    if (fieldName === 'Start Date' && selectedDate < today) {
-      return 'Start date cannot be in the past';
-    }
+    // if (fieldName === 'Start Date' && selectedDate < today) {
+    //   return 'Start date cannot be in the past';
+    // }
     if (fieldName === 'Issue Date' && selectedDate > today) {
       return 'Issue date cannot be in the future';
     }
@@ -187,7 +187,7 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
     errors.policyNumber = validatePolicyNumber(insuranceData.policyNumber);
     errors.insurer = validateInsurer(insuranceData.insurer);
     errors.policytype = validatePolicyType(insuranceData.policytype);
-    errors.startDate = validateDate(insuranceData.startDate, 'Start Date');
+    // errors.startDate = validateDate(insuranceData.startDate, 'Start Date');
     errors.endDate = validateEndDate(insuranceData.endDate, insuranceData.startDate);
     errors.issueDate = validateDate(insuranceData.issueDate, 'Issue Date');
     errors.premiumAmount = validatePremiumAmount(insuranceData.premiumAmount);
@@ -536,7 +536,7 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
   <div className="modal-overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
     <div className="vehicle-details-modal">
       <div className="modal-header">
-        <span className="modal-title">
+        <span className="modal-title text-capitalize">
           Vehicle Details - {selectedVehicle.make} {selectedVehicle.model}
         </span>
         <button className="modal-close" onClick={() => setShowDetailsModal(false)}>×</button>
@@ -544,8 +544,8 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
       <div className="vehicle-details-card">
         <div className="vehicle-details-top">
           <div>
-            <h3 className="vehicle-name">{selectedVehicle.make} {selectedVehicle.model}</h3>
-            <div className="vehicle-reg">{selectedVehicle.registrationNumber}</div>
+            <h3 className="vehicle-name text-capitalize">{selectedVehicle.make} {selectedVehicle.model}</h3>
+            <div className="vehicle-reg text-uppercase">{selectedVehicle.registrationNumber}</div>
           </div>
           <span className="year-badge">{new Date(selectedVehicle.purchaseDate).getFullYear()}</span>
         </div>
@@ -585,7 +585,7 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
           <div className="info-grid">
             <div>
               <span className="info-label">Owner:</span>
-              <span>{selectedVehicle.owner}</span>
+              <span className="text-capitalize">{selectedVehicle.owner}</span>
             </div>
             <div>
               <span className="info-label">Phone:</span>

@@ -10,7 +10,7 @@
 .vehicle-list-container {
   min-height: 100vh;
   /* background-color: #d9e0e7; */
-  padding: 2rem;
+  /* padding: 2rem; */
 }
 
 /* Header */
@@ -483,8 +483,9 @@
 
 /* Fuel Badge */
 .fuel-badge {
+  width: fit-content;
   display: inline-block;
-  padding: 0.25rem 0.75rem;
+  padding: 0.25rem;
   border-radius: 4px;
   font-size: 0.8rem;
   font-weight: 600;
@@ -1031,7 +1032,7 @@ span {
 .vehicle-details-modal {
   background: #fff;
   border-radius: 12px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
   padding: 0;
   width: 500px;
   max-width: 95vw;
@@ -1102,6 +1103,7 @@ span {
   cursor: pointer;
   transition: background 0.2s;
 }
+
 .btn-outline:hover {
   background: #e3f2fd;
 }
@@ -1131,4 +1133,8 @@ span {
   font-size: 28px;
   cursor: pointer;
   color: #888;
+}
+
+.vehicle-details-modal span{
+  width: fit-content;
 }

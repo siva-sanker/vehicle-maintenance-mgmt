@@ -12,6 +12,7 @@ import DocumentRepository from './pages/DocumentRepository.tsx';
 import VehicleClaims from './pages/VehicleClaims.tsx';
 import VehicleLocation from './pages/VehicleLocation.tsx';
 import ApiExample from './components/ApiExample.tsx';
+import Driver from './pages/Driver.tsx';
 
 // Define the props interface for components that receive sidebar props
 interface SidebarProps {
@@ -45,6 +46,7 @@ const App: React.FC = () => {
               <Route path="/claims" element={<VehicleClaims sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />} />
               <Route path="/location" element={<VehicleLocation sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />} />
               <Route path="/api" element={<ApiExample sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />} />
+              <Route path="/driver" element={<Driver sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />} />
             </Routes>
           </div>
         </div>

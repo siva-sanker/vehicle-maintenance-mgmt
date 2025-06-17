@@ -10,6 +10,7 @@ import '../styles/Sidebar.css';
 // import { LocationIcon } from '@primer/octicons-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons';
+import logo from '../assets/logo.png';
 
 interface SideBarProps {
   collapsed?: boolean;
@@ -18,93 +19,124 @@ interface SideBarProps {
 const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
   return (
     <div className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
+      <div className="sidebar-content">
+        <div className="sidebar-profile">
+          <img src={logo} alt="" />
+        </div>
+          <h2>system admin</h2>
+          <p>hodo hospital</p>
+          <p>kazhakootam</p>
+          <p>system admin</p>
+      </div>
       <nav>
         <ul>
-          {!collapsed && <li className="sidebar-title">Vehicle Maintenance</li>}
-          <li>
+          <li className="sidebar-title">
             <NavLink
               to="/dashboard"
               className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
-              title={collapsed ? "Dashboard" : ""}
+              title="Vehicle Management"
             >
-              <span>
-                <FontAwesomeIcon icon={faCaretRight} />
-              </span>
-              {!collapsed && "Dashboard"}
+              Vehicle Management
             </NavLink>
           </li>
-          <li>
-            <NavLink
-              to="/register-vehicle"
-              className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
-              title={collapsed ? "Vehicle Registration" : ""}
-            >
-              <span>
-                <FontAwesomeIcon icon={faCaretRight} />
-              </span>
-              {!collapsed && "Vehicle Registration"}
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/vehicle-list"
-              className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
-              title={collapsed ? "Vehicle List" : ""}
-            >
-              <span>
-                <FontAwesomeIcon icon={faCaretRight} />
-              </span>
-              {!collapsed && "Vehicle List"}
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/insurance"
-              className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
-              title={collapsed ? "Insurance Management" : ""}
-            >
-              <span>
-                <FontAwesomeIcon icon={faCaretRight} />
-              </span>
-              {!collapsed && "Insurance Management"}
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/documents"
-              className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
-              title={collapsed ? "Document Repository" : ""}
-            >
-              <span>
-                <FontAwesomeIcon icon={faCaretRight} />
-              </span>
-              {!collapsed && "Document Repository"}
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/claims"
-              className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
-              title={collapsed ? "Claims" : ""}
-            >
-              <span>
-                <FontAwesomeIcon icon={faCaretRight} />
-              </span>
-              {!collapsed && "Claims"}
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/location"
-              className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
-              title={collapsed ? "Vehicle Location" : ""}
-            >
-              <span>
-                <FontAwesomeIcon icon={faCaretRight} />
-              </span>
-              {!collapsed && "Vehicle Location"}
-            </NavLink>
-          </li>
+          <ul className="sidebar-sublist">
+            <li>
+              <NavLink
+                to="/dashboard"
+                className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
+                title={collapsed ? "Dashboard" : ""}
+              >
+                <span>
+                  <FontAwesomeIcon icon={faCaretRight} />
+                </span>
+                {!collapsed && "Dashboard"}
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/register-vehicle"
+                className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
+                title={collapsed ? "Vehicle Registration" : ""}
+              >
+                <span>
+                  <FontAwesomeIcon icon={faCaretRight} />
+                </span>
+                {!collapsed && "Vehicle Registration"}
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/vehicle-list"
+                className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
+                title={collapsed ? "Vehicle List" : ""}
+              >
+                <span>
+                  <FontAwesomeIcon icon={faCaretRight} />
+                </span>
+                {!collapsed && "Vehicle List"}
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/insurance"
+                className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
+                title={collapsed ? "Insurance Management" : ""}
+              >
+                <span>
+                  <FontAwesomeIcon icon={faCaretRight} />
+                </span>
+                {!collapsed && "Insurance Management"}
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/documents"
+                className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
+                title={collapsed ? "Document Repository" : ""}
+              >
+                <span>
+                  <FontAwesomeIcon icon={faCaretRight} />
+                </span>
+                {!collapsed && "Document Repository"}
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/claims"
+                className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
+                title={collapsed ? "Claims" : ""}
+              >
+                <span>
+                  <FontAwesomeIcon icon={faCaretRight} />
+                </span>
+                {!collapsed && "Claims"}
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/location"
+                className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
+                title={collapsed ? "Vehicle Location" : ""}
+              >
+                <span>
+                  <FontAwesomeIcon icon={faCaretRight} />
+                </span>
+                {!collapsed && "Vehicle Location"}
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/driver"
+                className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
+                title={collapsed ? "Driver Management" : ""}
+              >
+                <span>
+                  <FontAwesomeIcon icon={faCaretRight} />
+                </span>
+                {!collapsed && "Driver Management"}
+              </NavLink>
+            </li>
+          </ul>
         </ul>
       </nav>
     </div>
