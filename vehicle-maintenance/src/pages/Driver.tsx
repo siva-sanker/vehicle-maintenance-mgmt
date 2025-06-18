@@ -178,7 +178,7 @@ const DriverPage: React.FC<DriverProps> = ({ sidebarCollapsed, toggleSidebar }) 
         {showModal && (
           <div className="modal-overlay" style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(0,0,0,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
             <div className="modal" style={{ background: '#fff', padding: 24, borderRadius: 8, minWidth: 350, maxWidth: 400 }}>
-              <h2>{editDriver ? 'Edit Driver' : 'Add Driver'}</h2>
+              <h2 style={{border:"none"}}>{editDriver ? 'Edit Driver' : 'Add Driver'}</h2>
               <form onSubmit={handleSubmit}>
                 <div style={{ marginBottom: 12 }}>
                   <label>Name*</label>

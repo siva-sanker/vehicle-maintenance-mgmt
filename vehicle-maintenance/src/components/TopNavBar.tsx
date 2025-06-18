@@ -17,11 +17,51 @@ const TopNavBar: React.FC = () => {
         </button>
         <div className={`nav-links-container${menuOpen ? ' open' : ''}`}>
           <ul className="nav-list2">
-            <li className='nav-link'><NavLink to="/dashboard" className={({ isActive }) => isActive ? 'active' : ''}>Dashboard</NavLink></li>
-            <li className='nav-link'><NavLink to="/insurance" className={({ isActive }) => isActive ? 'active' : ''}>Billing</NavLink></li>
-            <li className='nav-link'><NavLink to="/documents" className={({ isActive }) => isActive ? 'active' : ''}>Pharmacy</NavLink></li>
-            <li className='nav-link'><NavLink to="/documents" className={({ isActive }) => isActive ? 'active' : ''}>Appointments</NavLink></li>
-            <li className='nav-link'><NavLink to="/documents" className={({ isActive }) => isActive ? 'active' : ''}>More</NavLink></li>
+            <li className='nav-link'>
+              <NavLink
+                to="/dashboard"
+                className={({ isActive }) => isActive ? 'active' : ''}
+                style={{ fontSize: '14px', fontWeight: 200 }}
+              >
+                Dashboard
+              </NavLink>
+            </li>
+            <li className='nav-link'>
+              <NavLink
+                to="/insurance"
+                className={({ isActive }) => isActive ? 'active' : ''}
+                style={{ fontSize: '14px', fontWeight: 200 }}
+              >
+                Billing
+              </NavLink>
+            </li>
+            <li className='nav-link'>
+              <NavLink
+                to="/documents"
+                className={({ isActive }) => isActive ? 'active' : ''}
+                style={{ fontSize: '14px', fontWeight: 200 }}
+              >
+                Pharmacy
+              </NavLink>
+            </li>
+            <li className='nav-link'>
+              <NavLink
+                to="/documents"
+                className={({ isActive }) => isActive ? 'active' : ''}
+                style={{ fontSize: '14px', fontWeight: 200 }}
+              >
+                Appointments
+              </NavLink>
+            </li>
+            <li className='dropdown'>
+              <NavLink
+                to="/documents"
+                className={({ isActive }) => isActive ? 'active' : ''}
+                style={{ fontSize: '14px', fontWeight: 200 }}
+              >
+                More <i className="fas fa-caret-down"></i>
+              </NavLink>
+            </li>
           </ul>
         </div>
       </div>

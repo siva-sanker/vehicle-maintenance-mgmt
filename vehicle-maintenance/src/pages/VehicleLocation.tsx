@@ -238,20 +238,23 @@ const VehicleLocation: React.FC<VehicleLocationProps> = ({ sidebarCollapsed, tog
 
   if (loading) {
     return (
+      <>
+      <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />
       <div className="vehicle-location-container">
-        <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />
         <div className="loading-container">
           <div className="loading-spinner"></div>
           <p>Loading vehicle locations...</p>
         </div>
         <Footer />
       </div>
+      </>
     );
   }
 
   return (
+    <>
+    <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />
     <div className="vehicle-location-container">
-      <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />
       
       {/* Header */}
       <div className="vehicle-location-header">
@@ -423,6 +426,7 @@ const VehicleLocation: React.FC<VehicleLocationProps> = ({ sidebarCollapsed, tog
 
       <Footer />
     </div>
+    </>
   );
 };
 

@@ -10,7 +10,8 @@ import '../styles/Sidebar.css';
 // import { LocationIcon } from '@primer/octicons-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons';
-import logo from '../assets/logo.png';
+// import logo from '../assets/logo.png';
+import sidebarLogo from '../assets/sidebar-logo.jpg';
 
 interface SideBarProps {
   collapsed?: boolean;
@@ -20,13 +21,23 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
   return (
     <div className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
       <div className="sidebar-content">
-        <div className="sidebar-profile">
-          <img src={logo} alt="" />
+        <div className="sidebar-top">
+          <a href="" className={`sidebar-profile ${collapsed ? 'collapsed': '' }`}>
+            <img src={sidebarLogo} alt="" />
+          </a>
+          <div className="sidebar-text">
+            <h6 className='sidebar-heading'>System Admin</h6>
+            <h4 className='sidebar-para'>HODO Hospital,</h4>
+            <p className='sidebar-para'>Kazhakkottam</p>
+            <p className='sidebar-para2'>System Admin</p>
+          </div>
         </div>
-          <h2>system admin</h2>
-          <p>hodo hospital</p>
-          <p>kazhakootam</p>
-          <p>system admin</p>
+        <div className={`searchbar ${collapsed ? 'collapsed': '' }`}>
+          <div className="sidebar-date">
+            <h6 className="sidebar-date-heading">@Anchal {new Date().toLocaleDateString()}</h6>
+          </div>
+          <input type="text" className="searchbar" placeholder="Search Menu- Ctrl + M"/>
+        </div>
       </div>
       <nav>
         <ul>

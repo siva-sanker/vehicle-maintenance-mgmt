@@ -9,8 +9,11 @@
 /* Vehicle List Container */
 .vehicle-list-container {
   min-height: 100vh;
-  /* background-color: #d9e0e7; */
-  /* padding: 2rem; */
+  background-color: white;
+  border-top: 5px solid #0d92ae;
+  padding: 2rem;
+  margin-left: 25px;
+  margin-right: 25px;
 }
 
 /* Header */
@@ -22,7 +25,7 @@
   padding: 2rem;
   background-color: white;
   border: 1px solid white;
-  border-top: 5px solid #0d92ae;
+  border-left: 5px solid #0d92ae;
   border-radius: 4px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
@@ -54,8 +57,25 @@
 
 .header-actions {
   display: flex;
-  gap: 1rem;
+  flex-direction: row;
   align-items: center;
+  gap: 1rem;
+}
+
+.header-actions .btn {
+  flex-shrink: 0;
+  margin-top: 10px;
+}
+
+.header-actions .search-wrapper {
+  flex: 1;
+  min-width: 200px;
+}
+
+.header-actions .search-input {
+  width: 100%;
+  min-width: 120px;
+  max-width: 350px;
 }
 
 .btn-primary {
@@ -147,7 +167,7 @@
 }
 
 .search-input {
-  padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+  padding: 1rem 1.15rem 1rem 3rem !important;
   border: 1px solid #dee2e6;
   border-radius: 4px;
   font-size: 14px;
@@ -1135,6 +1155,24 @@ span {
   color: #888;
 }
 
-.vehicle-details-modal span{
+.vehicle-details-modal span {
   width: fit-content;
+}
+
+@media (max-width: 600px) {
+  .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .header-actions .search-wrapper {
+    width: 100%;
+  }
+
+  .header-actions .search-input {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
 }

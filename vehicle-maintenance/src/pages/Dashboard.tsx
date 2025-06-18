@@ -385,9 +385,8 @@ const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed, toggleSidebar }
           </div>
         </div>
       </div>
-
-      <Footer />
     </div>
+      <Footer />
     </>
   );
 };

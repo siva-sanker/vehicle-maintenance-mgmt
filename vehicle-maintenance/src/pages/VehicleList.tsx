@@ -384,7 +384,7 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
             <p className="page-subtitle">Manage and view all your registered vehicles</p>
           </div>
           <div className="header-actions">
-            <button className="btn-primary" onClick={() => navigate('/register-vehicle')}>
+            <button className="btn btn-primary" onClick={() => navigate('/register-vehicle')}>
               <Plus size={16} />
               Add Vehicle
             </button>

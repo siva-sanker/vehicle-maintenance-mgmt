@@ -8,19 +8,23 @@
 
 .driver-page {
     min-height: 100vh;
-    /* background-color: #f4f7fa; */
-    /* padding: 2rem 0; */
+    background-color: white;
+    border-top: 5px solid #0d92ae;
+    padding: 2rem;
+    margin-left: 25px;
+    margin-right: 25px;
 }
 
 .driver-header {
     display: flex;
     justify-content: space-between;
+    color: #0d92ae;
     align-items: center;
     margin-bottom: 2rem;
     padding: 2rem;
     background-color: white;
     border: 1px solid white;
-    border-top: 5px solid #0d92ae;
+    border-left: 5px solid #0d92ae;
     border-radius: 4px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     width: 100%;

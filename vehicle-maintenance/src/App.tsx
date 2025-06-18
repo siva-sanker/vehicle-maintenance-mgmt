@@ -15,10 +15,10 @@ import ApiExample from './components/ApiExample.tsx';
 import Driver from './pages/Driver.tsx';
 
 // Define the props interface for components that receive sidebar props
-interface SidebarProps {
-  sidebarCollapsed: boolean;
-  toggleSidebar: () => void;
-}
+// interface SidebarProps {
+//   sidebarCollapsed: boolean;
+//   toggleSidebar: () => void;
+// }
 
 const App: React.FC = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
