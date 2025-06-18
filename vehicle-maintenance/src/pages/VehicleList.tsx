@@ -389,7 +389,8 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
               Add Vehicle
             </button>
             <div className="search-wrapper">
-              <Search className="search-icon" size={20} />
+              {/* <Search className="search-icon" size={20} /> */}
+              <i className="search-icon fa-solid fa-magnifying-glass"></i>
               <input
                 type="search"
                 name="search"

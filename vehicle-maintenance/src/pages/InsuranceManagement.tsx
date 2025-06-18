@@ -116,7 +116,8 @@ const InsuranceManagement: React.FC<InsuranceManagementProps> = ({ sidebarCollap
           </div>
           <div className="header-actions">
             <div className="search-container">
-              <Search className="search-icon" size={20} />
+              {/* <Search className="search-icon" size={20} /> */}
+              <i className="search-icon fa-solid fa-magnifying-glass"></i>
               <input
                 type="search"
                 name="searchVehicle"

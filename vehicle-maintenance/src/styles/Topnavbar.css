@@ -60,13 +60,18 @@
   padding-right: 8px;
   padding-top: 4px;
 }
-
+.nav-links-container{
+  margin: 0;
+  margin-left: -4px;
+  padding: 0;
+  /* border: 1px solid white; */
+}
 .nav-list2 {
   display: flex;
   list-style-type: none;
   margin: 0;
   padding: 0;
-  gap: 10px;
+  gap: 5px;
   align-items: center;
   margin-left: 0px;
   /* Add some space from the logo */
@@ -229,7 +234,8 @@
     align-items: flex-start;
     justify-content: flex-start;
     gap: 0;
-    padding: 1rem 0 0 0;
+    /* border: 5px solid yellow !important; */
+    padding: 2rem 0 0 0;
   }
 
   .navItem img {

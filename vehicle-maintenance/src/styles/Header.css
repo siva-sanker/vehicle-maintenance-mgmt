@@ -36,6 +36,7 @@
 }
 .sidebar-toggle-btn:hover{
     border: none;
+    background-color: transparent;
 }
 
 
