@@ -303,7 +303,7 @@ const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed, toggleSidebar }
             </div>
             <div className="stat-content">
               <h3 className='stat-number'>{activeClaims}</h3>
-              <p>Active Claims</p>
+              <p>Total Claims</p>
             </div>
           </div>
 

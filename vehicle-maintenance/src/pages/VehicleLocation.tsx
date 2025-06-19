@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, Car, Search, Navigation, Clock, Calendar } from 'lucide-react';
+import { MapPin, Car, Navigation, Clock } from 'lucide-react';
 import { vehicleAPI, Vehicle } from '../services/api';
 import { toast } from 'react-toastify';
 import Header from '../components/Header';
@@ -276,8 +276,9 @@ const VehicleLocation: React.FC<VehicleLocationProps> = ({ sidebarCollapsed, tog
               <Car size={18} />
               Vehicles <span className="vehicle-list-count">({filteredVehicles.length})</span>
             </h2>
-            <div className="search-container">
-              <Search size={16} className="search-icon" />
+            <div className="search-container3">
+              {/* <Search size={16} className="search-icon" /> */}
+              <i className="search-icon fa-solid fa-magnifying-glass"></i>
               <input
                 type="text"
                 placeholder="Search vehicles..."
@@ -424,8 +425,8 @@ const VehicleLocation: React.FC<VehicleLocationProps> = ({ sidebarCollapsed, tog
         </div>
       </div>
 
-      <Footer />
     </div>
+      <Footer />
     </>
   );
 };

@@ -61,10 +61,11 @@
         "insurer": "abcd",
         "policytype": "Comprehensive",
         "startDate": "2025-06-11",
-        "endDate": "2026-08-10",
+        "endDate": "2025-06-23",
         "payment": "upi",
         "issueDate": "2025-06-12",
-        "premiumAmount": "7500"
+        "premiumAmount": "7500",
+        "hasInsurance": true
       },
       "claims": [
         {
@@ -810,7 +811,18 @@
       "color": "beige",
       "owner": "Manoj Pillai",
       "phone": "9876543210",
-      "address": "Kochi, Kerala"
+      "address": "Kochi, Kerala",
+      "insurance": {
+        "policyNumber": "152535",
+        "insurer": "tata",
+        "policytype": "Third Party",
+        "startDate": "2024-07-07",
+        "endDate": "2025-06-21",
+        "payment": "cash",
+        "issueDate": "2024-07-08",
+        "premiumAmount": "1350",
+        "hasInsurance": true
+      }
     },
     {
       "id": "x9a3",
@@ -1028,7 +1040,34 @@
       "color": "dsaf",
       "owner": "SI",
       "phone": "1236985478",
-      "address": "DSFS"
+      "address": "DSFS",
+      "insurance": {
+        "policyNumber": "12345",
+        "insurer": "bhm",
+        "policytype": "Comprehensive",
+        "startDate": "2024-06-04",
+        "endDate": "2025-06-18",
+        "payment": "cash",
+        "issueDate": "2024-06-05",
+        "premiumAmount": "1200",
+        "hasInsurance": true
+      }
+    },
+    {
+      "id": "0a3e",
+      "make": "SUZUKI",
+      "model": "swift",
+      "purchaseDate": "2005-05-25",
+      "registrationNumber": "kl09i0989",
+      "purchasePrice": "3698598",
+      "fuelType": "Diesel",
+      "engineNumber": "154874",
+      "chassisNumber": "9632587410",
+      "kilometers": "15245",
+      "color": "black",
+      "owner": "sss",
+      "phone": "1269784653",
+      "address": "asdfvfdd"
     }
   ],
   "locationHistory": [

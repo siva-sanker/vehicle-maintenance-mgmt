@@ -378,8 +378,8 @@ const VehicleClaims: React.FC<VehicleClaimsProps> = ({ sidebarCollapsed, toggleS
                 <p>View and search through all claims</p>
               </div>
 
-              <div className="search-container">
-                <div className="search-input-wrapper">
+              <div className="search-container2">
+                {/* <div className="search-input-wrapper"> */}
                   <Search size={16} className="search-icon" />
                   <input
                     type="text"
@@ -388,7 +388,7 @@ const VehicleClaims: React.FC<VehicleClaimsProps> = ({ sidebarCollapsed, toggleS
                     onChange={handleSearchChange}
                     className="search-input"
                   />
-                </div>
+                {/* </div> */}
               </div>
 
               <div className="claims-table-container">

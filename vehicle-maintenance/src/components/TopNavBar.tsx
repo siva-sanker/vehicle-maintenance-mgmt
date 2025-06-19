@@ -21,7 +21,7 @@ const TopNavBar: React.FC = () => {
               <NavLink
                 to="/dashboard"
                 className={({ isActive }) => isActive ? 'active' : ''}
-                style={{ fontSize: '14px', fontWeight: 200 }}
+                style={{ fontSize: '14px', fontWeight: 400,color:'#cccccc' }}
               >
                 Dashboard
               </NavLink>
@@ -30,7 +30,7 @@ const TopNavBar: React.FC = () => {
               <NavLink
                 to="/insurance"
                 className={({ isActive }) => isActive ? 'active' : ''}
-                style={{ fontSize: '14px', fontWeight: 200 }}
+                style={{ fontSize: '14px', fontWeight: 400,color:'#cccccc' }}
               >
                 Billing
               </NavLink>
@@ -39,7 +39,7 @@ const TopNavBar: React.FC = () => {
               <NavLink
                 to="/documents"
                 className={({ isActive }) => isActive ? 'active' : ''}
-                style={{ fontSize: '14px', fontWeight: 200 }}
+                style={{ fontSize: '14px', fontWeight: 400,color:'#cccccc' }}
               >
                 Pharmacy
               </NavLink>
@@ -48,7 +48,7 @@ const TopNavBar: React.FC = () => {
               <NavLink
                 to="/documents"
                 className={({ isActive }) => isActive ? 'active' : ''}
-                style={{ fontSize: '14px', fontWeight: 200 }}
+                style={{ fontSize: '14px', fontWeight: 400,color:'#cccccc' }}
               >
                 Appointments
               </NavLink>
@@ -57,7 +57,7 @@ const TopNavBar: React.FC = () => {
               <NavLink
                 to="/documents"
                 className={({ isActive }) => isActive ? 'active' : ''}
-                style={{ fontSize: '14px', fontWeight: 200 }}
+                style={{ fontSize: '14px', fontWeight: 400,color:'#cccccc' }}
               >
                 More <i className="fas fa-caret-down"></i>
               </NavLink>
@@ -71,8 +71,8 @@ const TopNavBar: React.FC = () => {
             <input type="search" name="search" className='searchBarInput' placeholder="Search Patient with Name or Card No. or Mobile No." />
           </div>
           <div className="nav-buttons">
-            <li className='nav-list-button'><NavLink to="/dashboard" className={({ isActive }) => isActive ? 'active' : ''}>New Sale</NavLink></li>
-            <li className='nav-list-button'><NavLink to="/register-vehicle" className={({ isActive }) => isActive ? 'active' : ''}> <Plus size={16} /> Add Patient</NavLink></li>
+            <li className='nav-list-button'><NavLink to="/dashboard" className={({ isActive }) => isActive ? 'active' : ''} style={{fontWeight:400}}>New Sale</NavLink></li>
+            <li className='nav-list-button'><NavLink to="/register-vehicle" className={({ isActive }) => isActive ? 'active' : ''} style={{fontWeight:400}}> <Plus size={16} /> Add Patient</NavLink></li>
           </div>
           <div className="nav-div-main">
             <div className="nav-div">

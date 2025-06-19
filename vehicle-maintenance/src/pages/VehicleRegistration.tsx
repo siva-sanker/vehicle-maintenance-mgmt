@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import {
@@ -62,6 +60,7 @@ const VehicleRegistration: React.FC<VehicleRegistrationProps> = ({ sidebarCollap
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<FormTouched>({});
+  const [successMessage, setSuccessMessage] = useState<string>('');
   const navigate = useNavigate();
 
   // Validation functions
@@ -143,7 +142,7 @@ const VehicleRegistration: React.FC<VehicleRegistrationProps> = ({ sidebarCollap
     setTouched(allTouched);
 
     if (!validateForm()) {
-      toast.error('Please fix the errors in the form before submitting.');
+      alert('Please fix the errors in the form before submitting.');
       return;
     }
 
@@ -151,7 +150,7 @@ const VehicleRegistration: React.FC<VehicleRegistrationProps> = ({ sidebarCollap
       const response = await vehicleAPI.createVehicle(formData);
 
       if (response) {
-        toast.success('Vehicle registered successfully!');
+        setSuccessMessage('Vehicle registered successfully!');
         setFormData({
           make: '',
           model: '',
@@ -169,12 +168,17 @@ const VehicleRegistration: React.FC<VehicleRegistrationProps> = ({ sidebarCollap
         });
         setErrors({});
         setTouched({});
+        
+        // Clear success message after 3 seconds
+        setTimeout(() => {
+          setSuccessMessage('');
+        }, 3000);
       } else {
-        toast.error('Failed to register vehicle.');
+        alert('Failed to register vehicle.');
       }
     } catch (error) {
       console.error('Error:', error);
-      toast.error('An error occurred while submitting the form.');
+      alert('An error occurred while submitting the form.');
     }
   };
 
@@ -209,6 +213,14 @@ const VehicleRegistration: React.FC<VehicleRegistrationProps> = ({ sidebarCollap
         </div>
 
         <div className="registration-form-container">
+          {successMessage && (
+            <div className="success-message">
+              <div className="success-content">
+                <span className="success-icon">✓</span>
+                <span className="success-text">{successMessage}</span>
+              </div>
+            </div>
+          )}
           <form onSubmit={handleSubmit} className="registration-form">
             <div className="form-section">
               <div className="section-header">

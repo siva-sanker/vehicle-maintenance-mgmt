@@ -257,17 +257,22 @@
 }
 
 /* Search */
-.search-container {
+.search-container2 {
+  position: relative;
+  /* border: 1px solid red !important; */
+  display: flex;
+  align-items: center;
+  height: 28px;
   margin-bottom: 2rem;
 }
 
-.search-input-wrapper {
+/* .search-input-wrapper {
   width: 100% !important;
   position: relative;
   display: flex;
   align-items: center;
   border: none !important;
-}
+} */
 
 .search-icon {
   position: absolute;

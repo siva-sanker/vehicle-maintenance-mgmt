@@ -102,6 +102,29 @@ const InsuranceManagement: React.FC<InsuranceManagementProps> = ({ sidebarCollap
     setCurrentPage(1); // Reset to first page when changing items per page
   };
 
+  // Function to determine date status and return appropriate CSS class
+  const getDateStatusClass = (endDate: string): string => {
+    if (!endDate || endDate === '-') return 'date-cell';
+    
+    const today = new Date();
+    const end = new Date(endDate);
+    
+    // Reset time to compare only dates
+    today.setHours(0, 0, 0, 0);
+    end.setHours(0, 0, 0, 0);
+    
+    const diffTime = end.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays < 0) {
+      return 'date-cell date-expired'; // Past due - red
+    } else if (diffDays <= 5) {
+      return 'date-cell date-expiring-soon'; // Expiring within 5 days - orange
+    } else {
+      return 'date-cell date-valid'; // Valid - green
+    }
+  };
+
   return (
     <>
       <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />
@@ -199,7 +222,7 @@ const InsuranceManagement: React.FC<InsuranceManagementProps> = ({ sidebarCollap
                       <td className="text-capitalize">{v.insurance?.insurer || '-'}</td>
                       <td className="policy-type">{v.insurance?.policytype || '-'}</td>
                       <td className="date-cell">{v.insurance?.startDate || '-'}</td>
-                      <td className="date-cell">{v.insurance?.endDate || '-'}</td>
+                      <td className={getDateStatusClass(v.insurance?.endDate || '')}>{v.insurance?.endDate || '-'}</td>
                       <td className="premium-amount">
                         {v.insurance?.premiumAmount ? `₹${v.insurance.premiumAmount}` : '-'}
                       </td>
@@ -221,6 +244,26 @@ const InsuranceManagement: React.FC<InsuranceManagementProps> = ({ sidebarCollap
                 Showing {startIndex + 1} to {Math.min(endIndex, filteredVehicles.length)} of {filteredVehicles.length} vehicles
                 {searchTerm && ` (filtered from ${vehicles.length} total)`}
               </div>
+              
+              {/* Date Status Legend */}
+              <div className="date-legend">
+                <span className="legend-title">End Date Status:</span>
+                <div className="legend-items">
+                  <div className="legend-item">
+                    <span className="legend-color date-valid">Valid</span>
+                    {/* <span className="legend-text">More than 5 days remaining</span> */}
+                  </div>
+                  <div className="legend-item">
+                    <span className="legend-color date-expiring-soon">Expiring Soon</span>
+                    {/* <span className="legend-text">Within 5 days</span> */}
+                  </div>
+                  <div className="legend-item">
+                    <span className="legend-color date-expired">Expired</span>
+                    {/* <span className="legend-text">Past due date</span> */}
+                  </div>
+                </div>
+              </div>
+
               <div className="pagination-controls">
                 <button
                   className="pagination-btn"

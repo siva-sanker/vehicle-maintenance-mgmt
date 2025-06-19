@@ -1,6 +1,6 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
-import '../styles/Sidebar.css';
+import React from "react";
+import { NavLink } from "react-router-dom";
+import "../styles/Sidebar.css";
 // import { GraphIcon } from '@primer/octicons-react'
 // import { PlusCircleIcon } from '@primer/octicons-react'
 // import { ListUnorderedIcon } from '@primer/octicons-react'
@@ -8,10 +8,10 @@ import '../styles/Sidebar.css';
 // import { ShieldCheckIcon } from '@primer/octicons-react'
 // import { FileDirectoryIcon } from '@primer/octicons-react'
 // import { LocationIcon } from '@primer/octicons-react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCaretRight } from "@fortawesome/free-solid-svg-icons";
 // import logo from '../assets/logo.png';
-import sidebarLogo from '../assets/sidebar-logo.jpg';
+import sidebarLogo from "../assets/sidebar-logo.jpg";
 
 interface SideBarProps {
   collapsed?: boolean;
@@ -19,24 +19,33 @@ interface SideBarProps {
 
 const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
   return (
-    <div className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
+    <div className={`sidebar ${collapsed ? "collapsed" : ""}`}>
       <div className="sidebar-content">
         <div className="sidebar-top">
-          <a href="" className={`sidebar-profile ${collapsed ? 'collapsed': '' }`}>
+          <a
+            href=""
+            className={`sidebar-profile ${collapsed ? "collapsed" : ""}`}
+          >
             <img src={sidebarLogo} alt="" />
           </a>
           <div className="sidebar-text">
-            <h6 className='sidebar-heading'>System Admin</h6>
-            <h4 className='sidebar-para'>HODO Hospital,</h4>
-            <p className='sidebar-para'>Kazhakkottam</p>
-            <p className='sidebar-para2'>System Admin</p>
+            <h6 className="sidebar-heading">System Admin</h6>
+            <h4 className="sidebar-para">HODO Hospital,</h4>
+            <p className="sidebar-para">Kazhakkottam</p>
+            <p className="sidebar-para2">System Admin</p>
           </div>
         </div>
-        <div className={`searchbar ${collapsed ? 'collapsed': '' }`}>
+        <div className={`searchbar ${collapsed ? "collapsed" : ""}`}>
           <div className="sidebar-date">
-            <h6 className="sidebar-date-heading">@Anchal {new Date().toLocaleDateString()}</h6>
+            <h6 className="sidebar-date-heading">
+              @Anchal {new Date().toLocaleDateString()}
+            </h6>
           </div>
-          <input type="text" className="searchbar" placeholder="Search Menu- Ctrl + M"/>
+          <input
+            type="text"
+            className="searchbar"
+            placeholder="Search Menu- Ctrl + M"
+          />
         </div>
       </div>
       <nav>
@@ -44,7 +53,9 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
           <li className="sidebar-title">
             <NavLink
               to="/dashboard"
-              className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
+              className={({ isActive }) =>
+                isActive ? "sidebar-heading2 active" : "sidebar-heading2"
+              }
               title="Vehicle Management"
             >
               Vehicle Management
@@ -54,7 +65,10 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
             <li>
               <NavLink
                 to="/dashboard"
-                className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
+                style={{fontWeight:400,color:"#cccccc"}}
+                className={({ isActive }) =>
+                  isActive ? "nav-item active" : "nav-item"
+                }
                 title={collapsed ? "Dashboard" : ""}
               >
                 <span>
@@ -65,8 +79,10 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
             </li>
             <li>
               <NavLink
-                to="/register-vehicle"
-                className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
+                to="/register-vehicle" style={{fontWeight:400,color:"#cccccc"}}
+                className={({ isActive }) =>
+                  isActive ? "nav-item active" : "nav-item"
+                }
                 title={collapsed ? "Vehicle Registration" : ""}
               >
                 <span>
@@ -77,8 +93,10 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
             </li>
             <li>
               <NavLink
-                to="/vehicle-list"
-                className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
+                to="/vehicle-list" style={{fontWeight:400,color:"#cccccc"}}
+                className={({ isActive }) =>
+                  isActive ? "nav-item active" : "nav-item"
+                }
                 title={collapsed ? "Vehicle List" : ""}
               >
                 <span>
@@ -89,8 +107,10 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
             </li>
             <li>
               <NavLink
-                to="/insurance"
-                className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
+                to="/insurance" style={{fontWeight:400,color:"#cccccc"}}
+                className={({ isActive }) =>
+                  isActive ? "nav-item active" : "nav-item"
+                }
                 title={collapsed ? "Insurance Management" : ""}
               >
                 <span>
@@ -101,8 +121,10 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
             </li>
             <li>
               <NavLink
-                to="/documents"
-                className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
+                to="/documents" style={{fontWeight:400,color:"#cccccc"}}
+                className={({ isActive }) =>
+                  isActive ? "nav-item active" : "nav-item"
+                }
                 title={collapsed ? "Document Repository" : ""}
               >
                 <span>
@@ -113,8 +135,10 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
             </li>
             <li>
               <NavLink
-                to="/claims"
-                className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
+                to="/claims" style={{fontWeight:400,color:"#cccccc"}}
+                className={({ isActive }) =>
+                  isActive ? "nav-item active" : "nav-item"
+                }
                 title={collapsed ? "Claims" : ""}
               >
                 <span>
@@ -125,8 +149,10 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
             </li>
             <li>
               <NavLink
-                to="/location"
-                className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
+                to="/location" style={{fontWeight:400,color:"#cccccc"}}
+                className={({ isActive }) =>
+                  isActive ? "nav-item active" : "nav-item"
+                }
                 title={collapsed ? "Vehicle Location" : ""}
               >
                 <span>
@@ -137,8 +163,10 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
             </li>
             <li>
               <NavLink
-                to="/driver"
-                className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
+                to="/driver" style={{fontWeight:400,color:"#cccccc"}}
+                className={({ isActive }) =>
+                  isActive ? "nav-item active" : "nav-item"
+                }
                 title={collapsed ? "Driver Management" : ""}
               >
                 <span>
@@ -154,4 +182,4 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
   );
 };
 
-export default SideBar; 
+export default SideBar;

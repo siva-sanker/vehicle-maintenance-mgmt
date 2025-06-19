@@ -9,11 +9,22 @@
 }
 
 .sidebar-title {
-  font-weight: bold;
-  font-size: 1.2rem;
+  background-color: #80def7;
+  font-size: 14px;
+  border-right: 6px solid #0d92ae;
   margin-bottom: 1rem;
-  color: white;
-  /* padding: 20px 10px; */
+  /* color: black !important; */
+  padding: 8px 15px;
+}
+
+.sidebar-heading2{
+  background-color: #80def7;
+  /* font-weight: 700; */
+  /* font-weight: bold; */
+  font-size: 12px;
+  /* margin-bottom: 1rem; */
+  color: black !important;
+  padding: 10px 10px;
 }
 
 .sidebar ul {
@@ -37,8 +48,9 @@
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 5px;
+  width: 100%;
+  gap: 10px;
+  padding: 3px;
   margin: 0;
   text-decoration: none;
   /* font-size: 12px; */
@@ -48,19 +60,22 @@
 }
 
 .nav-item:hover {
-  background-color: #80ddf7;
+  background-color: #b2e4f1;
   border-right: 4px solid #0d92ae;
-  color: black;
+  /* padding: 10px 10px; */
+  color: black !important;
 }
 
 .nav-item.active {
-  background-color: rgb(128, 222, 247);
-  color: black;
+  background-color: #b2e4f1;
+  color: black !important;
   border-right: 4px solid #0d92ae;
 }
 
 .nav-item svg {
-  margin-right: 8px;
+  margin-left: 20px;
+  padding: 5px;
+  /* margin-right: 8px; */
   flex-shrink: 0;
 }
 
@@ -215,5 +230,5 @@ span {
   font-weight: 600;
 }
 .sidebar-sublist{
-  margin-left: 10px;
+  width: 100%;
 }
