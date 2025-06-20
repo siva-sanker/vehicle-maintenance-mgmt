@@ -59,7 +59,7 @@ const TopNavBar: React.FC = () => {
                 className={({ isActive }) => isActive ? 'active' : ''}
                 style={{ fontSize: '14px', fontWeight: 400,color:'#cccccc' }}
               >
-                More <i className="fas fa-caret-down"></i>
+                More <i className="fas fa-caret-down" style={{fontSize:'12px',marginLeft:'4px'}}></i>
               </NavLink>
             </li>
           </ul>

@@ -23,8 +23,6 @@ import {
   AlertTriangle,
   TrendingUp,
   DollarSign,
-  Calendar,
-  Users
 } from 'lucide-react';
 import { vehicleAPI, Vehicle } from '../services/api';
 import '../styles/Dashboard.css';

@@ -119,12 +119,12 @@
   font-size: 0.95rem;
   padding: 8px 12px;
   border-radius: 4px;
-  transition: all 0.3s ease;
+  /* transition: all 0.3s ease; */
   position: relative;
 }
 
 .nav-list2 li a:hover {
-  color: #0d92ae;
+  color: #0d92ae !important;
   /* Consistent with search bar focus color */
   /* background-color: rgba(255, 255, 255, 0.1);
   transform: translateY(-1px); */

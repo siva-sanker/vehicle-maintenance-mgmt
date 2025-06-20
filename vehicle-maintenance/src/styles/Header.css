@@ -45,7 +45,9 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    padding: 8px 12px;
+    /* margin-top: 10px; */
+    /* border: 1px solid red; */
+    padding: 8px 5px;
     /* background-color: white; */
     /* border-radius: 6px; */
     /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
@@ -56,6 +58,8 @@
     display: flex;
     align-items: center;
     gap: 5px;
+    /* margin-top: 5px; */
+    /* border:1px solid yellow; */
     flex-wrap: nowrap;
     width: 100%;
     justify-content: flex-end;
@@ -85,8 +89,8 @@
 .header-span{
     color: #888888;
     font-size: 14px;
-    font-weight: 700;
-    width: fit-content;
+    font-weight: 600;
+    width: 100%;
 }
 .header-icon{
     background-color: white;

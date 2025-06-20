@@ -344,6 +344,7 @@ body {
 }
 
 .details-title {
+    border: none;
     display: flex;
     align-items: center;
     gap: 0.75rem;
