@@ -38,8 +38,13 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
         <div className={`searchbar ${collapsed ? "collapsed" : ""}`}>
           <div className="sidebar-date">
             <h6 className="sidebar-date-heading">
-              @Anchal {new Date().toLocaleDateString()}
+              @Anchal {new Intl.DateTimeFormat('en-GB', {
+                day:'2-digit',
+                month:'2-digit',
+                year:'numeric'
+              }).format(new Date())}
             </h6>
+
           </div>
           <input
             type="text"

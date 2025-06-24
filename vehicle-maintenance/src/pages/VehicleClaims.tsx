@@ -8,10 +8,7 @@ import {
   Plus,
   AlertTriangle,
   CheckCircle,
-  XCircle,
   Car,
-  Check,
-  X,
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';

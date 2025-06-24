@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Search, FileText, Car, Calendar, DollarSign, Shield, CreditCard, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import { FileText, Car, Calendar, DollarSign, Shield, CreditCard, ChevronLeft, ChevronRight } from 'lucide-react';
 import { vehicleAPI } from '../services/api';
 import Header from '../components/Header';
 import Footer from '../components/Footer';

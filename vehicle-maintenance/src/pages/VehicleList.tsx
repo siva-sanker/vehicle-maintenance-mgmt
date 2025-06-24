@@ -5,17 +5,13 @@ import 'react-toastify/dist/ReactToastify.css';
 import {
   Car,
   Calendar,
-  User,
   FileText,
   Fuel,
-  Settings,
   Plus,
-  Eye,
   Info,
   ChevronLeft,
   ChevronRight,
   DollarSign,
-  Search
 } from 'lucide-react';
 import { vehicleAPI, Vehicle } from '../services/api.ts';
 import '../styles/Vehiclelist.css';
@@ -473,7 +469,7 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
                           {vehicle.fuelType}
                         </span>
                       </td>
-                      <td className="premium-amount">₹{vehicle.purchasePrice}</td>
+                      <td className="premium-amount">{vehicle.purchasePrice} /-</td>
                       <td>
                         <button
                           className="btn-details"

@@ -34,9 +34,9 @@
         }
       ],
       "currentLocation": {
-        "latitude": 12.975670663330611,
-        "longitude": 77.5933765155076,
-        "timestamp": "2025-06-19T11:53:48.530Z",
+        "latitude": 12.977458385518295,
+        "longitude": 77.59704776127582,
+        "timestamp": "2025-06-23T05:15:11.700Z",
         "address": "Unknown location"
       },
       "lastUpdated": "2025-06-13T08:21:17.340Z"
@@ -123,9 +123,9 @@
         }
       ],
       "currentLocation": {
-        "latitude": 19.077866626459933,
-        "longitude": 72.87842780037984,
-        "timestamp": "2025-06-19T11:57:25.646Z",
+        "latitude": 19.08168787495554,
+        "longitude": 72.875847334118,
+        "timestamp": "2025-06-23T05:15:38.734Z",
         "address": "Kalina Kurla Road, Kismat Nagar, L Ward, Zone 5, Mumbai, Maharashtra, 400070, India"
       },
       "lastUpdated": "2025-06-12T10:15:30.123Z"
@@ -669,7 +669,13 @@
           "reason": "premium car repair",
           "status": "Rejected"
         }
-      ]
+      ],
+      "currentLocation": {
+        "latitude": 12.967235944364578,
+        "longitude": 77.59427339080796,
+        "timestamp": "2025-06-23T05:16:10.542Z",
+        "address": "Rajaram Mohan Roy Road, Sampangirama Nagar, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+      }
     },
     {
       "id": "s4v8",
@@ -823,22 +829,6 @@
         "premiumAmount": "1350",
         "hasInsurance": true
       }
-    },
-    {
-      "id": "x9a3",
-      "make": "force",
-      "model": "gurkha",
-      "purchaseDate": "2020-12-08",
-      "registrationNumber": "GA01DE7890",
-      "purchasePrice": "1200000",
-      "fuelType": "Diesel",
-      "engineNumber": "force456wxy789",
-      "chassisNumber": "force123zab456",
-      "kilometers": "35000",
-      "color": "olive",
-      "owner": "Francisco Costa",
-      "phone": "8765432109",
-      "address": "Panaji, Goa"
     },
     {
       "id": "y0b4",
@@ -1054,20 +1044,127 @@
       }
     },
     {
-      "id": "0a3e",
-      "make": "SUZUKI",
-      "model": "swift",
-      "purchaseDate": "2005-05-25",
-      "registrationNumber": "kl09i0989",
-      "purchasePrice": "3698598",
-      "fuelType": "Diesel",
-      "engineNumber": "154874",
-      "chassisNumber": "9632587410",
-      "kilometers": "15245",
-      "color": "black",
-      "owner": "sss",
-      "phone": "1269784653",
-      "address": "asdfvfdd"
+      "id": "a74b",
+      "make": "Honda",
+      "model": "City",
+      "registrationNumber": "KL01CD1234",
+      "purchaseDate": "2024-01-15",
+      "purchasePrice": "1200000",
+      "fuelType": "Petrol",
+      "engineNumber": "honda123xyz",
+      "chassisNumber": "honda456abc",
+      "kilometers": "5000",
+      "color": "white",
+      "owner": "Alice Johnson",
+      "phone": "9876543210",
+      "address": "Kerala, India",
+      "insurance": {
+        "policyNumber": "POL789012",
+        "insurer": "HDFC Ergo",
+        "policytype": "Comprehensive",
+        "startDate": "2024-01-01",
+        "endDate": "2024-12-31",
+        "payment": "card",
+        "issueDate": "2023-12-20",
+        "premiumAmount": "12000"
+      }
+    },
+    {
+      "id": "2705",
+      "make": "byd",
+      "model": "i12",
+      "purchaseDate": "1975-12-04",
+      "registrationNumber": "i23i24",
+      "purchasePrice": "3975482",
+      "fuelType": "Hybrid",
+      "engineNumber": "4978566",
+      "chassisNumber": "3978467856",
+      "kilometers": "250000",
+      "color": "purple",
+      "owner": "begger",
+      "phone": "3978468542",
+      "address": "india europe america",
+      "insurance": {
+        "policyNumber": "9728162",
+        "insurer": "americna express",
+        "policytype": "Liability",
+        "startDate": "2022-01-05",
+        "endDate": "2023-02-05",
+        "payment": "cash",
+        "issueDate": "2022-01-07",
+        "premiumAmount": "16500",
+        "hasInsurance": true
+      },
+      "claims": [
+        {
+          "claimDate": "2023-03-05",
+          "claimAmount": "59862",
+          "reason": "asd",
+          "status": "Pending"
+        }
+      ]
+    },
+    {
+      "id": "2fa6",
+      "make": "mclaren",
+      "model": "p3",
+      "purchaseDate": "2004-04-05",
+      "registrationNumber": "yh10hi3839",
+      "purchasePrice": "15000000",
+      "fuelType": "Petrol",
+      "engineNumber": "9182736",
+      "chassisNumber": "54720154936",
+      "kilometers": "95768",
+      "color": "red",
+      "owner": "hibit",
+      "phone": "0987654321",
+      "address": "hitugnal",
+      "insurance": {
+        "policyNumber": "153241",
+        "insurer": "ambaani",
+        "policytype": "Liability",
+        "startDate": "2019-12-24",
+        "endDate": "2025-12-25",
+        "payment": "bank account",
+        "issueDate": "2019-12-25",
+        "premiumAmount": "75000",
+        "hasInsurance": true
+      }
+    },
+    {
+      "id": "6c25",
+      "make": "Honda",
+      "model": "City",
+      "registrationNumber": "KL01CD1234",
+      "purchaseDate": "2020-10-15",
+      "purchasePrice": "1200000",
+      "fuelType": "Petrol",
+      "engineNumber": "honda123xyz",
+      "chassisNumber": "honda456abc",
+      "kilometers": "5000",
+      "color": "white",
+      "owner": "Alice Johnson",
+      "phone": "9876543210",
+      "address": "Kerala, India",
+      "insurance": {
+        "policyNumber": "POL789015",
+        "insurer": "HDFC Ergo",
+        "policytype": "Comprehensive",
+        "startDate": "2024-05-06",
+        "endDate": "2025-06-30",
+        "payment": "card",
+        "issueDate": "2024-05-14",
+        "premiumAmount": "12000",
+        "hasInsurance": true
+      },
+      "claims": [
+        {
+          "claimDate": "2025-06-04",
+          "claimAmount": "6985",
+          "reason": "chipset\n",
+          "status": "Pending"
+        }
+      ]
     }
   ],
   "locationHistory": [
@@ -1247,6 +1344,23 @@
         "6b1e",
         "a4e4"
       ]
+    },
+    {
+      "name": "dom T",
+      "licenseNumber": "kl01kl09879081",
+      "phone": "9638527410",
+      "address": "ambadaaaaaaaa",
+      "assignedVehicleIds": [
+        "i4l8",
+        "q2t6",
+        "w8z2",
+        "fe87",
+        "2705",
+        "6b1e",
+        "a2d6",
+        "z1c5"
+      ],
+      "id": "287a"
     }
   ]
 }

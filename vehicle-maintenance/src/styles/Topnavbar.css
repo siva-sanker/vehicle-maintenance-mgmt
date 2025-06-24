@@ -1,6 +1,7 @@
 .top-navbar {
   background-color: #101010;
   padding: 0;
+  font-family: 'Poppins', sans-serif;
   /* height: 50px; */
   display: flex;
   justify-content: space-between;
@@ -24,10 +25,6 @@
   margin-bottom: 5px;
 }
 
-.topNavBarTitle {
-  margin: 0;
-}
-
 .nav-list {
   display: flex;
   list-style-type: none;
@@ -43,10 +40,6 @@
   text-decoration: none;
   /* font-weight: 500; */
   font-size: 14px;
-}
-
-.nav-list li a:hover {
-  color: lightblue;
 }
 
 .nav-list-button {
@@ -66,6 +59,7 @@
   margin: 0;
   margin-left: -4px;
   padding: 0;
+  /* overflow: visible !important; */
   /* border: 1px solid white; */
 }
 
@@ -79,7 +73,8 @@
   margin-left: 0px;
   /* border: 1px solid white; */
 }
-.searchBar{
+
+.searchBar {
   /* border: 1px solid white; */
   margin-right: -10px;
 }
@@ -108,17 +103,15 @@
 
 .nav-list2 li {
   color: white !important;
-  transition: all 0.3s ease;
-  /* Smooth transition for hover effects */
 }
 
 .nav-list2 li a {
   color: white;
   text-decoration: none;
   font-weight: 500;
-  font-size: 0.95rem;
+  /* font-size: 0.95rem; */
   padding: 8px 12px;
-  border-radius: 4px;
+  /* border-radius: 4px; */
   /* transition: all 0.3s ease; */
   position: relative;
 }
@@ -137,7 +130,6 @@
 } */
 
 .nav-list2 li a::after {
-  /* content: ''; */
   position: absolute;
   bottom: 0;
   left: 50%;
@@ -145,7 +137,7 @@
   height: 2px;
   /* background-color: #0d92ae; */
   transition: all 0.3s ease;
-  transform: translateX(-50%);
+  /* transform: translateX(-50%); */
 }
 
 .nav-buttons {
@@ -393,4 +385,161 @@
     width: 90vw;
     max-width: 350px;
   }
+}
+
+.dropdown-menu {
+  display: block !important;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white !important;
+  padding: 5px 0px;
+  margin-top: 7px;
+  border-radius: 0px;
+  min-width: 160px;
+  z-index: 99999;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-item {
+  display: block;
+  background-color: transparent !important;
+  padding: 3px 20px !important;
+  color: #333333 !important;
+  text-decoration: none;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  white-space: nowrap;
+  border-radius: 0px !important;
+}
+
+.dropdown-menu .dropdown-item:hover {
+  background-color: #cccccc77 !important;
+  color: #333333 !important;
+}
+
+.top-navbar,
+.navItem,
+.nav-links-container,
+.nav-list2,
+.nav-link.dropdown {
+  position: relative;
+  overflow: visible !important;
+  z-index: 1;
+}
+
+.notification-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 300px;
+  max-width: 400px;
+  z-index: 1000;
+  margin-top: 5px;
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem 0.25rem 1rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.notification-title {
+  font-weight: 600;
+  color: red;
+  margin: 0;
+}
+
+.clear-notifications-btn {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.clear-notifications-btn:hover {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.notification-empty {
+  color: #888;
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.97rem;
+}
+
+.notification-list {
+  list-style: none;
+  margin: 0;
+  padding: 0.5rem 0;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.notification-item {
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #f5f5f5;
+  font-size: 0.97rem;
+  line-height: 1.3;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notif-reg {
+  font-weight: 600;
+  color: black;
+}
+
+.notif-make {
+  color: #444;
+  font-size: 0.96em;
+}
+
+.notif-expiry {
+  color: #d32f2f;
+  font-size: 0.95em;
+}
+
+.nav-div-main,
+.nav-right,
+.top-navbar {
+  overflow: visible !important;
+}
+
+.nav-div-main,
+.nav-div {
+  position: relative;
+}
+
+/* Notification badge styles */
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #ff4444;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #101010;
+  min-width: 18px;
+  line-height: 1;
 }

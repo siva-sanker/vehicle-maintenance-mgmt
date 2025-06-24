@@ -151,16 +151,16 @@ const DriverPage: React.FC<DriverProps> = ({ sidebarCollapsed, toggleSidebar }) 
             <tbody>
               {drivers.map((driver) => (
                 <tr key={driver.id}>
-                  <td>{driver.name}</td>
-                  <td>{driver.licenseNumber}</td>
+                  <td className='text-capitalize'>{driver.name}</td>
+                  <td className='text-uppercase'>{driver.licenseNumber}</td>
                   <td>{driver.phone}</td>
-                  <td>{driver.address}</td>
+                  <td className='text-capitalize'>{driver.address}</td>
                   <td>
                     {driver.assignedVehicleIds.map((vid) => {
                       const v = vehicles.find((veh) => veh.id === vid);
                       return v ? (
-                        <span key={vid} style={{ display: 'inline-block', marginRight: 8, background: '#eee', padding: '2px 6px', borderRadius: 4 }}>
-                          {v.make} {v.model} ({v.registrationNumber})
+                        <span key={vid} style={{ display: 'inline-flex', marginRight: 8,alignItems:'center', background: '#eee', padding: '2px', borderRadius: 4 ,textTransform:'uppercase'}}>
+                           {v.registrationNumber}
                         </span>
                       ) : null;
                     })}

@@ -33,6 +33,7 @@ interface Vehicle {
         payment: string;
         issueDate: string;
         premiumAmount: string;
+        hasInsurance: boolean;
     };
 }
 
@@ -149,7 +150,7 @@ const ApiExample: React.FC<ApiExampleProps> = ({ sidebarCollapsed, toggleSidebar
             make: "Honda",
             model: "City",
             registrationNumber: "KL01CD1234",
-            purchaseDate: "2024-01-15",
+            purchaseDate: "2020-10-15",
             purchasePrice: "1200000",
             fuelType: "Petrol",
             engineNumber: "honda123xyz",
@@ -168,6 +169,7 @@ const ApiExample: React.FC<ApiExampleProps> = ({ sidebarCollapsed, toggleSidebar
                 payment: "card",
                 issueDate: "2023-12-20",
                 premiumAmount: "12000",
+                hasInsurance: true
             }
         };
 

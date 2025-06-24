@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import {
@@ -23,6 +23,7 @@ import {
   AlertTriangle,
   TrendingUp,
   DollarSign,
+  RefreshCw,
 } from 'lucide-react';
 import { vehicleAPI, Vehicle } from '../services/api';
 import '../styles/Dashboard.css';
@@ -76,86 +77,112 @@ const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed, toggleSidebar }
   });
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const fetchDashboardData = async (): Promise<void> => {
+    try {
+      const data = await vehicleAPI.getAllVehicles();
+      setVehicles(data);
+      setTotalVehicles(data.length);
+
+      // Calculate insurance policies
+      const insuranceCount = data.filter((v: Vehicle) => v.insurance && typeof v.insurance === 'object').length;
+      setInsurancePolicies(insuranceCount);
+
+      // Calculate active claims, total claim amount, and claim statuses
+      let claimsCount = 0;
+      let totalClaims = 0;
+      let pendingClaims = 0;
+      let approvedClaims = 0;
+      let rejectedClaims = 0;
+
+      data.forEach((vehicle: Vehicle) => {
+        if (vehicle.claims && Array.isArray(vehicle.claims)) {
+          claimsCount += vehicle.claims.length;
+          vehicle.claims.forEach((claim: any) => {
+            totalClaims += parseFloat(claim.claimAmount) || 0;
+
+            // Count claims by status
+            switch (claim.status?.toLowerCase()) {
+              case 'pending':
+                pendingClaims++;
+                break;
+              case 'approved':
+                approvedClaims++;
+                break;
+              case 'rejected':
+                rejectedClaims++;
+                break;
+              default:
+                pendingClaims++; 
+                break;
+            }
+          });
+        }
+      });
+
+      setActiveClaims(claimsCount);
+      setTotalClaimAmount(totalClaims);
+      setClaimStatusData({
+        pending: pendingClaims,
+        approved: approvedClaims,
+        rejected: rejectedClaims
+      });
+
+      // Calculate fuel type distribution
+      const fuelTypes: FuelTypeData = {};
+      data.forEach((vehicle: Vehicle) => {
+        const fuelType = vehicle.fuelType || 'Unknown';
+        fuelTypes[fuelType] = (fuelTypes[fuelType] || 0) + 1;
+      });
+      setFuelTypeData(fuelTypes);
+
+      // Calculate monthly purchase data
+      const monthlyPurchases: MonthlyData = {};
+      data.forEach((vehicle: Vehicle) => {
+        if (vehicle.purchaseDate) {
+          try {
+            const date = new Date(vehicle.purchaseDate);
+            if (!isNaN(date.getTime())) { // Check if date is valid
+              const month = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+              monthlyPurchases[month] = (monthlyPurchases[month] || 0) + 1;
+            }
+          } catch (error) {
+            console.warn('Invalid purchase date for vehicle:', vehicle.id, vehicle.purchaseDate);
+          }
+        }
+      });
+      
+      // Sort months chronologically
+      const sortedMonthlyData: MonthlyData = {};
+      Object.keys(monthlyPurchases)
+        .sort((a, b) => {
+          const dateA = new Date(a);
+          const dateB = new Date(b);
+          return dateA.getTime() - dateB.getTime();
+        })
+        .forEach(month => {
+          sortedMonthlyData[month] = monthlyPurchases[month];
+        });
+      
+      setMonthlyData(sortedMonthlyData);
+
+      setDocumentCount(10); // Mock data
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error);
+      setLoading(false);
+    }
+  };
+
+  const handleRefresh = async (): Promise<void> => {
+    setLoading(true);
+    await fetchDashboardData();
+  };
 
   useEffect(() => {
-    const fetchDashboardData = async (): Promise<void> => {
-      try {
-        const data = await vehicleAPI.getAllVehicles();
-        setVehicles(data);
-        setTotalVehicles(data.length);
-
-        // Calculate insurance policies
-        const insuranceCount = data.filter((v: Vehicle) => v.insurance && typeof v.insurance === 'object').length;
-        setInsurancePolicies(insuranceCount);
-
-        // Calculate active claims, total claim amount, and claim statuses
-        let claimsCount = 0;
-        let totalClaims = 0;
-        let pendingClaims = 0;
-        let approvedClaims = 0;
-        let rejectedClaims = 0;
-
-        data.forEach((vehicle: Vehicle) => {
-          if (vehicle.claims && Array.isArray(vehicle.claims)) {
-            claimsCount += vehicle.claims.length;
-            vehicle.claims.forEach((claim: any) => {
-              totalClaims += parseFloat(claim.claimAmount) || 0;
-
-              // Count claims by status
-              switch (claim.status?.toLowerCase()) {
-                case 'pending':
-                  pendingClaims++;
-                  break;
-                case 'approved':
-                  approvedClaims++;
-                  break;
-                case 'rejected':
-                  rejectedClaims++;
-                  break;
-                default:
-                  pendingClaims++; 
-                  break;
-              }
-            });
-          }
-        });
-
-        setActiveClaims(claimsCount);
-        setTotalClaimAmount(totalClaims);
-        setClaimStatusData({
-          pending: pendingClaims,
-          approved: approvedClaims,
-          rejected: rejectedClaims
-        });
-
-        // Calculate fuel type distribution
-        const fuelTypes: FuelTypeData = {};
-        data.forEach((vehicle: Vehicle) => {
-          const fuelType = vehicle.fuelType || 'Unknown';
-          fuelTypes[fuelType] = (fuelTypes[fuelType] || 0) + 1;
-        });
-        setFuelTypeData(fuelTypes);
-
-        // Calculate monthly purchase data
-        const monthlyPurchases: MonthlyData = {};
-        data.forEach((vehicle: Vehicle) => {
-          if (vehicle.purchaseDate) {
-            const month = new Date(vehicle.purchaseDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-            monthlyPurchases[month] = (monthlyPurchases[month] || 0) + 1;
-          }
-        });
-        setMonthlyData(monthlyPurchases);
-
-        setDocumentCount(230); // Mock data
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching dashboard data:', error);
-        setLoading(false);
-      }
-    };
-
     fetchDashboardData();
-  }, []);
+  }, [location]);
 
   // Chart configurations
   const fuelTypeChartData = {
@@ -270,6 +297,10 @@ const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed, toggleSidebar }
               <Car size={16} />
               Add Vehicle
             </button>
+            {/* <button onClick={handleRefresh} className="btn-primary">
+              <RefreshCw size={16} />
+              Refresh
+            </button> */}
           </div>
         </div>
 
@@ -281,7 +312,7 @@ const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed, toggleSidebar }
             </div>
             <div className="stat-content">
               <h3 className='stat-number'>{totalVehicles}</h3>
-              <p>Total Vehicles</p>
+              <p className='stat-p'>Total Vehicles</p>
             </div>
           </div>
 
@@ -291,7 +322,7 @@ const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed, toggleSidebar }
             </div>
             <div className="stat-content">
               <h3 className='stat-number'>{insurancePolicies}</h3>
-              <p>Insurance Policies</p>
+              <p className='stat-p'>Insurance Policies</p>
             </div>
           </div>
 
@@ -301,7 +332,7 @@ const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed, toggleSidebar }
             </div>
             <div className="stat-content">
               <h3 className='stat-number'>{activeClaims}</h3>
-              <p>Total Claims</p>
+              <p className='stat-p'>Total Claims</p>
             </div>
           </div>
 
@@ -311,7 +342,7 @@ const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed, toggleSidebar }
             </div>
             <div className="stat-content">
               <h3 className='stat-number'>₹{totalClaimAmount.toLocaleString()}</h3>
-              <p>Total Claim Amount</p>
+              <p className='stat-p'>Total Claim Amount</p>
             </div>
           </div>
 
@@ -321,7 +352,7 @@ const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed, toggleSidebar }
             </div>
             <div className="stat-content">
               <h3 className='stat-number'>{documentCount}</h3>
-              <p>Documents</p>
+              <p className='stat-p'>Documents</p>
             </div>
           </div>
 
@@ -331,7 +362,7 @@ const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed, toggleSidebar }
             </div>
             <div className="stat-content">
             <h3 className='stat-number'>{((insurancePolicies / totalVehicles) * 100).toFixed(1)}%</h3>
-              <p>Insurance Coverage</p>
+              <p className='stat-p'>Insurance Coverage</p>
             </div>
           </div>
         </div>

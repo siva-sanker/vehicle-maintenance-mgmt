@@ -1,9 +1,12 @@
 .sidebar {
-  width: 255px;
+  width: 235px;
+  /* width: 319.984px; */
+  z-index: 1000;
   height: 100vh;
   background-color: #1f1f1f;
   /* padding: 20px; */
   overflow-y: auto;
+  /* overflow-y: scroll; */
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   transition: width 0.3s ease;
 }
@@ -191,7 +194,10 @@ span {
 .searchbar input{
   padding: 8px 6px 8px 6px;
   border: 1px solid rgb(128, 222, 247);
-  color: white !important ;
+  color: white;
+}
+.searchbar::placeholder{
+  color: white;
 }
 .searchbar.collapsed{
   display: hidden;
