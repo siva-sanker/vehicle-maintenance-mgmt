@@ -262,7 +262,7 @@ const VehicleClaims: React.FC<VehicleClaimsProps> = ({ sidebarCollapsed, toggleS
         <div className="claims-header">
           <div className="header-content">
             <h1 className="page-title">
-              <FileText className="page-icon" />
+              {/* <FileText className="page-icon" /> */}
               Insurance Claims
             </h1>
             <p className="page-subtitle">Manage and track vehicle insurance claims</p>

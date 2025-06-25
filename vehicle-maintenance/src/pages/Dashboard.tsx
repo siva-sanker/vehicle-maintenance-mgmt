@@ -21,9 +21,9 @@ import {
   FileText,
   Shield,
   AlertTriangle,
-  TrendingUp,
-  DollarSign,
-  RefreshCw,
+  // TrendingUp,
+  // DollarSign,
+  // RefreshCw,
 } from 'lucide-react';
 import { vehicleAPI, Vehicle } from '../services/api';
 import '../styles/Dashboard.css';
@@ -175,10 +175,10 @@ const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed, toggleSidebar }
     }
   };
 
-  const handleRefresh = async (): Promise<void> => {
-    setLoading(true);
-    await fetchDashboardData();
-  };
+  // const handleRefresh = async (): Promise<void> => {
+  //   setLoading(true);
+  //   await fetchDashboardData();
+  // };
 
   useEffect(() => {
     fetchDashboardData();
@@ -283,7 +283,6 @@ const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed, toggleSidebar }
     <>
       <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />
     <div className="dashboard-container">
-      
       <div className="dashboard-content">
         <div className="dashboard-header">
           <div className="header-content">
@@ -307,62 +306,62 @@ const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed, toggleSidebar }
         {/* Stats Cards */}
         <div className="stats-grid">
           <div className="stat-card">
-            <div className="stat-icon vehicles">
+            {/* <div className="stat-icon vehicles">
               <Car size={24} />
-            </div>
+            </div> */}
             <div className="stat-content">
-              <h3 className='stat-number'>{totalVehicles}</h3>
               <p className='stat-p'>Total Vehicles</p>
+              <h3 className='stat-number'>{totalVehicles}</h3>
             </div>
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon insurance">
+            {/* <div className="stat-icon insurance">
               <Shield size={24} />
-            </div>
+            </div> */}
             <div className="stat-content">
-              <h3 className='stat-number'>{insurancePolicies}</h3>
               <p className='stat-p'>Insurance Policies</p>
+              <h3 className='stat-number'>{insurancePolicies}</h3>
             </div>
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon claims">
+            {/* <div className="stat-icon claims">
               <FileText size={24} />
-            </div>
+            </div> */}
             <div className="stat-content">
-              <h3 className='stat-number'>{activeClaims}</h3>
               <p className='stat-p'>Total Claims</p>
+              <h3 className='stat-number'>{activeClaims}</h3>
             </div>
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon amount">
+            {/* <div className="stat-icon amount">
               <DollarSign size={24} />
-            </div>
+            </div> */}
             <div className="stat-content">
-              <h3 className='stat-number'>₹{totalClaimAmount.toLocaleString()}</h3>
               <p className='stat-p'>Total Claim Amount</p>
+              <h3 className='stat-number'>₹{totalClaimAmount.toLocaleString()}</h3>
             </div>
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon documents">
+            {/* <div className="stat-icon documents">
               <AlertTriangle size={24} />
-            </div>
+            </div> */}
             <div className="stat-content">
-              <h3 className='stat-number'>{documentCount}</h3>
               <p className='stat-p'>Documents</p>
+              <h3 className='stat-number'>{documentCount}</h3>
             </div>
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon amount">
+            {/* <div className="stat-icon amount">
               <TrendingUp size={24} />
-            </div>
+            </div> */}
             <div className="stat-content">
-            <h3 className='stat-number'>{((insurancePolicies / totalVehicles) * 100).toFixed(1)}%</h3>
               <p className='stat-p'>Insurance Coverage</p>
+            <h3 className='stat-number'>{((insurancePolicies / totalVehicles) * 100).toFixed(1)}%</h3>
             </div>
           </div>
         </div>

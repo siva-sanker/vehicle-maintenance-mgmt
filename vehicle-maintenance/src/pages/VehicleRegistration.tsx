@@ -200,7 +200,7 @@ const VehicleRegistration: React.FC<VehicleRegistrationProps> = ({ sidebarCollap
         <div className="registration-header">
           <div className="header-content">
             <h1 className="page-title">
-              <Car className="page-icon" />
+              {/* <Car className="page-icon" /> */}
               Vehicle Registration
             </h1>
             <p className="page-subtitle">Register a new vehicle in your fleet</p>

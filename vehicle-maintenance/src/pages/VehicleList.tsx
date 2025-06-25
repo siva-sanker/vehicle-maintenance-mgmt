@@ -17,6 +17,7 @@ import { vehicleAPI, Vehicle } from '../services/api.ts';
 import '../styles/Vehiclelist.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+// import { Shield } from 'lucide-react';
 
 interface VehicleListProps {
   sidebarCollapsed: boolean;
@@ -79,6 +80,27 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
   // Validation state
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+  // 1. Add state for update modal and form data
+  const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
+  const [updateFormData, setUpdateFormData] = useState({
+    make: '',
+    model: '',
+    purchaseDate: '',
+    registrationNumber: '',
+    purchasePrice: '',
+    fuelType: '',
+    engineNumber: '',
+    chassisNumber: '',
+    kilometers: '',
+    color: '',
+    owner: '',
+    phone: '',
+    address: ''
+  });
+  const [updateErrors, setUpdateErrors] = useState<{ [key: string]: string }>({});
+  const [updateTouched, setUpdateTouched] = useState<{ [key: string]: boolean }>({});
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
   const calculateVehicleAge = (purchaseDateString: string): number => {
     const purchaseDate = new Date(purchaseDateString);
@@ -216,9 +238,9 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
   }, [searchTerm]);
 
   const navigate = useNavigate();
-  const goToClaims = (vehicleId: string) => {
-    navigate(`/claims?vehicleId=${vehicleId}`);
-  };
+  // const goToClaims = (vehicleId: string) => {
+  //   navigate(`/claims?vehicleId=${vehicleId}`);
+  // };
 
   useEffect(() => {
     const fetchVehicles = async (): Promise<void> => {
@@ -367,6 +389,131 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
     setShowDetailsModal(true);
   };
 
+  // 2. Function to open update modal and prefill data
+  const openUpdateModal = (vehicle: Vehicle) => {
+    setUpdateFormData({
+      make: vehicle.make || '',
+      model: vehicle.model || '',
+      purchaseDate: vehicle.purchaseDate || '',
+      registrationNumber: vehicle.registrationNumber || '',
+      purchasePrice: vehicle.purchasePrice || '',
+      fuelType: vehicle.fuelType || '',
+      engineNumber: vehicle.engineNumber || '',
+      chassisNumber: vehicle.chassisNumber || '',
+      kilometers: vehicle.kilometers || '',
+      color: vehicle.color || '',
+      owner: vehicle.owner || '',
+      phone: vehicle.phone || '',
+      address: vehicle.address || ''
+    });
+    setUpdateErrors({});
+    setUpdateTouched({});
+    setShowUpdateModal(true);
+  };
+
+  // 3. Validation for update form (reuse registration logic)
+  const validateUpdateField = (name: string, value: string): string => {
+    switch (name) {
+      case 'make':
+        return value.trim().length < 2 ? 'Make must be at least 2 characters' : '';
+      case 'model':
+        return value.trim().length < 1 ? 'Model is required' : '';
+      case 'registrationNumber':
+        return value.trim().length < 5 ? 'Registration number must be at least 5 characters' : '';
+      case 'purchasePrice':
+        return !value || parseFloat(value) < 45000 ? 'Purchase price must be at least ₹45,000' : '';
+      case 'kilometers':
+        return !value || parseFloat(value) < 0 ? 'Kilometers must be a positive number' : '';
+      case 'fuelType':
+        return !value ? 'Please select a fuel type' : '';
+      case 'engineNumber':
+        return value.trim().length < 5 ? 'Engine number must be at least 5 characters' : '';
+      case 'chassisNumber':
+        return value.trim().length < 10 ? 'Chassis number must be at least 10 characters' : '';
+      case 'color':
+        return value.trim().length < 2 ? 'Color must be at least 2 characters' : '';
+      case 'owner':
+        return value.trim().length < 2 ? 'Owner name must be at least 2 characters' : '';
+      case 'phone':
+        const phoneRegex = /^[0-9]\d{9}$/;
+        return !phoneRegex.test(value) ? 'Please enter a valid 10-digit phone number' : '';
+      case 'address':
+        return value.trim().length < 10 ? 'Address must be at least 10 characters' : '';
+      case 'purchaseDate':
+        const selectedDate = new Date(value);
+        const today = new Date();
+        return !value ? 'Purchase date is required' :
+          selectedDate > today ? 'Purchase date cannot be in the future' : '';
+      default:
+        return '';
+    }
+  };
+  const validateUpdateForm = (): boolean => {
+    const newErrors: { [key: string]: string } = {};
+    Object.keys(updateFormData).forEach(key => {
+      const error = validateUpdateField(key, updateFormData[key as keyof typeof updateFormData]);
+      if (error) {
+        newErrors[key] = error;
+      }
+    });
+    setUpdateErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // 4. Handle update form change/blur
+  const handleUpdateChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>): void => {
+    const { name, value } = e.target;
+    setUpdateFormData(prev => ({ ...prev, [name]: value }));
+    if (updateErrors[name]) {
+      setUpdateErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+  const handleUpdateBlur = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>): void => {
+    const { name, value } = e.target;
+    setUpdateTouched(prev => ({ ...prev, [name]: true }));
+    const error = validateUpdateField(name, value);
+    setUpdateErrors(prev => ({ ...prev, [name]: error }));
+  };
+  const getUpdateFieldClassName = (fieldName: string): string => {
+    const baseClass = 'form-input';
+    if (updateTouched[fieldName] && updateErrors[fieldName]) {
+      return `${baseClass} error`;
+    }
+    if (updateTouched[fieldName] && !updateErrors[fieldName] && updateFormData[fieldName as keyof typeof updateFormData]) {
+      return `${baseClass} valid`;
+    }
+    return baseClass;
+  };
+
+  // 5. Handle update submit
+  const handleUpdateVehicle = async (e: React.FormEvent) => {
+    e.preventDefault();
+    // Mark all as touched
+    const allTouched: { [key: string]: boolean } = {};
+    Object.keys(updateFormData).forEach(key => { allTouched[key] = true; });
+    setUpdateTouched(allTouched);
+    if (!validateUpdateForm()) {
+      toast.error('Please fix the errors in the form before submitting.');
+      return;
+    }
+    if (!selectedVehicle?.id) return;
+    setIsUpdating(true);
+    try {
+      const updatedVehicle = await vehicleAPI.patchVehicle(selectedVehicle.id, updateFormData);
+      if (updatedVehicle) {
+        setVehicles(vehicles.map(v => v.id === updatedVehicle.id ? updatedVehicle : v));
+        setShowUpdateModal(false);
+        toast.success('Vehicle details updated successfully!');
+      } else {
+        toast.error('Failed to update vehicle details.');
+      }
+    } catch (error) {
+      toast.error('An error occurred while updating vehicle details.');
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
   return (
     <>
       <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />
@@ -374,7 +521,7 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
         <div className="vehicle-list-header">
           <div className="header-content">
             <h1 className="page-title">
-              <Car className="page-icon" />
+              {/* <Car className="page-icon" /> */}
               Registered Vehicles
             </h1>
             <p className="page-subtitle">Manage and view all your registered vehicles</p>
@@ -412,6 +559,10 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
           </div>
         ) : (
           <div className="table-container">
+            {/* <div className="section-header">
+              <Shield size={20} className="section-icon" />
+              <h3>Vehicle Insurance Details</h3>
+            </div> */}
             <div className="searchBar2">
             </div>
             <table className="vehicles-table">
@@ -442,6 +593,7 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
                     Price
                   </th>
                   <th>Actions</th>
+                  <th>Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -462,7 +614,7 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
                       <td className="text-capitalize">{vehicle.model}</td>
                       <td className="text-uppercase reg-number">{vehicle.registrationNumber}</td>
                       <td className="date-cell">{vehicle.purchaseDate}</td>
-                      <td>{vehicle.color}</td>
+                      <td className='text-capitalize'>{vehicle.color}</td>
                       <td>{calculateVehicleAge(vehicle.purchaseDate)} years</td>
                       <td>
                         <span className={`fuel-badge ${vehicle.fuelType.toLowerCase()}`}>
@@ -479,6 +631,14 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
                           More Details
                         </button>
                       </td>
+                      <td className='status'>
+                        <select name="status" id="" className="status-selector">
+                          <option value="" selected disabled>Set status</option>
+                          <option value="">Active</option>
+                          <option value="">Inactive</option>
+                          <option value="">Maintenance</option>
+                        </select>
+                      </td>
                     </tr>
                   ))
                 )}
@@ -489,7 +649,7 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
 
         {/* Pagination Controls */}
         {filteredVehicles.length > vehiclesPerPage && (
-          <div className="pagination-container">
+          <div className="pagination-container-list">
             <div className="pagination-info">
               Showing {indexOfFirstVehicle + 1} to {Math.min(indexOfLastVehicle, filteredVehicles.length)} of {filteredVehicles.length} vehicles
               {searchTerm && ` (filtered from ${vehicles.length} total)`}
@@ -530,8 +690,9 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
 
         {/* Vehicle Details Modal */}
         {showDetailsModal && selectedVehicle && (
-  <div className="modal-overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-    <div className="vehicle-details-modal">
+  <div className="modal-overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+    onClick={() => setShowDetailsModal(false)}>
+    <div className="vehicle-details-modal" onClick={e => e.stopPropagation()}>
       <div className="modal-header">
         <span className="modal-title text-capitalize">
           Vehicle Details - {selectedVehicle.make} {selectedVehicle.model}
@@ -547,6 +708,7 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
           <span className="year-badge">{new Date(selectedVehicle.purchaseDate).getFullYear()}</span>
         </div>
         <div className="info-section">
+            <h5 className='info-title'>Basic Details</h5>
           <div className="info-grid">
             <div>
               <span className="info-label">Color:</span>
@@ -563,6 +725,7 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
           </div>
         </div>
         <div className="info-section">
+            <h5 className='info-title'>More Details</h5>
           <div className="info-grid">
             <div>
               <span className="info-label">Engine No.:</span>
@@ -579,6 +742,7 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
           </div>
         </div>
         <div className="info-section">
+            <h5 className='info-title'>Owner Details</h5>
           <div className="info-grid">
             <div>
               <span className="info-label">Owner:</span>
@@ -595,6 +759,7 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
           </div>
         </div>
         <div className="info-section">
+            <h5 className='info-title'>Insurance Details</h5>
           <div className="info-grid">
             {selectedVehicle.insurance ? (
               <>
@@ -620,55 +785,84 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
             )}
           </div>
         </div>
-        <div className="vehicle-details-actions">
-          <button
-            className="btn-outline"
-            onClick={() => {
-              if (selectedVehicle.insurance) {
-                viewClaims(selectedVehicle.id);
+        <div className="modal-footer">
+          <div className="vehicle-details-actions" style={{ gap: '3rem' }}>
+            <button
+              className="btn-outline"
+              style={{
+                padding: '0.8rem 1.2rem',
+                fontSize: '0.85rem',
+                minHeight: '32px',
+                minWidth: 'unset'
+              }}
+              onClick={() => {
+                if (selectedVehicle.insurance) {
+                  viewClaims(selectedVehicle.id);
+                  setShowDetailsModal(false);
+                } else {
+                  toast.error("Vehicle has no insurance");
+                }
+              }}
+            >
+              View Claims
+            </button>
+            <button
+              className="btn-outline"
+              style={{
+                padding: '0.3rem 0.7rem',
+                fontSize: '0.85rem',
+                minHeight: '32px',
+                minWidth: 'unset'
+              }}
+              onClick={() => {
                 setShowDetailsModal(false);
-              } else {
-                toast.error("Vehicle has no insurance");
-              }
-            }}
-          >
-            View Claims
-          </button>
-          <button
-            className="btn-outline"
-            onClick={() => {
-              setShowDetailsModal(false);
-              if (selectedVehicle.insurance) {
-                populateFormWithExistingInsurance(selectedVehicle);
-              } else {
-                resetForm();
-              }
-              setShowModal(true);
-            }}
-          >
-            {selectedVehicle.insurance ? 'Update Insurance' : 'Add Insurance'}
-          </button>
+                if (selectedVehicle.insurance) {
+                  populateFormWithExistingInsurance(selectedVehicle);
+                } else {
+                  resetForm();
+                }
+                setShowModal(true);
+              }}
+            >
+              {selectedVehicle.insurance ? 'Update Insurance' : 'Add Insurance'}
+            </button>
+            <button
+              className="btn-outline"
+              style={{
+                padding: '0.3rem 0.7rem',
+                fontSize: '0.85rem',
+                minHeight: '32px',
+                minWidth: 'unset'
+              }}
+              onClick={() => {
+                setShowDetailsModal(false);
+                openUpdateModal(selectedVehicle);
+              }}
+            >
+              Update Vehicle Details
+            </button>
+          </div>
         </div>
       </div>
-      <div className="modal-footer">
+      {/* <div className="modal-footer">
         <button className="btn-secondary" onClick={() => setShowDetailsModal(false)}>Close</button>
-      </div>
+      </div> */}
     </div>
   </div>
 )}
 
         {/* Insurance Modal */}
         {showModal && (
-          <div className="modal-overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="modal-overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            onClick={() => { setShowModal(false); resetForm(); }}>
             <div className="modal" style={{
               backgroundColor: 'white',
               padding: '20px',
-              border: '1px solid #e0e0e0',
               maxWidth: '600px',
               width: '90%',
               maxHeight: '70vh',
               overflowY: 'auto'
-            }}>
+            }} onClick={e => e.stopPropagation()}>
               <div className="modal-header">
                 <h3>{selectedVehicle?.insurance ? 'Update' : 'Add'} Insurance for {selectedVehicle?.make} {selectedVehicle?.model}</h3>
                 <button className="modal-close" onClick={() => {
@@ -831,8 +1025,8 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
                   </div>
                 </div>
               </div>
-              <div className="modal-footer">
-                <button className="btn-secondary" onClick={() => {
+              <div className="modal-footer3">
+                <button className="btn-primary" style={{backgroundColor: 'red', color: 'white'}} onClick={() => {
                   setShowModal(false);
                   resetForm();
                 }}>Cancel</button>
@@ -850,15 +1044,15 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
 
         {/* Claims Modal */}
         {claimsModalOpen && (
-          <div className="modal-overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="modal-overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            onClick={() => setClaimsModalOpen(false)}>
             <div className="modal" style={{
               backgroundColor: 'white',
               padding: '20px',
-              border: '1px solid #e0e0e0',
               maxWidth: '500px',
               width: '90%',
               overflowY: 'auto'
-            }}>
+            }} onClick={e => e.stopPropagation()}>
               <div className="modal-header">
                 <h3>Claims History - {selectedVehicle?.make} {selectedVehicle?.model}</h3>
                 <button className="modal-close" onClick={() => setClaimsModalOpen(false)}>×</button>
@@ -906,6 +1100,105 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
               <div className="modal-footer">
                 <button className="btn-secondary" onClick={() => setClaimsModalOpen(false)}>Close</button>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Update Vehicle Details Modal */}
+        {showUpdateModal && (
+          <div className="modal-overlay" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            onClick={() => setShowUpdateModal(false)}>
+            <div className="modal" style={{
+              backgroundColor: 'white',
+              padding: '20px',
+              maxWidth: '600px',
+              width: '90%',
+              maxHeight: '80vh',
+              overflowY: 'auto'
+            }} onClick={e => e.stopPropagation()}>
+              <div className="modal-header2">
+                <h3>Update Vehicle Details</h3>
+                <button className="modal-close" onClick={() => setShowUpdateModal(false)}>×</button>
+              </div>
+              <form onSubmit={handleUpdateVehicle} className="modal-body2">
+                <div className="form-grid">
+                  <div className="form-group">
+                    <label>Make *</label>
+                    <input name="make" value={updateFormData.make} onChange={handleUpdateChange} onBlur={handleUpdateBlur} className={getUpdateFieldClassName('make')} />
+                    {updateTouched['make'] && updateErrors['make'] && <span className="error-message">{updateErrors['make']}</span>}
+                  </div>
+                  <div className="form-group">
+                    <label>Model *</label>
+                    <input name="model" value={updateFormData.model} onChange={handleUpdateChange} onBlur={handleUpdateBlur} className={getUpdateFieldClassName('model')} />
+                    {updateTouched['model'] && updateErrors['model'] && <span className="error-message">{updateErrors['model']}</span>}
+                  </div>
+                  <div className="form-group">
+                    <label>Registration Number *</label>
+                    <input name="registrationNumber" value={updateFormData.registrationNumber} onChange={handleUpdateChange} onBlur={handleUpdateBlur} className={getUpdateFieldClassName('registrationNumber')} />
+                    {updateTouched['registrationNumber'] && updateErrors['registrationNumber'] && <span className="error-message">{updateErrors['registrationNumber']}</span>}
+                  </div>
+                  <div className="form-group">
+                    <label>Purchase Date *</label>
+                    <input type="date" name="purchaseDate" value={updateFormData.purchaseDate} onChange={handleUpdateChange} onBlur={handleUpdateBlur} className={getUpdateFieldClassName('purchaseDate')} />
+                    {updateTouched['purchaseDate'] && updateErrors['purchaseDate'] && <span className="error-message">{updateErrors['purchaseDate']}</span>}
+                  </div>
+                  <div className="form-group">
+                    <label>Purchase Price *</label>
+                    <input type="number" name="purchasePrice" value={updateFormData.purchasePrice} onChange={handleUpdateChange} onBlur={handleUpdateBlur} min={45000} className={getUpdateFieldClassName('purchasePrice')} />
+                    {updateTouched['purchasePrice'] && updateErrors['purchasePrice'] && <span className="error-message">{updateErrors['purchasePrice']}</span>}
+                  </div>
+                  <div className="form-group">
+                    <label>Kilometers *</label>
+                    <input type="number" name="kilometers" value={updateFormData.kilometers} onChange={handleUpdateChange} onBlur={handleUpdateBlur} min={0} className={getUpdateFieldClassName('kilometers')} />
+                    {updateTouched['kilometers'] && updateErrors['kilometers'] && <span className="error-message">{updateErrors['kilometers']}</span>}
+                  </div>
+                  <div className="form-group">
+                    <label>Fuel Type *</label>
+                    <select name="fuelType" value={updateFormData.fuelType} onChange={handleUpdateChange} onBlur={handleUpdateBlur} className={getUpdateFieldClassName('fuelType')}>
+                      <option value="" disabled>Select fuel type</option>
+                      <option value="Petrol">Petrol</option>
+                      <option value="Diesel">Diesel</option>
+                      <option value="Electric">Electric</option>
+                      <option value="Hybrid">Hybrid</option>
+                    </select>
+                    {updateTouched['fuelType'] && updateErrors['fuelType'] && <span className="error-message">{updateErrors['fuelType']}</span>}
+                  </div>
+                  <div className="form-group">
+                    <label>Engine Number *</label>
+                    <input name="engineNumber" value={updateFormData.engineNumber} onChange={handleUpdateChange} onBlur={handleUpdateBlur} className={getUpdateFieldClassName('engineNumber')} />
+                    {updateTouched['engineNumber'] && updateErrors['engineNumber'] && <span className="error-message">{updateErrors['engineNumber']}</span>}
+                  </div>
+                  <div className="form-group">
+                    <label>Chassis Number *</label>
+                    <input name="chassisNumber" value={updateFormData.chassisNumber} onChange={handleUpdateChange} onBlur={handleUpdateBlur} className={getUpdateFieldClassName('chassisNumber')} />
+                    {updateTouched['chassisNumber'] && updateErrors['chassisNumber'] && <span className="error-message">{updateErrors['chassisNumber']}</span>}
+                  </div>
+                  <div className="form-group">
+                    <label>Color *</label>
+                    <input name="color" value={updateFormData.color} onChange={handleUpdateChange} onBlur={handleUpdateBlur} className={getUpdateFieldClassName('color')} />
+                    {updateTouched['color'] && updateErrors['color'] && <span className="error-message">{updateErrors['color']}</span>}
+                  </div>
+                  <div className="form-group">
+                    <label>Owner *</label>
+                    <input name="owner" value={updateFormData.owner} onChange={handleUpdateChange} onBlur={handleUpdateBlur} className={getUpdateFieldClassName('owner')} />
+                    {updateTouched['owner'] && updateErrors['owner'] && <span className="error-message">{updateErrors['owner']}</span>}
+                  </div>
+                  <div className="form-group">
+                    <label>Phone *</label>
+                    <input name="phone" value={updateFormData.phone} onChange={handleUpdateChange} onBlur={handleUpdateBlur} className={getUpdateFieldClassName('phone')} />
+                    {updateTouched['phone'] && updateErrors['phone'] && <span className="error-message">{updateErrors['phone']}</span>}
+                  </div>
+                  <div className="form-group">
+                    <label>Address *</label>
+                    <textarea name="address" value={updateFormData.address} onChange={handleUpdateChange} onBlur={handleUpdateBlur} className={getUpdateFieldClassName('address')} />
+                    {updateTouched['address'] && updateErrors['address'] && <span className="error-message">{updateErrors['address']}</span>}
+                  </div>
+                </div>
+                <div className="modal-footer2">
+                  <button className="btn-primary" style={{backgroundColor: 'red', color: 'white'}} type="button" onClick={() => setShowUpdateModal(false)}>Cancel</button>
+                  <button className="btn-primary" type="submit" disabled={isUpdating}>{isUpdating ? 'Updating...' : 'Update Vehicle'}</button>
+                </div>
+              </form>
             </div>
           </div>
         )}

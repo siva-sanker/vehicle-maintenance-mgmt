@@ -260,7 +260,7 @@ const VehicleLocation: React.FC<VehicleLocationProps> = ({ sidebarCollapsed, tog
       <div className="vehicle-location-header">
         <div className="header-content">
           <h1 className="page-title">
-            <MapPin className="page-icon" size={28} />
+            {/* <MapPin className="page-icon" size={28} /> */}
             Vehicle Location Tracking
           </h1>
           <p className="page-subtitle">Track and monitor vehicle locations in real-time</p>

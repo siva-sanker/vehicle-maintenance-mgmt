@@ -132,7 +132,7 @@ const InsuranceManagement: React.FC<InsuranceManagementProps> = ({ sidebarCollap
         <div className="insurance-header">
           <div className="header-content">
             <h1 className="page-title">
-              <FileText className="page-icon" />
+              {/* <FileText className="page-icon" /> */}
               Insurance Management
             </h1>
             <p className="page-subtitle">Manage vehicle insurance policies and details</p>

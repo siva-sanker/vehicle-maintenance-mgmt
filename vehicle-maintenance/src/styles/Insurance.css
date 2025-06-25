@@ -254,11 +254,11 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin: 1rem 0;
-  padding: 1rem;
-  background-color: #f8f9fa;
+  /* margin: 1rem 0;
+  padding: 1rem; */
+  background-color: transparent;
   border-radius: 6px;
-  border: 1px solid #e9ecef;
+  border: none;
 }
 
 .legend-title {
@@ -451,7 +451,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 2rem;
+  padding: 1rem;
   background-color: white;
   border: 1px solid #eeeeee;
   border-top: none;

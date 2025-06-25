@@ -1,5 +1,6 @@
 .sidebar {
-  width: 235px;
+  /* width: 235px; */
+  width: 255px;
   /* width: 319.984px; */
   z-index: 1000;
   height: 100vh;
@@ -181,18 +182,20 @@ span {
 }
 
 .searchbar {
-  margin: 0px 5px 0 auto;
+  margin: 0px 3px 0 auto;
   padding: 6px 12px 6px 12px;
+  /* border: 1px solid red; */
   line-height: 17.5px;
   width: 100%;
-  max-width: 95%; /* or set a fixed width */
+  max-width: 99%; /* or set a fixed width */
   background-color: #1f1f1f;
   border-radius: 4px;
   box-shadow: rgba(0, 0, 0, 0.075) 0px 1px 1px 0px inset;
   outline: none;
 }
 .searchbar input{
-  padding: 8px 6px 8px 6px;
+  width: 100%;
+  padding: 8px 6px 6px 10px;
   border: 1px solid rgb(128, 222, 247);
   color: white;
 }

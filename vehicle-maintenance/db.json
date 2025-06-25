@@ -34,10 +34,10 @@
         }
       ],
       "currentLocation": {
-        "latitude": 12.977458385518295,
-        "longitude": 77.59704776127582,
-        "timestamp": "2025-06-23T05:15:11.700Z",
-        "address": "Unknown location"
+        "latitude": 12.973036698956918,
+        "longitude": 77.6015152850183,
+        "timestamp": "2025-06-25T06:47:55.797Z",
+        "address": "St. Marks Circle, St. Mark's Circle Plaza, Shanthala Nagar, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
       },
       "lastUpdated": "2025-06-13T08:21:17.340Z"
     },
@@ -88,7 +88,7 @@
       "make": "honda",
       "model": "city",
       "purchaseDate": "2018-05-15",
-      "registrationNumber": "MH02AB4567",
+      "registrationNumber": "MH02AB4545",
       "purchasePrice": "950000",
       "fuelType": "Petrol",
       "engineNumber": "honda123xyz789",
@@ -342,7 +342,7 @@
       "chassisNumber": "ford456klm789",
       "kilometers": "38000",
       "color": "brown",
-      "owner": "Anjali Verma",
+      "owner": "Anjali sha verma",
       "phone": "3210987654",
       "address": "Lucknow, Uttar Pradesh",
       "insurance": {
