@@ -4,7 +4,10 @@ import { vehicleAPI, Vehicle } from '../services/api';
 import { toast } from 'react-toastify';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import PageContainer from '../components/PageContainer';
+import SectionHeading from '../components/SectionHeading';
 import '../styles/VehicleLocation.css';
+import ButtonWithGradient from '../components/ButtonWithGradient';
 
 interface VehicleLocationProps {
   sidebarCollapsed: boolean;
@@ -253,19 +256,21 @@ const VehicleLocation: React.FC<VehicleLocationProps> = ({ sidebarCollapsed, tog
 
   return (
     <>
-    <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />
-    <div className="vehicle-location-container">
-      
+    {/* <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} /> */}
+    <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator />
+    {/* <div className="vehicle-location-container"> */}
+    <PageContainer>
+      <SectionHeading title='Vehicle Location Tracking' subtitle='Track and monitor vehicle locations in real-time'/>
       {/* Header */}
-      <div className="vehicle-location-header">
+      {/* <div className="vehicle-location-header">
         <div className="header-content">
           <h1 className="page-title">
-            {/* <MapPin className="page-icon" size={28} /> */}
+            <MapPin className="page-icon" size={28} />
             Vehicle Location Tracking
           </h1>
           <p className="page-subtitle">Track and monitor vehicle locations in real-time</p>
         </div>
-      </div>
+      </div> */}
 
       {/* Main Content */}
       <div className="location-content-grid">
@@ -424,8 +429,8 @@ const VehicleLocation: React.FC<VehicleLocationProps> = ({ sidebarCollapsed, tog
           )}
         </div>
       </div>
-
-    </div>
+    </PageContainer>
+    {/* </div> */}
       <Footer />
     </>
   );

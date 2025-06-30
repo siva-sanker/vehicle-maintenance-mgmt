@@ -871,29 +871,6 @@
       ]
     },
     {
-      "id": "z1c5",
-      "make": "citroen",
-      "model": "c5",
-      "purchaseDate": "2022-03-30",
-      "registrationNumber": "PB03HI5678",
-      "purchasePrice": "2800000",
-      "fuelType": "Petrol",
-      "engineNumber": "citroen123ijk456",
-      "chassisNumber": "citroen789lmn123",
-      "kilometers": "12000",
-      "color": "lavender",
-      "owner": "Gurpreet Singh",
-      "phone": "6543210987",
-      "address": "Amritsar, Punjab",
-      "currentLocation": {
-        "latitude": 12.973842073753149,
-        "longitude": 77.59821992266714,
-        "timestamp": "2025-06-12T09:27:15.317Z",
-        "address": "Shanthala Nagar, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
-      },
-      "lastUpdated": "2025-06-12T09:27:15.988Z"
-    },
-    {
       "id": "a2d6",
       "make": "peugeot",
       "model": "2008",
@@ -1132,7 +1109,7 @@
       }
     },
     {
-      "id": "6c25",
+      "id": "abf1",
       "make": "Honda",
       "model": "City",
       "registrationNumber": "KL01CD1234",
@@ -1147,24 +1124,16 @@
       "phone": "9876543210",
       "address": "Kerala, India",
       "insurance": {
-        "policyNumber": "POL789015",
+        "policyNumber": "POL789012",
         "insurer": "HDFC Ergo",
         "policytype": "Comprehensive",
-        "startDate": "2024-05-06",
-        "endDate": "2025-06-30",
+        "startDate": "2024-01-01",
+        "endDate": "2024-12-31",
         "payment": "card",
-        "issueDate": "2024-05-14",
+        "issueDate": "2023-12-20",
         "premiumAmount": "12000",
         "hasInsurance": true
-      },
-      "claims": [
-        {
-          "claimDate": "2025-06-04",
-          "claimAmount": "6985",
-          "reason": "chipset\n",
-          "status": "Pending"
-        }
-      ]
+      }
     }
   ],
   "locationHistory": [
@@ -1328,28 +1297,19 @@
       "licenseNumber": "DL1234567890",
       "phone": "9876543210",
       "address": "123 Main St, City, State",
+      "isActive": true,
       "assignedVehicleIds": [
         "a4e4",
         "6b1e"
       ]
     },
     {
-      "id": "1d2d",
-      "name": "shibu",
-      "licenseNumber": "123914912",
-      "phone": "09873048170",
-      "address": "abcd",
-      "assignedVehicleIds": [
-        "d9g3",
-        "6b1e",
-        "a4e4"
-      ]
-    },
-    {
+      "id": "287a",
       "name": "dom T",
       "licenseNumber": "kl01kl09879081",
       "phone": "9638527410",
       "address": "ambadaaaaaaaa",
+      "isActive": true,
       "assignedVehicleIds": [
         "i4l8",
         "q2t6",
@@ -1359,8 +1319,28 @@
         "6b1e",
         "a2d6",
         "z1c5"
-      ],
-      "id": "287a"
+      ]
+    },
+    {
+      "id": "ed95",
+      "name": "johnson",
+      "licenseNumber": "908909",
+      "phone": "918",
+      "address": "india usa",
+      "isActive": true,
+      "assignedVehicleIds": []
+    },
+    {
+      "id": "f4cc",
+      "name": "test",
+      "licenseNumber": "test123",
+      "phone": "5289484",
+      "address": "asdfg",
+      "isActive": false,
+      "assignedVehicleIds": [
+        "6b1e",
+        "a4e4"
+      ]
     }
   ]
 }

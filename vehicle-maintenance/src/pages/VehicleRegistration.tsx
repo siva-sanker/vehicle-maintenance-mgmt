@@ -2,6 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import PageContainer from '../components/PageContainer';
+import ButtonWithGradient from '../components/ButtonWithGradient';
+import SectionHeading from '../components/SectionHeading';
+// import AddressInput from '../components/AddressInput';
+import SelectInput from '../components/SelectInput';
+import InputText from '../components/InputText';
 import {
   Car,
   Calendar,
@@ -195,22 +201,25 @@ const VehicleRegistration: React.FC<VehicleRegistrationProps> = ({ sidebarCollap
 
   return (
     <>
-      <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />
-      <div className="registration-container">
-        <div className="registration-header">
+      <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator />
+      <PageContainer>
+        <SectionHeading title='Vehicle Registration' subtitle='Register a new vehicle in your fleet'/>
+      {/* <div className="registration-container"> */}
+        {/* <div className="registration-header">
           <div className="header-content">
             <h1 className="page-title">
-              {/* <Car className="page-icon" /> */}
+              <Car className="page-icon" />
               Vehicle Registration
             </h1>
             <p className="page-subtitle">Register a new vehicle in your fleet</p>
           </div>
           <div className="header-actions">
-            <button className="btn-secondary" onClick={() => navigate('/vehicle-list')}>
-              View All Vehicles
-            </button>
+            <ButtonWithGradient
+              text="View All Vehicles"
+              onClick={() => navigate('/vehicle-list')}
+            />
           </div>
-        </div>
+        </div> */}
 
         <div className="registration-form-container">
           {successMessage && (
@@ -229,67 +238,59 @@ const VehicleRegistration: React.FC<VehicleRegistrationProps> = ({ sidebarCollap
               </div>
               <div className="form-grid">
                 <div className="form-group">
-                  <label>Make</label>
-                  <input
+                  <InputText
+                    label="Make"
                     type="text"
                     name="make"
                     placeholder="Vehicle make / Brand"
                     value={formData.make}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    error={touched['make'] ? errors['make'] : ''}
                     className={getFieldClassName('make')}
                   />
-                  {touched['make'] && errors['make'] && (
-                    <div className="error-message">{errors['make']}</div>
-                  )}
                 </div>
-
+                
                 <div className="form-group">
-                  <label>Model</label>
-                  <input
+                  <InputText
+                    label="Model"
                     type="text"
                     name="model"
                     placeholder="Vehicle model"
                     value={formData.model}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    error={touched['model'] ? errors['model'] : ''}
                     className={getFieldClassName('model')}
                   />
-                  {touched['model'] && errors['model'] && (
-                    <div className="error-message">{errors['model']}</div>
-                  )}
                 </div>
 
                 <div className="form-group">
-                  <label>Registration Number</label>
-                  <input
+                  <InputText
+                    label="Registration Number"
                     type="text"
                     name="registrationNumber"
                     placeholder="Registration number"
                     value={formData.registrationNumber}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    error={touched['registrationNumber'] ? errors['registrationNumber'] : ''}
                     className={getFieldClassName('registrationNumber')}
                   />
-                  {touched['registrationNumber'] && errors['registrationNumber'] && (
-                    <div className="error-message">{errors['registrationNumber']}</div>
-                  )}
                 </div>
 
                 <div className="form-group">
-                  <label>Color</label>
-                  <input
+                  <InputText
+                    label="Color"
                     type="text"
                     name="color"
                     placeholder="Vehicle Color"
                     value={formData.color}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    error={touched['color'] ? errors['color'] : ''}
                     className={getFieldClassName('color')}
                   />
-                  {touched['color'] && errors['color'] && (
-                    <div className="error-message">{errors['color']}</div>
-                  )}
                 </div>
               </div>
             </div>
@@ -301,73 +302,63 @@ const VehicleRegistration: React.FC<VehicleRegistrationProps> = ({ sidebarCollap
               </div>
               <div className="form-grid">
                 <div className="form-group">
-                  <label>Purchase Date</label>
-                  <input
+                  <InputText
+                    label="Purchase Date"
                     type="date"
                     name="purchaseDate"
                     value={formData.purchaseDate}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    error={touched['purchaseDate'] ? errors['purchaseDate'] : ''}
                     className={getFieldClassName('purchaseDate')}
                   />
-                  {touched['purchaseDate'] && errors['purchaseDate'] && (
-                    <div className="error-message">{errors['purchaseDate']}</div>
-                  )}
                 </div>
 
                 <div className="form-group">
-                  <label>Purchase Price</label>
-                  <input
+                  <InputText
+                    label="Purchase Price"
                     type="number"
                     name="purchasePrice"
                     placeholder="Enter purchase price"
                     value={formData.purchasePrice}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    min={45000}
-                    style={{ paddingLeft: '2.5rem' }}
+                    error={touched['purchasePrice'] ? errors['purchasePrice'] : ''}
                     className={getFieldClassName('purchasePrice')}
                   />
-                  {touched['purchasePrice'] && errors['purchasePrice'] && (
-                    <div className="error-message">{errors['purchasePrice']}</div>
-                  )}
                 </div>
 
                 <div className="form-group">
-                  <label>Kilometers Driven</label>
-                  <input
+                  <InputText
+                    label="Kilometers Driven"
                     type="number"
                     name="kilometers"
                     placeholder="Kilometers driven"
                     value={formData.kilometers}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    error={touched['kilometers'] ? errors['kilometers'] : ''}
                     className={getFieldClassName('kilometers')}
                   />
-                  {touched['kilometers'] && errors['kilometers'] && (
-                    <div className="error-message">{errors['kilometers']}</div>
-                  )}
                 </div>
 
                 <div className="form-group">
-                  <label>Fuel Type</label>
-                  <select
+                  <SelectInput
+                    label="Fuel Type"
                     name="fuelType"
                     value={formData.fuelType}
                     onChange={handleChange}
-                    onBlur={handleBlur}
+                    options={[
+                      { value: '', label: 'Select Fuel Type', disabled: true },
+                      { value: 'Petrol', label: 'Petrol' },
+                      { value: 'Diesel', label: 'Diesel' },
+                      { value: 'Electric', label: 'Electric' },
+                      { value: 'Hybrid', label: 'Hybrid' },
+                      { value: 'CNG', label: 'CNG' },
+                    ]}
+                    error={touched['fuelType'] ? errors['fuelType'] : ''}
                     className={getFieldClassName('fuelType')}
-                  >
-                    <option value="" disabled>Select fuel type</option>
-                    <option value="Petrol">Petrol</option>
-                    <option value="Diesel">Diesel</option>
-                    <option value="Electric">Electric</option>
-                    <option value="Hybrid">Hybrid</option>
-                    <option value="CNG">CNG</option>
-                  </select>
-                  {touched['fuelType'] && errors['fuelType'] && (
-                    <div className="error-message">{errors['fuelType']}</div>
-                  )}
+                  />
                 </div>
               </div>
             </div>
@@ -379,35 +370,31 @@ const VehicleRegistration: React.FC<VehicleRegistrationProps> = ({ sidebarCollap
               </div>
               <div className="form-grid">
                 <div className="form-group">
-                  <label>Engine Number</label>
-                  <input
+                  <InputText
+                    label="Engine Number"
                     type="text"
                     name="engineNumber"
                     placeholder="Engine Number"
                     value={formData.engineNumber}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    error={touched['engineNumber'] ? errors['engineNumber'] : ''}
                     className={getFieldClassName('engineNumber')}
                   />
-                  {touched['engineNumber'] && errors['engineNumber'] && (
-                    <div className="error-message">{errors['engineNumber']}</div>
-                  )}
                 </div>
 
                 <div className="form-group">
-                  <label>Chassis Number</label>
-                  <input
+                  <InputText
+                    label="Chassis Number"
                     type="text"
                     name="chassisNumber"
                     placeholder="Chassis Number"
                     value={formData.chassisNumber}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    error={touched['chassisNumber'] ? errors['chassisNumber'] : ''}
                     className={getFieldClassName('chassisNumber')}
                   />
-                  {touched['chassisNumber'] && errors['chassisNumber'] && (
-                    <div className="error-message">{errors['chassisNumber']}</div>
-                  )}
                 </div>
               </div>
             </div>
@@ -419,40 +406,36 @@ const VehicleRegistration: React.FC<VehicleRegistrationProps> = ({ sidebarCollap
               </div>
               <div className="form-grid">
                 <div className="form-group">
-                  <label>Owner Name</label>
-                  <input
+                  <InputText
+                    label="Owner Name"
                     type="text"
                     name="owner"
                     placeholder="Owner Name"
                     value={formData.owner}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    error={touched['owner'] ? errors['owner'] : ''}
                     className={getFieldClassName('owner')}
                   />
-                  {touched['owner'] && errors['owner'] && (
-                    <div className="error-message">{errors['owner']}</div>
-                  )}
                 </div>
 
                 <div className="form-group">
-                  <label>Contact Number</label>
-                  <input
+                  <InputText
+                    label="Contact Number"
                     type="text"
                     name="phone"
                     placeholder="Owner Phone"
                     value={formData.phone}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    error={touched['phone'] ? errors['phone'] : ''}
                     className={getFieldClassName('phone')}
                   />
-                  {touched['phone'] && errors['phone'] && (
-                    <div className="error-message">{errors['phone']}</div>
-                  )}
                 </div>
 
-                <div className="form-group full-width">
-                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: '1rem' }}>
-                    <div style={{ flex: 1 }}>
+                <div className="form-group full-width ">
+                  {/* <div style={{ display: 'flex', alignItems: 'flex-end', gap: '1rem' }}> */}
+                    <div className='form-group'>
                       <label>Address</label>
                       <div className="input-with-icon">
                         <textarea
@@ -471,26 +454,29 @@ const VehicleRegistration: React.FC<VehicleRegistrationProps> = ({ sidebarCollap
                     </div>
 
                     <div className="form-actions">
-                      <button
+                      {/* <button
                         type="button"
                         className="btn-primary"
                         style={{ backgroundColor: '#e53935', borderColor: '#e53935' }}
                         onClick={() => navigate('/dashboard')}
                       >
                         Cancel
-                      </button>
-                      <button type="submit" className="btn-primary">
+                      </button> */}
+                      <ButtonWithGradient text='Cancel' type='button' className='btn' onClick={() => navigate('/dashboard')} />
+                      {/* <button type="submit" className="btn-primary">
                         <Plus size={16} />
                         Register Vehicle
-                      </button>
+                      </button> */}
+                      <ButtonWithGradient text='Register Vehicle' type='submit' className='btn' />
                     </div>
-                  </div>
+                  {/* </div> */}
                 </div>
               </div>
             </div>
           </form>
         </div>
-      </div>
+      {/* </div> */}
+      </PageContainer>
       <Footer />
     </>
   );

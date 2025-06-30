@@ -39,7 +39,7 @@ span {
 .footer-container a {
     font-size: 14px;
     color: rgb(3, 139, 164);
-    /* text-decoration: none; */
+    text-decoration: none;
 }
 
 .footer-container a:hover {
@@ -89,7 +89,7 @@ span {
     margin: 0 0 16px 0;
     font-size: 1.2rem;
     font-weight: 600;
-    color: #1976d2;
+    color: black;
 }
 
 .shortcuts-modal ul {

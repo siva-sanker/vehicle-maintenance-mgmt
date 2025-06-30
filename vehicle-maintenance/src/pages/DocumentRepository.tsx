@@ -3,6 +3,9 @@ import { FileText, Upload, Eye } from 'lucide-react';
 import '../styles/Documentrepo.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import ButtonWithGradient from '../components/ButtonWithGradient';
+import PageContainer from '../components/PageContainer';
+import SectionHeading from '../components/SectionHeading';
 import { vehicleAPI, Vehicle } from '../services/api';
 
 interface DocumentRepositoryProps {
@@ -69,16 +72,19 @@ const DocumentRepository: React.FC<DocumentRepositoryProps> = ({ sidebarCollapse
 
   return (
     <>
-      <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />
-      <div className="document-repository-container">
-        <div className="document-repository-header">
+      {/* <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} /> */}
+      <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator />
+      <PageContainer>
+      {/* <div className="document-repository-container"> */}
+        <SectionHeading title='Document Repository' subtitle='Upload and manage your vehicle documents'/>
+        {/* <div className="document-repository-header">
           <div className="header-content">
             <h1 className="page-title">
               Document Repository
             </h1>
             <p className="page-subtitle">Upload and manage your vehicle documents</p>
           </div>
-        </div>
+        </div> */}
 
         <div className="upload-form-card">
           <div className="form-header">
@@ -139,10 +145,11 @@ const DocumentRepository: React.FC<DocumentRepositoryProps> = ({ sidebarCollapse
               </select>
             </div>
 
-            <button type="button" className="btn-primary" onClick={handleUpload}>
+            {/* <button type="button" className="btn-primary" onClick={handleUpload}>
               <Upload size={16} />
               Upload Document
-            </button>
+            </button> */}
+            <ButtonWithGradient text='Upload Document' type='button' className='btn' onClick={handleUpload} />
           </form>
         </div>
 
@@ -185,7 +192,8 @@ const DocumentRepository: React.FC<DocumentRepositoryProps> = ({ sidebarCollapse
             </div>
           ))}
         </div>
-      </div>
+      {/* </div> */}
+      </PageContainer>
       <Footer />
     </>
   );

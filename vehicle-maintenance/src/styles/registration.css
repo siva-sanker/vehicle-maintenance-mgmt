@@ -251,7 +251,7 @@
 
 .form-input.error:focus {
     border-color: #dc3545;
-    box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.2);
+    box-shadow: 0 0 0 2px rgba(236, 48, 67, 0.2);
 }
 
 .form-input.valid {
@@ -264,19 +264,21 @@
     border-color: #28a745;
     box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.2);
 }
-
+.label-plus-error{
+    display: flex;
+    flex-direction: row;
+}
 .error-message {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     gap: 0.5rem;
     color: #dc3545;
     font-size: 0.8rem;
     font-weight: 500;
     margin-top: 0.25rem;
-    padding: 0.5rem;
-    background-color: #fff5f5;
-    border: 1px solid #fed7d7;
-    border-radius: 4px;
+    padding: 0px !important;
+    background-color: transparent !important;
+    border: none !important;
     animation: fadeIn 0.3s ease-in;
 }
 
@@ -332,7 +334,7 @@
     gap: 1rem;
     margin-top: 2rem;
     padding-top: 2rem;
-    border-top: 1px solid #eeeeee;
+    /* border-top: 1px solid #eeeeee; */
 }
 
 /* Responsive Design */

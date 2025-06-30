@@ -2,6 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import PageContainer from '../components/PageContainer';
+import ButtonWithGradient from '../components/ButtonWithGradient';
+import SectionHeading from '../components/SectionHeading';
+import Searchbar from '../components/Searchbar';
+import Table from '../components/Table';
+// import DatePicker from 'react-datepicker';
+// import 'react-datepicker/dist/react-datepicker.css';
 import {
   FileText,
   Search,
@@ -62,10 +69,6 @@ const VehicleClaims: React.FC<VehicleClaimsProps> = ({ sidebarCollapsed, toggleS
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [successMessage, setSuccessMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
-  
-  // Pagination state
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [claimsPerPage] = useState<number>(10); // Number of claims to show per page
   
   const [formData, setFormData] = useState<FormData>({
     vehicleId: '',
@@ -129,20 +132,6 @@ const VehicleClaims: React.FC<VehicleClaimsProps> = ({ sidebarCollapsed, toggleS
   const filteredClaims = getAllClaims().filter(claim =>
     claim.registrationNumber.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  // Pagination logic
-  const indexOfLastClaim = currentPage * claimsPerPage;
-  const indexOfFirstClaim = indexOfLastClaim - claimsPerPage;
-  const currentClaims = filteredClaims.slice(indexOfFirstClaim, indexOfLastClaim);
-  const totalPages = Math.ceil(filteredClaims.length / claimsPerPage);
-
-  // Change page
-  const paginate = (pageNumber: number): void => setCurrentPage(pageNumber);
-
-  // Reset to first page when search term changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -213,7 +202,7 @@ const VehicleClaims: React.FC<VehicleClaimsProps> = ({ sidebarCollapsed, toggleS
       const vehicle = await vehicleAPI.getVehicleById(vehicleId);
 
       // Update the specific claim status
-      const updatedClaims = [...vehicle.claims];
+      const updatedClaims = vehicle.claims ? [...vehicle.claims] : [];
       updatedClaims[claimIndex].status = newStatus;
 
       // Update vehicle with updated claims array
@@ -257,17 +246,20 @@ const VehicleClaims: React.FC<VehicleClaimsProps> = ({ sidebarCollapsed, toggleS
 
   return (
     <>
-      <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />
-      <div className="claims-container">
-        <div className="claims-header">
+      {/* <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} /> */}
+      <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator />
+      {/* <div className="claims-container"> */}
+      <PageContainer>
+        {/* <div className="claims-header">
           <div className="header-content">
             <h1 className="page-title">
-              {/* <FileText className="page-icon" /> */}
+              <FileText className="page-icon" />
               Insurance Claims
             </h1>
             <p className="page-subtitle">Manage and track vehicle insurance claims</p>
           </div>
-        </div>
+        </div> */}
+        <SectionHeading title='Insurance Claims' subtitle='Manage and track vehicle insurance claims'/>  
 
         {/* Success Message */}
         {successMessage && (
@@ -322,6 +314,7 @@ const VehicleClaims: React.FC<VehicleClaimsProps> = ({ sidebarCollapsed, toggleS
                     onChange={handleChange}
                     required
                   />
+                  {/* <DatePicker onChange={handleChange} value={formData.claimDate}/> */}
                 </div>
 
                 <div className="form-group">
@@ -360,10 +353,12 @@ const VehicleClaims: React.FC<VehicleClaimsProps> = ({ sidebarCollapsed, toggleS
                   </select>
                 </div>
 
-                <button type="submit" className="btn-primary">
+                {/* <button type="submit" className="btn-primary">
                   <Plus size={16} />
                   Submit Claim
-                </button>
+                </button> */}
+                <ButtonWithGradient text='Submit Claim' type='submit' className='btn' />  
+
               </form>
             </div>
           </div>
@@ -376,16 +371,11 @@ const VehicleClaims: React.FC<VehicleClaimsProps> = ({ sidebarCollapsed, toggleS
               </div>
 
               <div className="search-container2">
-                {/* <div className="search-input-wrapper"> */}
-                  <Search size={16} className="search-icon" />
-                  <input
-                    type="text"
-                    placeholder="Search by vehicle registration number..."
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                    className="search-input"
-                  />
-                {/* </div> */}
+                <Searchbar
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+
+                />
               </div>
 
               <div className="claims-table-container">
@@ -396,102 +386,40 @@ const VehicleClaims: React.FC<VehicleClaimsProps> = ({ sidebarCollapsed, toggleS
                     <p>No claims match your search criteria</p>
                   </div>
                 ) : (
-                  <>
-                    <table className="claims-table">
-                      <thead>
-                        <tr>
-                          <th>Vehicle</th>
-                          <th>Date</th>
-                          <th>Amount</th>
-                          <th>Reason</th>
-                          {/* <th>Status</th> */}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {currentClaims.map((claim, idx) => (
-                          <tr key={idx}>
-                            <td className="vehicle-cell text-uppercase">
-                              <Car size={14} />
-                              {claim.registrationNumber}
-                            </td>
-                            <td>{claim.claimDate}</td>
-                            <td className="amount-cell">₹{claim.claimAmount}</td>
-                            <td className="reason-cell">{claim.reason}</td>
-                            {/* <td>
-                              <div className="status-actions">
-                                <span className={`status-badge ${getStatusClass(claim.status)}`}>
-                                  {getStatusIcon(claim.status)}
-                                  {claim.status}
-                                </span>
-                                <div className="status-buttons">
-                                  <button
-                                    className="status-btn approve-btn"
-                                    onClick={() => handleStatusChange(claim.vehicleId, claim.claimIndex, 'Approved')}
-                                    title="Approve Claim"
-                                  >
-                                    <Check size={14} />
-                                  </button>
-                                  <button
-                                    className="status-btn reject-btn"
-                                    onClick={() => handleStatusChange(claim.vehicleId, claim.claimIndex, 'Rejected')}
-                                    title="Reject Claim"
-                                  >
-                                    <X size={14} />
-                                  </button>
-                                </div>
-                              </div>
-                            </td> */}
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-
-                    {/* Pagination Controls */}
-                    {totalPages > 1 && (
-                      <div className="pagination-container">
-                        <div className="pagination-info">
-                          Showing {indexOfFirstClaim + 1} to {Math.min(indexOfLastClaim, filteredClaims.length)} of {filteredClaims.length} claims
-                        </div>
-                        <div className="pagination-controls">
-                          <button
-                            className="pagination-btn"
-                            onClick={() => paginate(currentPage - 1)}
-                            disabled={currentPage === 1}
-                          >
-                            <ChevronLeft size={16} />
-                            Previous
-                          </button>
-                          
-                          <div className="page-numbers">
-                            {Array.from({ length: totalPages }, (_, i) => i + 1).map(number => (
-                              <button
-                                key={number}
-                                className={`page-number ${currentPage === number ? 'active' : ''}`}
-                                onClick={() => paginate(number)}
-                              >
-                                {number}
-                              </button>
-                            ))}
-                          </div>
-                          
-                          <button
-                            className="pagination-btn"
-                            onClick={() => paginate(currentPage + 1)}
-                            disabled={currentPage === totalPages}
-                          >
-                            Next
-                            <ChevronRight size={16} />
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </>
+                  <Table
+                    columns={[
+                      {
+                        key: 'registrationNumber',
+                        header: 'Vehicle',
+                        renderCell: (value: string) => (
+                          <span className="vehicle-cell text-uppercase"><Car size={14} /> {value}</span>
+                        )
+                      },
+                      { key: 'claimDate', header: 'Date' },
+                      {
+                        key: 'claimAmount',
+                        header: 'Amount',
+                        renderCell: (value: string) => (
+                          <span className="amount-cell">₹{value}</span>
+                        )
+                      },
+                      {
+                        key: 'reason',
+                        header: 'Reason',
+                        renderCell: (value: string) => (
+                          <span className="reason-cell">{value}</span>
+                        )
+                      }
+                    ]}
+                    data={filteredClaims}
+                  />
                 )}
               </div>
             </div>
           </div>
         </div>
-      </div>
+      {/* </div> */}
+      </PageContainer>
       <Footer />
     </>
   );

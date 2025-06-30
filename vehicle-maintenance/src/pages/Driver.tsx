@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { driverAPI, vehicleAPI, Driver, Vehicle } from '../services/api';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import PageContainer from '../components/PageContainer';
+import SectionHeading from '../components/SectionHeading';
+import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import '../styles/Driver.css';
 
 interface DriverProps {
@@ -20,9 +23,17 @@ const DriverPage: React.FC<DriverProps> = ({ sidebarCollapsed, toggleSidebar }) 
     licenseNumber: '',
     phone: '',
     address: '',
+    isActive: true,
     assignedVehicleIds: [],
   });
   const [error, setError] = useState('');
+
+  // Search state
+  const [searchTerm, setSearchTerm] = useState<string>('');
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [driversPerPage] = useState<number>(10); // Number of drivers to show per page
 
   // Fetch drivers and vehicles
   useEffect(() => {
@@ -44,9 +55,36 @@ const DriverPage: React.FC<DriverProps> = ({ sidebarCollapsed, toggleSidebar }) 
     fetchData();
   }, []);
 
+  // Filter drivers based on search term
+  const filteredDrivers = drivers.filter(driver =>
+    driver.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    driver.licenseNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    driver.phone.includes(searchTerm)
+  );
+
+  // Pagination logic
+  const indexOfLastDriver = currentPage * driversPerPage;
+  const indexOfFirstDriver = indexOfLastDriver - driversPerPage;
+  const currentDrivers = filteredDrivers.slice(indexOfFirstDriver, indexOfLastDriver);
+  const totalPages = Math.ceil(filteredDrivers.length / driversPerPage);
+
+  // Change page
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  // Reset to first page when search term changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
   // Handle form input
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value, type } = e.target;
+    if (type === 'checkbox') {
+      const checked = (e.target as HTMLInputElement).checked;
+      setForm({ ...form, [name]: checked });
+    } else {
+      setForm({ ...form, [name]: value });
+    }
   };
 
   // Handle vehicle assignment
@@ -68,11 +106,12 @@ const DriverPage: React.FC<DriverProps> = ({ sidebarCollapsed, toggleSidebar }) 
         licenseNumber: driver.licenseNumber,
         phone: driver.phone,
         address: driver.address,
+        isActive: driver.isActive,
         assignedVehicleIds: driver.assignedVehicleIds,
       });
     } else {
       setEditDriver(null);
-      setForm({ name: '', licenseNumber: '', phone: '', address: '', assignedVehicleIds: [] });
+      setForm({ name: '', licenseNumber: '', phone: '', address: '', isActive: true, assignedVehicleIds: [] });
     }
     setShowModal(true);
     setError('');
@@ -126,94 +165,204 @@ const DriverPage: React.FC<DriverProps> = ({ sidebarCollapsed, toggleSidebar }) 
 
   return (
     <>
-      <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />
-      <div className="driver-page">
-        <div className="driver-header">
-            <h1>Drivers</h1>
-            <button className="btn-primary" onClick={() => openModal()}>Add Driver</button>
-        </div>
+      {/* <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} /> */}
+      <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator />
+      {/* <div className="driver-page"> */}
+      <PageContainer>
+        {/* <div className="driver-header">
+          <div className="header-content">
+            <h1 className="page-title">Drivers</h1>
+            <p className="page-subtitle">Manage and view all your registered drivers</p>
+          </div>
+          <div className="header-actions">
+            <button className="btn-primary" onClick={() => openModal()}>
+              <Plus size={16} />
+              Add Driver
+            </button>
+            <div className="search-wrapper">
+              <i className="search-icon fa-solid fa-magnifying-glass"></i>
+              <input
+                type="search"
+                name="search"
+                id="search"
+                placeholder='Search by name, license number, or phone...'
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="search-input"
+              />
+            </div>
+          </div>
+        </div> */}
+        <SectionHeading title='Driver' subtitle="Driver's page"/>
+
         {loading ? (
           <div>Loading...</div>
         ) : error ? (
           <div style={{ color: 'red' }}>{error}</div>
+        ) : drivers.length === 0 ? (
+          <div className="empty-state">
+            <h3>No drivers registered yet</h3>
+            <p>Start by adding your first driver to the system</p>
+            <button className="btn-primary" onClick={() => openModal()}>
+              <Plus size={16} />
+              Add Driver
+            </button>
+          </div>
         ) : (
-          <table className="drivers-table" style={{ width: '100%', marginTop: 24, borderCollapse: 'collapse' }}>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>License Number</th>
-                <th>Phone</th>
-                <th>Address</th>
-                <th>Assigned Vehicles</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {drivers.map((driver) => (
-                <tr key={driver.id}>
-                  <td className='text-capitalize'>{driver.name}</td>
-                  <td className='text-uppercase'>{driver.licenseNumber}</td>
-                  <td>{driver.phone}</td>
-                  <td className='text-capitalize'>{driver.address}</td>
-                  <td>
-                    {driver.assignedVehicleIds.map((vid) => {
-                      const v = vehicles.find((veh) => veh.id === vid);
-                      return v ? (
-                        <span key={vid} style={{ display: 'inline-flex', marginRight: 8,alignItems:'center', background: '#eee', padding: '2px', borderRadius: 4 ,textTransform:'uppercase'}}>
-                           {v.registrationNumber}
-                        </span>
-                      ) : null;
-                    })}
-                  </td>
-                  <td>
-                    <button onClick={() => openModal(driver)}>Edit</button>
-                    <button style={{ marginLeft: 8 }} onClick={() => handleDelete(driver.id)}>Delete</button>
-                  </td>
+          <div className="table-container">
+            <table className="drivers-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>License Number</th>
+                  <th>Phone</th>
+                  <th>Address</th>
+                  <th>Active</th>
+                  <th>Assigned Vehicles</th>
+                  <th>Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {currentDrivers.length === 0 ? (
+                  <tr>
+                    <td colSpan={8} className="no-data">
+                      <div className="no-data-content">
+                        <p>No drivers found matching your search criteria.</p>
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
+                  currentDrivers.map((driver, index) => (
+                    <tr key={driver.id} className="table-row">
+                      <td className="row-number">{indexOfFirstDriver + index + 1}</td>
+                      <td className='text-capitalize'>{driver.name}</td>
+                      <td className='text-uppercase'>{driver.licenseNumber}</td>
+                      <td>{driver.phone}</td>
+                      <td className='text-capitalize'>{driver.address}</td>
+                      <td>
+                        <span className={`status-badge ${driver.isActive ? 'active' : 'inactive'}`}>
+                          {driver.isActive ? 'Active' : 'Inactive'}
+                        </span>
+                      </td>
+                      <td>
+                        {driver.assignedVehicleIds.map((vid) => {
+                          const v = vehicles.find((veh) => veh.id === vid);
+                          return v ? (
+                            <span key={vid} className="driver-vehicle-badge text-uppercase">
+                              {v.registrationNumber}
+                            </span>
+                          ) : null;
+                        })}
+                      </td>
+                      <td>
+                        <button className="btn-details" onClick={() => openModal(driver)}>
+                          Edit
+                        </button>
+                        <button className="btn-details" style={{ marginLeft: 8 }} onClick={() => handleDelete(driver.id)}>
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         )}
+
+        {/* Pagination Controls */}
+        {filteredDrivers.length > driversPerPage && (
+          <div className="pagination-container-list">
+            <div className="pagination-info">
+              Showing {indexOfFirstDriver + 1} to {Math.min(indexOfLastDriver, filteredDrivers.length)} of {filteredDrivers.length} drivers
+              {searchTerm && ` (filtered from ${drivers.length} total)`}
+            </div>
+            <div className="pagination-controls">
+              <button
+                className="pagination-btn"
+                onClick={() => paginate(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                <ChevronLeft size={16} />
+                Previous
+              </button>
+
+              <div className="page-numbers">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(number => (
+                  <button
+                    key={number}
+                    className={`page-number ${currentPage === number ? 'active' : ''}`}
+                    onClick={() => paginate(number)}
+                  >
+                    {number}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                className="pagination-btn"
+                onClick={() => paginate(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                Next
+                <ChevronRight size={16} />
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Modal for add/edit */}
         {showModal && (
-          <div className="modal-overlay" style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(0,0,0,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-            <div className="modal" style={{ background: '#fff', padding: 24, borderRadius: 8, minWidth: 350, maxWidth: 400 }}>
-              <h2 style={{border:"none"}}>{editDriver ? 'Edit Driver' : 'Add Driver'}</h2>
+          <div className="modal-overlay">
+            <div className="modal">
+              <h2>{editDriver ? 'Edit Driver' : 'Add Driver'}</h2>
               <form onSubmit={handleSubmit}>
                 <div style={{ marginBottom: 12 }}>
                   <label>Name*</label>
-                  <input name="name" value={form.name} onChange={handleChange} required style={{ width: '100%' }} />
+                  <input name="name" value={form.name} onChange={handleChange} required />
                 </div>
                 <div style={{ marginBottom: 12 }}>
                   <label>License Number*</label>
-                  <input name="licenseNumber" value={form.licenseNumber} onChange={handleChange} required style={{ width: '100%' }} />
+                  <input name="licenseNumber" value={form.licenseNumber} onChange={handleChange} required />
                 </div>
                 <div style={{ marginBottom: 12 }}>
                   <label>Phone*</label>
-                  <input name="phone" value={form.phone} onChange={handleChange} required style={{ width: '100%' }} />
+                  <input name="phone" value={form.phone} onChange={handleChange} required />
                 </div>
                 <div style={{ marginBottom: 12 }}>
                   <label>Address</label>
-                  <textarea name="address" value={form.address} onChange={handleChange} style={{ width: '100%' }} />
+                  <textarea name="address" value={form.address} onChange={handleChange} />
+                </div>
+                <div style={{ marginBottom: 12 }} className='driver-checkbox'>
+                  <label>
+                    Active Driver
+                    <input
+                      type="checkbox"
+                      name="isActive"
+                      checked={form.isActive}
+                      onChange={handleChange}
+                    />
+                  </label>
                 </div>
                 <div style={{ marginBottom: 12 }}>
                   <label>Assign Vehicles</label>
-                  <div style={{ maxHeight: 120, overflowY: 'auto', border: '1px solid #eee', borderRadius: 4, padding: 4 }}>
-                        {vehicles.map((v) => (
-                        <div key={v.id} className='driver-checkbox'>
-                            <label>
-                                {v.make} {v.model} ({v.registrationNumber})
-                            <input
-                                type="checkbox"
-                                checked={form.assignedVehicleIds.includes(v.id)}
-                                onChange={() => handleVehicleSelect(v.id)} 
-                            />{' '}
-                            </label>
-                        </div>
-                        ))}
+                  <div className="vehicle-list">
+                    {vehicles.map((v) => (
+                      <div key={v.id} className='driver-checkbox'>
+                        <label className='text-capitalize'>
+                          {v.make} {v.model} <span className='text-uppercase'>({v.registrationNumber})</span>
+                          <input
+                            type="checkbox"
+                            checked={form.assignedVehicleIds.includes(v.id)}
+                            onChange={() => handleVehicleSelect(v.id)} 
+                          />
+                        </label>
+                      </div>
+                    ))}
                   </div>
                 </div>
-                {error && <div style={{ color: 'red', marginBottom: 8 }}>{error}</div>}
+                {error && <div className="error">{error}</div>}
                 <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
                   <button type="button" onClick={closeModal}>Cancel</button>
                   <button type="submit">{editDriver ? 'Update' : 'Add'}</button>
@@ -222,7 +371,8 @@ const DriverPage: React.FC<DriverProps> = ({ sidebarCollapsed, toggleSidebar }) 
             </div>
           </div>
         )}
-      </div>
+      {/* </div> */}
+      </PageContainer>
       <Footer/>
     </>
   );

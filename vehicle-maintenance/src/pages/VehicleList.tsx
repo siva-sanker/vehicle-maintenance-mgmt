@@ -4,19 +4,24 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
   Car,
-  Calendar,
+  // Calendar,
   FileText,
-  Fuel,
+  // Fuel,
   Plus,
   Info,
-  ChevronLeft,
-  ChevronRight,
-  DollarSign,
+  // ChevronLeft,
+  // ChevronRight,
+  // DollarSign,
 } from 'lucide-react';
 import { vehicleAPI, Vehicle } from '../services/api.ts';
 import '../styles/Vehiclelist.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import Searchbar from '../components/Searchbar';
+import SectionHeading from '../components/SectionHeading.tsx';
+import ButtonWithGradient from '../components/ButtonWithGradient';
+import Table from '../components/Table';
+import PageContainer from '../components/PageContainer.tsx';
 // import { Shield } from 'lucide-react';
 
 interface VehicleListProps {
@@ -60,10 +65,6 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
 
   // Search state
   const [searchTerm, setSearchTerm] = useState<string>('');
-
-  // Pagination state
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [vehiclesPerPage] = useState<number>(10); // Number of vehicles to show per page
 
   const [insuranceData, setInsuranceData] = useState<InsuranceData>({
     policyNumber: '',
@@ -217,25 +218,10 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
     return !Object.values(errors).some(error => error !== '');
   };
 
-  // Pagination logic
-  const indexOfLastVehicle = currentPage * vehiclesPerPage;
-  const indexOfFirstVehicle = indexOfLastVehicle - vehiclesPerPage;
-
   // Filter vehicles based on search term
   const filteredVehicles = vehicles.filter(vehicle =>
     vehicle.registrationNumber.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  const currentVehicles = filteredVehicles.slice(indexOfFirstVehicle, indexOfLastVehicle);
-  const totalPages = Math.ceil(filteredVehicles.length / vehiclesPerPage);
-
-  // Change page
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-
-  // Reset to first page when search term changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm]);
 
   const navigate = useNavigate();
   // const goToClaims = (vehicleId: string) => {
@@ -516,46 +502,40 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
 
   return (
     <>
-      <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />
-      <div className="vehicle-list-container">
-        <div className="vehicle-list-header">
+      {/* <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} /> */}
+      <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator />
+      {/* <div className="vehicle-list-container"> */}
+      <PageContainer>
+        <SectionHeading title='Vehicle List' subtitle='Manage and view all your registered vehicles'/>
+        {/* <div className="vehicle-list-header">
           <div className="header-content">
             <h1 className="page-title">
-              {/* <Car className="page-icon" /> */}
+              <Car className="page-icon" />
               Registered Vehicles
             </h1>
             <p className="page-subtitle">Manage and view all your registered vehicles</p>
           </div>
-          <div className="header-actions">
-            <button className="btn btn-primary" onClick={() => navigate('/register-vehicle')}>
-              <Plus size={16} />
-              Add Vehicle
-            </button>
-            <div className="search-wrapper">
-              {/* <Search className="search-icon" size={20} /> */}
-              <i className="search-icon fa-solid fa-magnifying-glass"></i>
-              <input
-                type="search"
-                name="search"
-                id="search"
-                placeholder='Search by registration number...'
+        </div> */}
+          <div className="header-actions2 d-flex justify-content-end">
+            <div className="search border border-grey d-flex justify-content-center align-items-center">
+              <Searchbar
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="search-input"
               />
             </div>
           </div>
-        </div>
+
 
         {vehicles.length === 0 ? (
           <div className="empty-state">
             <Car size={64} className="empty-icon" />
             <h3>No vehicles registered yet</h3>
             <p>Start by adding your first vehicle to the system</p>
-            <button className="btn-primary" onClick={() => navigate('/register-vehicle')}>
-              <Plus size={16} />
-              Register Vehicle
-            </button>
+            {/* <button className="btn-primary" onClick={() => navigate('/register-vehicle')}> */}
+            <ButtonWithGradient text='Click here to register' onClick={()=>navigate('\register-vehicle')} />
+              {/* <Plus size={16} /> */}
+              {/* Register Vehicle */}
+            {/* </button> */}
           </div>
         ) : (
           <div className="table-container">
@@ -563,128 +543,49 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
               <Shield size={20} className="section-icon" />
               <h3>Vehicle Insurance Details</h3>
             </div> */}
-            <div className="searchBar2">
-            </div>
-            <table className="vehicles-table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>
-                    <Car size={16} className="table-icon" />
-                    Make
-                  </th>
-                  <th>
-                    <Car size={16} className="table-icon" />
-                    Model
-                  </th>
-                  <th>Reg. Number</th>
-                  <th>
-                    <Calendar size={16} className="table-icon" />
-                    Purchase Date
-                  </th>
-                  <th>Color</th>
-                  <th>Age</th>
-                  <th>
-                    <Fuel size={16} className="table-icon" />
-                    Fuel Type
-                  </th>
-                  <th>
-                    <DollarSign size={16} className="table-icon" />
-                    Price
-                  </th>
-                  <th>Actions</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentVehicles.length === 0 ? (
-                  <tr>
-                    <td colSpan={10} className="no-data">
-                      <div className="no-data-content">
-                        <Car size={48} className="no-data-icon" />
-                        <p>No vehicles found matching your search criteria.</p>
-                      </div>
-                    </td>
-                  </tr>
-                ) : (
-                  currentVehicles.map((vehicle, index) => (
-                    <tr key={index} className="table-row">
-                      <td className="row-number">{indexOfFirstVehicle + index + 1}</td>
-                      <td className="text-capitalize">{vehicle.make}</td>
-                      <td className="text-capitalize">{vehicle.model}</td>
-                      <td className="text-uppercase reg-number">{vehicle.registrationNumber}</td>
-                      <td className="date-cell">{vehicle.purchaseDate}</td>
-                      <td className='text-capitalize'>{vehicle.color}</td>
-                      <td>{calculateVehicleAge(vehicle.purchaseDate)} years</td>
-                      <td>
-                        <span className={`fuel-badge ${vehicle.fuelType.toLowerCase()}`}>
-                          {vehicle.fuelType}
-                        </span>
-                      </td>
-                      <td className="premium-amount">{vehicle.purchasePrice} /-</td>
-                      <td>
-                        <button
-                          className="btn-details"
-                          onClick={() => showVehicleDetails(vehicle)}
-                        >
-                          <Info size={16} />
-                          More Details
-                        </button>
-                      </td>
-                      <td className='status'>
-                        <select name="status" id="" className="status-selector">
-                          <option value="" selected disabled>Set status</option>
-                          <option value="">Active</option>
-                          <option value="">Inactive</option>
-                          <option value="">Maintenance</option>
-                        </select>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        {/* Pagination Controls */}
-        {filteredVehicles.length > vehiclesPerPage && (
-          <div className="pagination-container-list">
-            <div className="pagination-info">
-              Showing {indexOfFirstVehicle + 1} to {Math.min(indexOfLastVehicle, filteredVehicles.length)} of {filteredVehicles.length} vehicles
-              {searchTerm && ` (filtered from ${vehicles.length} total)`}
-            </div>
-            <div className="pagination-controls">
-              <button
-                className="pagination-btn"
-                onClick={() => paginate(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                <ChevronLeft size={16} />
-                Previous
-              </button>
-
-              <div className="page-numbers">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(number => (
+            {/* <div className="searchBar2">
+            </div> */}
+            <Table
+              columns={[
+                { key: 'make', header: 'Make' },
+                { key: 'model', header: 'Model' },
+                { key: 'registrationNumber', header: 'Reg. Number' },
+                { key: 'purchaseDate', header: 'Purchase Date' },
+                { key: 'color', header: 'Color' },
+                { key: 'age', header: 'Age' },
+                { key: 'fuelType', header: 'Fuel Type' },
+                { key: 'purchasePrice', header: 'Price' },
+                { key: 'actions', header: 'Actions' },
+                { key: 'status', header: 'Status' },
+              ]}
+              data={filteredVehicles.map((vehicle, index) => ({
+                ...vehicle,
+                age: `${calculateVehicleAge(vehicle.purchaseDate)} years`,
+                fuelType: (
+                  <span className={`fuel-badge ${vehicle.fuelType.toLowerCase()}`}>
+                    {vehicle.fuelType}
+                  </span>
+                ),
+                purchasePrice: `${vehicle.purchasePrice} /-`,
+                actions: (
                   <button
-                    key={number}
-                    className={`page-number ${currentPage === number ? 'active' : ''}`}
-                    onClick={() => paginate(number)}
+                    className="btn-details"
+                    onClick={() => showVehicleDetails(vehicle)}
                   >
-                    {number}
+                    <Info size={16} />
+                    More Details
                   </button>
-                ))}
-              </div>
-
-              <button
-                className="pagination-btn"
-                onClick={() => paginate(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              >
-                Next
-                <ChevronRight size={16} />
-              </button>
-            </div>
+                ),
+                status: (
+                  <select name="status" id="" className="status-selector">
+                    <option value="" selected disabled>Set status</option>
+                    <option value="">Active</option>
+                    <option value="">Inactive</option>
+                    <option value="">Maintenance</option>
+                  </select>
+                ),
+              }))}
+            />
           </div>
         )}
 
@@ -1204,7 +1105,8 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
         )}
 
         <ToastContainer />
-      </div>
+      {/* </div> */}
+      </PageContainer>
       <Footer />
     </>
   );

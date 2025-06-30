@@ -55,21 +55,15 @@
   font-weight: 400;
 }
 
+
+/* Search Container */
+
 .header-actions {
   display: flex;
   gap: 1rem;
   align-items: center;
   height: 10px !important;
   /* border: 1px solid yellow !important; */
-}
-
-/* Search Container */
-.search-container {
-  position: relative;
-  /* border: 1px solid red !important; */
-  display: flex;
-  align-items: center;
-  height: 28px;
 }
 
 .search-icon {

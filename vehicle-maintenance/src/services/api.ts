@@ -37,6 +37,16 @@ interface Vehicle {
     }>;
 }
 
+interface Driver {
+    id: string;
+    name: string;
+    licenseNumber: string;
+    phone: string;
+    address: string;
+    isActive: boolean;
+    assignedVehicleIds: string[];
+}
+
 interface Maintenance {
     id: string;
     vehicleId: string;
@@ -86,22 +96,12 @@ interface DashboardStats {
     highPriorityServicesCount: number;
 }
 
-// Driver type definition
-interface Driver {
-    id: string;
-    name: string;
-    licenseNumber: string;
-    phone: string;
-    address: string;
-    assignedVehicleIds: string[];
-}
-
 // Configuration for different environments
 const getBaseURL = (): string => {
     // Check if we're in development or production
     if (import.meta.env.DEV) {
         // In development, use network IP for cross-system access
-        return 'http://192.168.50.141:4000';
+        return 'http://192.168.50.148:4000';
         // return 'http://localhost:4000';
     } else {
         // In production, use the actual server URL

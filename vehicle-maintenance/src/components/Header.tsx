@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/Header.css';
+import '../styles/header.css';
 // import { ChevronLeftIcon, ChevronRightIcon } from '@primer/octicons-react';
-import leftarrow from '../assets/lefthand.png';
-import rightarrow from '../assets/righthand.png';
+import leftarrow from '../assets/lefthand.png'
+import rightarrow from '../assets/righthand.png'
 // import { Calendar, Clock, Calculator } from 'lucide-react';
 
 interface HeaderProps {
-  sidebarCollapsed: boolean;
-  toggleSidebar: () => void;
+  sidebarCollapsed?: boolean;
+  toggleSidebar?: () => void;
+  showDate?: boolean;
+  showTime?: boolean;
+  showCalculator?: boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ sidebarCollapsed, toggleSidebar }) => {
+const Header: React.FC<HeaderProps> = ({ sidebarCollapsed, toggleSidebar  ,showDate = true, showTime = true, showCalculator = false }) => {
+
     const [currentTime, setCurrentTime] = useState<Date>(new Date());
 
     const currentDateObj = new Date();
@@ -39,33 +43,45 @@ const Header: React.FC<HeaderProps> = ({ sidebarCollapsed, toggleSidebar }) => {
 
     return (
         <div className='header-container'>
-            <button
-                className="sidebar-toggle-btn"
-                onClick={toggleSidebar}
-                title={sidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
-            >
-                {sidebarCollapsed ? <img src={rightarrow} alt="leftarrow" /> : <img src={leftarrow} alt="rightarrow" />}
-            </button>
+            {toggleSidebar && (
+                <button
+                    className="sidebar-toggle-btn"
+                    onClick={toggleSidebar}
+                    title={sidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+                >
+                    {sidebarCollapsed ? (
+                    <img src={rightarrow} alt="Expand Sidebar" />
+                    ) : (
+                    <img src={leftarrow} alt="Collapse Sidebar" />
+                    )}
+                </button>
+                )}
+
             <h1></h1>
             <div className="header-div">
+                {(showDate || showTime || showCalculator) && (
                 <div className="icons-div">
+                    {showDate && (
                     <div className="icon-item">
-                        {/* <Calendar size={25} className='header-icon' /> */}
                         <i className="header-icon fa-solid fa-calendar-days"></i>
-                        <span className='header-span'>{currentDate}</span>
+                        <span className="header-span">{currentDate}</span>
                     </div>
+                    )}
+                    {showTime && (
                     <div className="icon-item">
-                        {/* <Clock size={25} className='header-icon' /> */}
                         <i className="header-icon fa-solid fa-clock custom-clock"></i>
-                        <span className='header-span'>{formattedTime}</span>
+                        <span className="header-span">{formattedTime}</span>
                     </div>
+                    )}
+                    {showCalculator && (
                     <div className="icon-item">
-                        {/* <Calculator size={25} className='header-icon' /> */}
                         <i className="header-icon fa-solid fa-calculator"></i>
-                        {/* <span>Calculator</span> */}
                     </div>
+                    )}
                 </div>
+                )}
             </div>
+
         </div>
     );
 };

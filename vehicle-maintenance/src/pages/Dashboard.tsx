@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Footer from '../components/Footer';
+// import Footer2 from '../components/Footer2';
 import Header from '../components/Header';
+import Cards from '../components/Cards';
+// import ButtonWithGradient from '../components/ButtonWithGradient';
+import PageContainer from '../components/PageContainer';
+import SectionHeading from '../components/SectionHeading';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -21,7 +26,7 @@ import {
   FileText,
   Shield,
   AlertTriangle,
-  // TrendingUp,
+  TrendingUp,
   // DollarSign,
   // RefreshCw,
 } from 'lucide-react';
@@ -61,7 +66,31 @@ interface MonthlyData {
   [key: string]: number;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed, toggleSidebar }) => {
+// interface Claim {
+//   claimAmount?: string | number;
+// }
+
+// interface Vehicle {
+//   insurance?: boolean;
+//   claims?: Claim[];
+// }
+
+// interface Stats {
+//   totalVehicles: number;
+//   totalInsurances: number;
+//   totalClaims: number;
+//   totalClaimAmount: number;
+//   insuranceCoverage: string;
+// }
+
+const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed=false, toggleSidebar }) => {
+  //   const [stats, setStats] = useState<Stats>({
+  //   totalVehicles: 0,
+  //   totalInsurances: 0,
+  //   totalClaims: 0,
+  //   totalClaimAmount: 0,
+  //   insuranceCoverage: '0%',
+  // });
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [totalVehicles, setTotalVehicles] = useState<number>(0);
   const [activeClaims, setActiveClaims] = useState<number>(0);
@@ -269,12 +298,14 @@ const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed, toggleSidebar }
   if (loading) {
     return (
       <div className="dashboard-container">
-        <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />
+        {/* <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} /> */}
+        <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator />
         <div className="loading-container">
           <div className="loading-spinner"></div>
           <p>Loading dashboard data...</p>
         </div>
         <Footer />
+        {/* <Footer2 /> */}
       </div>
     );
   }
@@ -282,9 +313,15 @@ const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed, toggleSidebar }
   return (
     <>
       <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />
-    <div className="dashboard-container">
+      <PageContainer>
+    {/* <div className="dashboard-container"> */}
       <div className="dashboard-content">
-        <div className="dashboard-header">
+        <SectionHeading title='Dashboard' subtitle='Vehicle Maintenance Management System Overview'/>
+        {/* <div className="dashboard-header">
+          <ButtonWithGradient onClick={() => navigate('/register-vehicle')}>
+            <Car size={16} />
+            Add Vehicle
+          </ButtonWithGradient>
           <div className="header-content">
             <h1 className="dashboard-title">
               Dashboard
@@ -292,23 +329,31 @@ const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed, toggleSidebar }
             <p className="dashboard-subtitle">Vehicle Maintenance Management System Overview</p>
           </div>
           <div className="header-actions">
-            <button onClick={() => navigate('/register-vehicle')} className="btn-primary">
-              <Car size={16} />
-              Add Vehicle
+            <button onClick={handleRefresh} className="btn-primary">
+               <RefreshCw size={16} />
+               Refresh
             </button>
-            {/* <button onClick={handleRefresh} className="btn-primary">
-              <RefreshCw size={16} />
-              Refresh
-            </button> */}
           </div>
-        </div>
+        </div> */}
 
+        {/* <Cards/> */}
         {/* Stats Cards */}
         <div className="stats-grid">
-          <div className="stat-card">
-            {/* <div className="stat-icon vehicles">
+              {[
+          { title: 'Total Vehicles', subtitle: totalVehicles },
+          { title: 'Total Insurances', subtitle: insurancePolicies },
+          { title: 'Total Claims', subtitle: activeClaims },
+          { title: 'Total Claim Amount', subtitle: totalClaimAmount.toLocaleString() },
+          { title: 'Document Count', subtitle: documentCount },
+          { title: 'Insurance Coverage', subtitle: ((insurancePolicies / totalVehicles) * 100).toFixed(1)+'%' }
+        ].map((card, index) => (
+          <Cards key={index} title={card.title} subtitle={card.subtitle} />
+        ))}
+
+          {/* <div className="stat-card">
+            <div className="stat-icon vehicles">
               <Car size={24} />
-            </div> */}
+            </div>
             <div className="stat-content">
               <p className='stat-p'>Total Vehicles</p>
               <h3 className='stat-number'>{totalVehicles}</h3>
@@ -316,9 +361,9 @@ const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed, toggleSidebar }
           </div>
 
           <div className="stat-card">
-            {/* <div className="stat-icon insurance">
+            <div className="stat-icon insurance">
               <Shield size={24} />
-            </div> */}
+            </div>
             <div className="stat-content">
               <p className='stat-p'>Insurance Policies</p>
               <h3 className='stat-number'>{insurancePolicies}</h3>
@@ -326,9 +371,9 @@ const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed, toggleSidebar }
           </div>
 
           <div className="stat-card">
-            {/* <div className="stat-icon claims">
+            <div className="stat-icon claims">
               <FileText size={24} />
-            </div> */}
+            </div>
             <div className="stat-content">
               <p className='stat-p'>Total Claims</p>
               <h3 className='stat-number'>{activeClaims}</h3>
@@ -336,9 +381,9 @@ const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed, toggleSidebar }
           </div>
 
           <div className="stat-card">
-            {/* <div className="stat-icon amount">
+            <div className="stat-icon amount">
               <DollarSign size={24} />
-            </div> */}
+            </div>
             <div className="stat-content">
               <p className='stat-p'>Total Claim Amount</p>
               <h3 className='stat-number'>₹{totalClaimAmount.toLocaleString()}</h3>
@@ -346,9 +391,9 @@ const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed, toggleSidebar }
           </div>
 
           <div className="stat-card">
-            {/* <div className="stat-icon documents">
+            <div className="stat-icon documents">
               <AlertTriangle size={24} />
-            </div> */}
+            </div>
             <div className="stat-content">
               <p className='stat-p'>Documents</p>
               <h3 className='stat-number'>{documentCount}</h3>
@@ -356,18 +401,19 @@ const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed, toggleSidebar }
           </div>
 
           <div className="stat-card">
-            {/* <div className="stat-icon amount">
+            <div className="stat-icon amount">
               <TrendingUp size={24} />
-            </div> */}
+            </div>
             <div className="stat-content">
               <p className='stat-p'>Insurance Coverage</p>
             <h3 className='stat-number'>{((insurancePolicies / totalVehicles) * 100).toFixed(1)}%</h3>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Charts Section */}
         <div className="charts-grid">
+
           <div className="chart-card">
             <h3>Fuel Type Distribution</h3>
             <div className="chart-container">
@@ -388,6 +434,7 @@ const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed, toggleSidebar }
               <Bar data={claimStatusChartData} options={chartOptions} />
             </div>
           </div>
+          
         </div>
 
         {/* Quick Actions */}
@@ -412,10 +459,13 @@ const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed, toggleSidebar }
             </button>
           </div>
         </div>
+        {/* </PageContainer> */}
       </div>
-    </div>
+    {/* </div> */}
+    </PageContainer>
       <Footer />
-    </>
+      {/* <Footer2/> */}
+  </>
   );
 };
 
