@@ -35,6 +35,7 @@ interface Vehicle {
         reason: string;
         status: string;
     }>;
+    deletedAt?: string; // For soft delete functionality
 }
 
 interface Driver {
@@ -45,33 +46,34 @@ interface Driver {
     address: string;
     isActive: boolean;
     assignedVehicleIds: string[];
+    deletedAt?: string; // For soft delete functionality
 }
 
-interface Maintenance {
-    id: string;
-    vehicleId: string;
-    serviceDate: string;
-    serviceType: string;
-    description: string;
-    cost: number;
-    nextServiceDate: string;
-    serviceCenter: string;
-    technician: string;
-    status: string;
-    odometerReading: number;
-}
+// interface Maintenance {
+//     id: string;
+//     vehicleId: string;
+//     serviceDate: string;
+//     serviceType: string;
+//     description: string;
+//     cost: number;
+//     nextServiceDate: string;
+//     serviceCenter: string;
+//     technician: string;
+//     status: string;
+//     odometerReading: number;
+// }
 
-interface FuelLog {
-    id: string;
-    vehicleId: string;
-    fuelDate: string;
-    fuelType: string;
-    quantity: number;
-    cost: number;
-    odometerReading: number;
-    fuelStation: string;
-    location: string;
-}
+// interface FuelLog {
+//     id: string;
+//     vehicleId: string;
+//     fuelDate: string;
+//     fuelType: string;
+//     quantity: number;
+//     cost: number;
+//     odometerReading: number;
+//     fuelStation: string;
+//     location: string;
+// }
 
 interface Expense {
     id: string;
@@ -101,7 +103,7 @@ const getBaseURL = (): string => {
     // Check if we're in development or production
     if (import.meta.env.DEV) {
         // In development, use network IP for cross-system access
-        return 'http://192.168.50.148:4000';
+        return 'http://192.168.50.133:4000';
         // return 'http://localhost:4000';
     } else {
         // In production, use the actual server URL
@@ -222,8 +224,12 @@ const api = {
 
 // Vehicle API methods
 export const vehicleAPI = {
-    // Get all vehicles
-    getAllVehicles: (): Promise<Vehicle[]> => api.get<Vehicle[]>('/vehicles'),
+    // Get all vehicles (excluding soft deleted)
+    getAllVehicles: async (): Promise<Vehicle[]> => {
+        const allVehicles = await api.get<Vehicle[]>('/vehicles');
+        // Filter out soft deleted vehicles
+        return allVehicles.filter(vehicle => !vehicle.deletedAt);
+    },
 
     // Get vehicle by ID
     getVehicleById: (id: string): Promise<Vehicle> => api.get<Vehicle>(`/vehicles/${id}`),
@@ -237,7 +243,13 @@ export const vehicleAPI = {
     // Partially update vehicle
     patchVehicle: (id: string, vehicleData: Partial<Vehicle>): Promise<Vehicle> => api.patch<Vehicle>(`/vehicles/${id}`, vehicleData),
 
-    // Delete vehicle
+    // Soft delete vehicle
+    softDeleteVehicle: (id: string): Promise<Vehicle> => api.patch<Vehicle>(`/vehicles/${id}`, { deletedAt: new Date().toISOString() }),
+
+    // Restore soft deleted vehicle
+    restoreVehicle: (id: string): Promise<Vehicle> => api.patch<Vehicle>(`/vehicles/${id}`, { deletedAt: null }),
+
+    // Hard delete vehicle (for admin purposes)
     deleteVehicle: (id: string): Promise<void> => api.delete<void>(`/vehicles/${id}`),
 
     // Get vehicles by search term
@@ -247,8 +259,12 @@ export const vehicleAPI = {
     getVehiclesWithInsurance: async (): Promise<Vehicle[]> => {
         try {
             const allVehicles = await api.get<Vehicle[]>('/vehicles');
-            // Filter vehicles that have an insurance object
-            return allVehicles.filter(vehicle => vehicle.insurance && typeof vehicle.insurance === 'object');
+            // Filter vehicles that have an insurance object and are not deleted
+            return allVehicles.filter(vehicle =>
+                vehicle.insurance &&
+                typeof vehicle.insurance === 'object' &&
+                !vehicle.deletedAt
+            );
         } catch (error) {
             console.error('Error getting vehicles with insurance:', error);
             throw error;
@@ -259,62 +275,68 @@ export const vehicleAPI = {
     getVehiclesWithoutInsurance: async (): Promise<Vehicle[]> => {
         try {
             const allVehicles = await api.get<Vehicle[]>('/vehicles');
-            // Filter vehicles that don't have an insurance object
-            return allVehicles.filter(vehicle => !vehicle.insurance || typeof vehicle.insurance !== 'object');
+            // Filter vehicles that don't have an insurance object and are not deleted
+            return allVehicles.filter(vehicle =>
+                (!vehicle.insurance || typeof vehicle.insurance !== 'object') &&
+                !vehicle.deletedAt
+            );
         } catch (error) {
             console.error('Error getting vehicles without insurance:', error);
             throw error;
         }
     },
+
+    // Get all vehicles including soft deleted (for admin purposes)
+    getAllVehiclesIncludingDeleted: (): Promise<Vehicle[]> => api.get<Vehicle[]>('/vehicles'),
 };
 
 // Maintenance API methods
-export const maintenanceAPI = {
-    // Get all maintenance records
-    getAllMaintenance: (): Promise<Maintenance[]> => api.get<Maintenance[]>('/maintenance'),
+// export const maintenanceAPI = {
+//     // Get all maintenance records
+//     getAllMaintenance: (): Promise<Maintenance[]> => api.get<Maintenance[]>('/maintenance'),
 
-    // Get maintenance by ID
-    getMaintenanceById: (id: string): Promise<Maintenance> => api.get<Maintenance>(`/maintenance/${id}`),
+//     // Get maintenance by ID
+//     getMaintenanceById: (id: string): Promise<Maintenance> => api.get<Maintenance>(`/maintenance/${id}`),
 
-    // Get maintenance by vehicle ID
-    getMaintenanceByVehicle: (vehicleId: string): Promise<Maintenance[]> => api.get<Maintenance[]>(`/maintenance?vehicleId=${vehicleId}`),
+//     // Get maintenance by vehicle ID
+//     getMaintenanceByVehicle: (vehicleId: string): Promise<Maintenance[]> => api.get<Maintenance[]>(`/maintenance?vehicleId=${vehicleId}`),
 
-    // Create new maintenance record
-    createMaintenance: (maintenanceData: Omit<Maintenance, 'id'>): Promise<Maintenance> => api.post<Maintenance>('/maintenance', maintenanceData),
+//     // Create new maintenance record
+//     createMaintenance: (maintenanceData: Omit<Maintenance, 'id'>): Promise<Maintenance> => api.post<Maintenance>('/maintenance', maintenanceData),
 
-    // Update maintenance record
-    updateMaintenance: (id: string, maintenanceData: Partial<Maintenance>): Promise<Maintenance> => api.put<Maintenance>(`/maintenance/${id}`, maintenanceData),
+//     // Update maintenance record
+//     updateMaintenance: (id: string, maintenanceData: Partial<Maintenance>): Promise<Maintenance> => api.put<Maintenance>(`/maintenance/${id}`, maintenanceData),
 
-    // Delete maintenance record
-    deleteMaintenance: (id: string): Promise<void> => api.delete<void>(`/maintenance/${id}`),
+//     // Delete maintenance record
+//     deleteMaintenance: (id: string): Promise<void> => api.delete<void>(`/maintenance/${id}`),
 
-    // Get completed maintenance
-    getCompletedMaintenance: (): Promise<Maintenance[]> => api.get<Maintenance[]>('/maintenance?status=Completed'),
+//     // Get completed maintenance
+//     getCompletedMaintenance: (): Promise<Maintenance[]> => api.get<Maintenance[]>('/maintenance?status=Completed'),
 
-    // Get scheduled maintenance
-    getScheduledMaintenance: (): Promise<Maintenance[]> => api.get<Maintenance[]>('/maintenance?status=Scheduled'),
-};
+//     // Get scheduled maintenance
+//     getScheduledMaintenance: (): Promise<Maintenance[]> => api.get<Maintenance[]>('/maintenance?status=Scheduled'),
+// };
 
 // Fuel Logs API methods
-export const fuelLogsAPI = {
-    // Get all fuel logs
-    getAllFuelLogs: (): Promise<FuelLog[]> => api.get<FuelLog[]>('/fuelLogs'),
+// export const fuelLogsAPI = {
+//     // Get all fuel logs
+//     getAllFuelLogs: (): Promise<FuelLog[]> => api.get<FuelLog[]>('/fuelLogs'),
 
-    // Get fuel log by ID
-    getFuelLogById: (id: string): Promise<FuelLog> => api.get<FuelLog>(`/fuelLogs/${id}`),
+//     // Get fuel log by ID
+//     getFuelLogById: (id: string): Promise<FuelLog> => api.get<FuelLog>(`/fuelLogs/${id}`),
 
-    // Get fuel logs by vehicle ID
-    getFuelLogsByVehicle: (vehicleId: string): Promise<FuelLog[]> => api.get<FuelLog[]>(`/fuelLogs?vehicleId=${vehicleId}`),
+//     // Get fuel logs by vehicle ID
+//     getFuelLogsByVehicle: (vehicleId: string): Promise<FuelLog[]> => api.get<FuelLog[]>(`/fuelLogs?vehicleId=${vehicleId}`),
 
-    // Create new fuel log
-    createFuelLog: (fuelLogData: Omit<FuelLog, 'id'>): Promise<FuelLog> => api.post<FuelLog>('/fuelLogs', fuelLogData),
+//     // Create new fuel log
+//     createFuelLog: (fuelLogData: Omit<FuelLog, 'id'>): Promise<FuelLog> => api.post<FuelLog>('/fuelLogs', fuelLogData),
 
-    // Update fuel log
-    updateFuelLog: (id: string, fuelLogData: Partial<FuelLog>): Promise<FuelLog> => api.put<FuelLog>(`/fuelLogs/${id}`, fuelLogData),
+//     // Update fuel log
+//     updateFuelLog: (id: string, fuelLogData: Partial<FuelLog>): Promise<FuelLog> => api.put<FuelLog>(`/fuelLogs/${id}`, fuelLogData),
 
-    // Delete fuel log
-    deleteFuelLog: (id: string): Promise<void> => api.delete<void>(`/fuelLogs/${id}`),
-};
+//     // Delete fuel log
+//     deleteFuelLog: (id: string): Promise<void> => api.delete<void>(`/fuelLogs/${id}`),
+// };
 
 // Expenses API methods
 export const expensesAPI = {
@@ -351,8 +373,12 @@ export const dashboardAPI = {
 
 // Driver API methods
 export const driverAPI = {
-    // Get all drivers
-    getAllDrivers: (): Promise<Driver[]> => api.get<Driver[]>('/drivers'),
+    // Get all drivers (excluding soft deleted)
+    getAllDrivers: async (): Promise<Driver[]> => {
+        const allDrivers = await api.get<Driver[]>('/drivers');
+        // Filter out soft deleted drivers
+        return allDrivers.filter(driver => !driver.deletedAt);
+    },
 
     // Get driver by ID
     getDriverById: (id: string): Promise<Driver> => api.get<Driver>(`/drivers/${id}`),
@@ -363,9 +389,18 @@ export const driverAPI = {
     // Update driver
     updateDriver: (id: string, driverData: Partial<Driver>): Promise<Driver> => api.put<Driver>(`/drivers/${id}`, driverData),
 
-    // Delete driver
+    // Soft delete driver
+    softDeleteDriver: (id: string): Promise<Driver> => api.patch<Driver>(`/drivers/${id}`, { deletedAt: new Date().toISOString() }),
+
+    // Restore soft deleted driver
+    restoreDriver: (id: string): Promise<Driver> => api.patch<Driver>(`/drivers/${id}`, { deletedAt: null }),
+
+    // Hard delete driver (for admin purposes)
     deleteDriver: (id: string): Promise<void> => api.delete<void>(`/drivers/${id}`),
+
+    // Get all drivers including soft deleted (for admin purposes)
+    getAllDriversIncludingDeleted: (): Promise<Driver[]> => api.get<Driver[]>('/drivers'),
 };
 
 // Export types for use in other files
-export type { Vehicle, Maintenance, FuelLog, Expense, DashboardStats, Driver };
+export type { Vehicle, Expense, DashboardStats, Driver };

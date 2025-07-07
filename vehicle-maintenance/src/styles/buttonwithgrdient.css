@@ -8,10 +8,10 @@
   border-radius: 3px;
   font-size: 14px;
   height: 36px;
-  padding: 0 16px;
+  /* padding: 0 16px; */
   color: #ffffff !important;
   border: none;
-  max-width: 100%;
+  width: 100%;
   /* min-width: 80px; */
   text-decoration: none;
   transition: all 0.3s ease;

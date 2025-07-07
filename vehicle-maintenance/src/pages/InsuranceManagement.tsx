@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-// import {  Car, Calendar, DollarSign, Shield, CreditCard,} from 'lucide-react';
-// import { FileText } from 'lucide-react';
-import { vehicleAPI } from '../services/api';
+import { fetchVehicles, filterVehicles, getTableData, getDateStatusClass, InsuranceData, processExpiredInsurance } from '../utils/insuranceUtils';
+import { Vehicle } from '../services/api';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Searchbar from '../components/Searchbar';
@@ -15,80 +14,11 @@ interface InsuranceManagementProps {
   toggleSidebar: () => void;
 }
 
-interface Vehicle {
-  id: string;
-  make: string;
-  model: string;
-  registrationNumber: string;
-  chassisNumber?: string;
-  engineNumber?: string;
-  insurance?: {
-    policyNumber?: string;
-    insurer?: string;
-    policytype?: string;
-    startDate?: string;
-    endDate?: string;
-    premiumAmount?: string;
-    issueDate?: string;
-    payment?: string;
-  };
-}
-
-interface InsuranceData {
-  policyNumber: string;
-  insurer: string;
-  expiryDate: string;
-  policyType: string;
-  startDate: string;
-  endDate: string;
-  premiumAmount: string;
-  vehicleType: string;
-  chassisNumber: string;
-  engineNumber: string;
-  policyIssueDate: string;
-  paymentMode: string;
-}
-
 const InsuranceManagement: React.FC<InsuranceManagementProps> = ({ sidebarCollapsed, toggleSidebar }) => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [insuranceData, setInsuranceData] = useState<InsuranceData>({
-    policyNumber: '',
-    insurer: '',
-    expiryDate: '',
-    policyType: '',
-    startDate: '',
-    endDate: '',
-    premiumAmount: '',
-    vehicleType: '',
-    chassisNumber: '',
-    engineNumber: '',
-    policyIssueDate: '',
-    paymentMode: ''
-  });
-
-  const filteredVehicles = vehicles.filter((v) =>
-    v.registrationNumber.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  // Transform vehicles data for the Table component
-  const tableData = filteredVehicles.map((v, idx) => ({
-    id: v.id || idx.toString(),
-    number: idx + 1,
-    make: v.make,
-    model: v.model,
-    registrationNumber: v.registrationNumber,
-    policyNumber: v.insurance?.policyNumber || '-',
-    insurer: v.insurance?.insurer || '-',
-    policyType: v.insurance?.policytype || '-',
-    startDate: v.insurance?.startDate || '-',
-    endDate: v.insurance?.endDate || '-',
-    premiumAmount: v.insurance?.premiumAmount ? `₹${v.insurance.premiumAmount}` : '-',
-    chassisNumber: v.chassisNumber || '-',
-    engineNumber: v.engineNumber || '-',
-    issueDate: v.insurance?.issueDate || '-',
-    payment: v.insurance?.payment || '-'
-  }));
+  const filteredVehicles = filterVehicles(vehicles, searchTerm);
+  const tableData = getTableData(filteredVehicles);
 
   // Define table columns
   const columns = [
@@ -115,67 +45,37 @@ const InsuranceManagement: React.FC<InsuranceManagementProps> = ({ sidebarCollap
   ];
 
   useEffect(() => {
-    const fetchVehicles = async (): Promise<void> => {
+    const fetchData = async (): Promise<void> => {
       try {
-        const data = await vehicleAPI.getAllVehicles();
-        setVehicles(data);
+        // Process expired insurance first
+        const { updatedVehicles } = await processExpiredInsurance();
+        setVehicles(updatedVehicles);
       } catch (err) {
         console.error(err);
+        // Fallback to original fetch if processing fails
+        try {
+          const data = await fetchVehicles();
+          setVehicles(data);
+        } catch (fallbackErr) {
+          console.error('Fallback fetch also failed:', fallbackErr);
+        }
       }
     };
-    fetchVehicles();
+    fetchData();
   }, []);
-
-  // Function to determine date status and return appropriate CSS class
-  const getDateStatusClass = (endDate: string): string => {
-    if (!endDate || endDate === '-') return 'date-cell';
-    
-    const today = new Date();
-    const end = new Date(endDate);
-    
-    // Reset time to compare only dates
-    today.setHours(0, 0, 0, 0);
-    end.setHours(0, 0, 0, 0);
-    
-    const diffTime = end.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays < 0) {
-      return 'date-cell date-expired'; // Past due - red
-    } else if (diffDays <= 5) {
-      return 'date-cell date-expiring-soon'; // Expiring within 5 days - orange
-    } else {
-      return 'date-cell date-valid'; // Valid - green
-    }
-  };
 
   return (
     <>
-      {/* <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} /> */}
       <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator />
       {/* <div className="insurance-container"> */}
       <PageContainer>
+      <div className="dashboard-content">
         <SectionHeading title='Insurance Management' subtitle='Manage vehicle insurance policies and details'/>
-        {/* <div className="insurance-header">
-          <div className="header-content">
-            <h1 className="page-title">
-              <FileText className="page-icon" />
-              Insurance Management
-            </h1>
-            <p className="page-subtitle">Manage vehicle insurance policies and details</p>
-          </div>
-          </div> */}
-        {/* <div className="insurance-content border border-black"> */}
-          {/* <div className="content-header">
-            <div className="section-header">
-            <Shield size={20} className="section-icon" />
-            <h3>Vehicle Insurance Details</h3>
-            </div>
-            </div> */}
-
             <div className="header-actions2 d-flex justify-content-end">
-              <div className="search border border-grey d-flex justify-content-center align-items-center">
+              <div className="search-wrapper">
                 <Searchbar
+                placeholder='Search registration number'
+                  type='search'
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -203,7 +103,7 @@ const InsuranceManagement: React.FC<InsuranceManagementProps> = ({ sidebarCollap
               </div>
             </div>
           </div>
-        {/* </div> */}
+      </div>
       {/* </div> */}
       </PageContainer>
       <Footer />

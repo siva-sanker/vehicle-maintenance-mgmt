@@ -7,6 +7,8 @@ import ButtonWithGradient from '../components/ButtonWithGradient';
 import PageContainer from '../components/PageContainer';
 import SectionHeading from '../components/SectionHeading';
 import { vehicleAPI, Vehicle } from '../services/api';
+import InputText from '../components/InputText';
+import SelectInput from '../components/SelectInput';
 
 interface DocumentRepositoryProps {
   sidebarCollapsed: boolean;
@@ -72,19 +74,11 @@ const DocumentRepository: React.FC<DocumentRepositoryProps> = ({ sidebarCollapse
 
   return (
     <>
-      {/* <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} /> */}
-      <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator />
+      <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator  />
       <PageContainer>
       {/* <div className="document-repository-container"> */}
+      <div className="dashboard-content">
         <SectionHeading title='Document Repository' subtitle='Upload and manage your vehicle documents'/>
-        {/* <div className="document-repository-header">
-          <div className="header-content">
-            <h1 className="page-title">
-              Document Repository
-            </h1>
-            <p className="page-subtitle">Upload and manage your vehicle documents</p>
-          </div>
-        </div> */}
 
         <div className="upload-form-card">
           <div className="form-header">
@@ -93,62 +87,56 @@ const DocumentRepository: React.FC<DocumentRepositoryProps> = ({ sidebarCollapse
           </div>
 
           <form className="upload-form">
-            <div className="form-group">
-              <label>Select Vehicle</label>
-              <select
-                value={selectedVehicleId}
-                onChange={e => setSelectedVehicleId(e.target.value)}
-                required
-              >
-                <option value="" disabled>Choose Vehicle...</option>
-                {vehicles.map((v) => (
-                  <option key={v.id} value={v.id} className='text-uppercase'>
-                    {v.registrationNumber} - {v.make} {v.model}
-                  </option>
-                ))}
-              </select>
+            <div className="form-row">
+              <div className="form-group">
+                <SelectInput 
+                  name='vehicle' 
+                  label='Select Vehicle' 
+                  value={selectedVehicleId} 
+                  onChange={e => setSelectedVehicleId(e.target.value)} 
+                  options={[
+                    { value: '', label: 'Choose Vehicle...', disabled: true },
+                    ...vehicles.map(v => ({
+                      value: v.id,
+                      label: `${v.registrationNumber} - ${v.make} ${v.model}`
+                    }))
+                  ]}
+                />
+              </div>
+
+              <div className="form-group">
+                <label className='mb-0'>
+                  Upload PDF
+                </label>
+                <input
+                  type="file"
+                  className='form-control'
+                  id="fileInput"
+                  accept="application/pdf"
+                  onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+                />
+              </div>
             </div>
 
-            <div className="form-group">
-              <label>
-                Upload PDF
-              </label>
-              <input
-                type="file"
-                id="fileInput"
-                accept="application/pdf"
-                onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
-              />
-            </div>
+            <div className="form-row">
+              <div className="form-group">
+                <InputText name='fileName' label='Custom File Name' type='text' value={customName} placeholder="e.g., John_Driving_License.pdf" onChange={(e) => setCustomName(e.target.value)}/>
+              </div>
 
-            <div className="form-group">
-              <label>
-                Custom File Name
-              </label>
-              <input
-                type="text"
-                value={customName}
-                placeholder="e.g., John_Driving_License.pdf"
-                onChange={(e) => setCustomName(e.target.value)}
-              />
+              <div className="form-group">
+                <SelectInput 
+                  name='category' 
+                  label='Select Category' 
+                  value={category} 
+                  onChange={(e) => setCategory(e.target.value)} 
+                  placeholder='Choose...'
+                  options={[
+                    { value: '', label: 'Choose Category...', disabled: true },
+                    ...categories.map(cat => ({ value: cat, label: cat }))
+                  ]}
+                />
+              </div>
             </div>
-
-            <div className="form-group">
-              <label>
-                Select Category
-              </label>
-              <select value={category} onChange={(e) => setCategory(e.target.value)}>
-                <option value="" disabled>Choose...</option>
-                {categories.map((cat, idx) => (
-                  <option key={idx} value={cat}>{cat}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* <button type="button" className="btn-primary" onClick={handleUpload}>
-              <Upload size={16} />
-              Upload Document
-            </button> */}
             <ButtonWithGradient text='Upload Document' type='button' className='btn' onClick={handleUpload} />
           </form>
         </div>
@@ -169,7 +157,7 @@ const DocumentRepository: React.FC<DocumentRepositoryProps> = ({ sidebarCollapse
                   <p>No documents uploaded.</p>
                 </div>
               ) : (
-                <div className="document-list">
+                <div className="document-list ">
                   {documents[cat as keyof Documents].map((doc, idx) => (
                     <div key={idx} className="document-item">
                       <div className="document-name">
@@ -193,6 +181,7 @@ const DocumentRepository: React.FC<DocumentRepositoryProps> = ({ sidebarCollapse
           ))}
         </div>
       {/* </div> */}
+      </div>
       </PageContainer>
       <Footer />
     </>

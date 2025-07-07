@@ -6,15 +6,17 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 interface SearchbarProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  placeholder:string;
+  type:string;
 }
 
-const Searchbar: React.FC<SearchbarProps> = ({ value, onChange }) => {
+const Searchbar: React.FC<SearchbarProps> = ({ value, onChange,type,placeholder }) => {
   return (
     <div className="searchbar-container" style={{ maxWidth: '100%'}}>
       <input
-        type="search"
-        className="form-control search-input"
-        placeholder="Search here..."
+        type={type}
+        className="form-control search"
+        placeholder={placeholder}
         value={value}
         onChange={onChange}
       />

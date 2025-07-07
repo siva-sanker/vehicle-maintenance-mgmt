@@ -1,47 +1,6 @@
 {
   "vehicles": [
     {
-      "id": "a4e4",
-      "make": "toyota",
-      "model": "innova",
-      "purchaseDate": "2004-02-03",
-      "registrationNumber": "KL28UH231",
-      "purchasePrice": "800000",
-      "fuelType": "Diesel",
-      "engineNumber": "47a47b47c47d",
-      "chassisNumber": "32s32d32rf23",
-      "kilometers": "60000",
-      "color": "black",
-      "owner": "siva",
-      "phone": "9865784963",
-      "address": "tvm",
-      "insurance": {
-        "policyNumber": "2454",
-        "insurer": "tata",
-        "policytype": "Third Party",
-        "startDate": "2025-06-01",
-        "endDate": "2026-06-02",
-        "payment": "cash",
-        "issueDate": "2025-06-12",
-        "premiumAmount": "15000"
-      },
-      "claims": [
-        {
-          "claimDate": "2025-02-04",
-          "claimAmount": "12000",
-          "reason": "accident",
-          "status": "Rejected"
-        }
-      ],
-      "currentLocation": {
-        "latitude": 12.973036698956918,
-        "longitude": 77.6015152850183,
-        "timestamp": "2025-06-25T06:47:55.797Z",
-        "address": "St. Marks Circle, St. Mark's Circle Plaza, Shanthala Nagar, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
-      },
-      "lastUpdated": "2025-06-13T08:21:17.340Z"
-    },
-    {
       "id": "6b1e",
       "make": "suzuki",
       "model": "swift",
@@ -56,17 +15,6 @@
       "owner": "Jane Smith",
       "phone": "9748569785",
       "address": "adsff",
-      "insurance": {
-        "policyNumber": "692356",
-        "insurer": "abcd",
-        "policytype": "Comprehensive",
-        "startDate": "2025-06-11",
-        "endDate": "2025-06-23",
-        "payment": "upi",
-        "issueDate": "2025-06-12",
-        "premiumAmount": "7500",
-        "hasInsurance": true
-      },
       "claims": [
         {
           "claimDate": "2025-06-12",
@@ -81,54 +29,19 @@
         "timestamp": "2025-06-17T04:37:21.928Z",
         "address": "Woodlands, Sri Ram Mandir Road, Sampangi Rama Nagara, Shanti Nagar, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
       },
-      "lastUpdated": "2025-06-12T09:41:33.406Z"
-    },
-    {
-      "id": "c8f2",
-      "make": "honda",
-      "model": "city",
-      "purchaseDate": "2018-05-15",
-      "registrationNumber": "MH02AB4545",
-      "purchasePrice": "950000",
-      "fuelType": "Petrol",
-      "engineNumber": "honda123xyz789",
-      "chassisNumber": "honda456def012",
-      "kilometers": "45000",
-      "color": "silver",
-      "owner": "Rajesh Kumar",
-      "phone": "9876543210",
-      "address": "Mumbai, Maharashtra",
+      "lastUpdated": "2025-06-12T09:41:33.406Z",
+      "deletedAt": null,
       "insurance": {
-        "policyNumber": "789456",
-        "insurer": "ICICI Lombard",
-        "policytype": "Comprehensive",
-        "startDate": "2024-12-01",
-        "endDate": "2025-11-30",
-        "payment": "card",
-        "issueDate": "2024-11-25",
-        "premiumAmount": "12000"
-      },
-      "claims": [
-        {
-          "claimDate": "2025-01-15",
-          "claimAmount": "8500",
-          "reason": "minor collision",
-          "status": "Approved"
-        },
-        {
-          "claimDate": "2025-03-20",
-          "claimAmount": "15000",
-          "reason": "windshield damage",
-          "status": "Approved"
-        }
-      ],
-      "currentLocation": {
-        "latitude": 19.08168787495554,
-        "longitude": 72.875847334118,
-        "timestamp": "2025-06-23T05:15:38.734Z",
-        "address": "Kalina Kurla Road, Kismat Nagar, L Ward, Zone 5, Mumbai, Maharashtra, 400070, India"
-      },
-      "lastUpdated": "2025-06-12T10:15:30.123Z"
+        "policyNumber": "95869",
+        "insurer": "U and I",
+        "policytype": "Liability",
+        "startDate": "2025-07-06",
+        "endDate": "2026-07-09",
+        "payment": "cash",
+        "issueDate": "2025-07-07",
+        "premiumAmount": "12000",
+        "hasInsurance": true
+      }
     },
     {
       "id": "d9g3",
@@ -161,7 +74,8 @@
         "timestamp": "2025-06-17T04:51:55.856Z",
         "address": "Sector 3, Rohini, Rohini Tehsil, North West Delhi, Delhi, 110085, India"
       },
-      "lastUpdated": "2025-06-12T11:30:45.456Z"
+      "lastUpdated": "2025-06-12T11:30:45.456Z",
+      "deletedAt": null
     },
     {
       "id": "e0h4",
@@ -186,7 +100,8 @@
         "endDate": "2025-07-31",
         "payment": "upi",
         "issueDate": "2024-07-25",
-        "premiumAmount": "9500"
+        "premiumAmount": "9500",
+        "hasInsurance": true
       },
       "claims": [
         {
@@ -197,12 +112,13 @@
         }
       ],
       "currentLocation": {
-        "latitude": 12.9716,
-        "longitude": 77.5946,
-        "timestamp": "2025-06-12T12:45:20.789Z",
-        "address": "Bangalore, Karnataka, India"
+        "latitude": 12.966905880439427,
+        "longitude": 77.5929314961314,
+        "timestamp": "2025-07-04T04:10:24.007Z",
+        "address": "Unknown location"
       },
-      "lastUpdated": "2025-06-12T12:45:20.789Z"
+      "lastUpdated": "2025-06-12T12:45:20.789Z",
+      "deletedAt": null
     },
     {
       "id": "f1i5",
@@ -221,13 +137,14 @@
       "address": "Chennai, Tamil Nadu",
       "insurance": {
         "policyNumber": "987123",
-        "insurer": "Reliance General",
+        "insurer": "tata bhk",
         "policytype": "Comprehensive",
         "startDate": "2024-09-01",
         "endDate": "2025-08-31",
         "payment": "card",
         "issueDate": "2024-08-20",
-        "premiumAmount": "18000"
+        "premiumAmount": "18000",
+        "hasInsurance": true
       },
       "currentLocation": {
         "latitude": 12.9716,
@@ -235,7 +152,8 @@
         "timestamp": "2025-06-13T05:15:01.379Z",
         "address": "St. Joseph's Indian High School, Vittal Mallya Road, D'Souza Layout, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
       },
-      "lastUpdated": "2025-06-13T05:15:02.058Z"
+      "lastUpdated": "2025-06-13T05:15:02.058Z",
+      "deletedAt": null
     },
     {
       "id": "g2j6",
@@ -252,16 +170,6 @@
       "owner": "Vikram Singh",
       "phone": "5432109876",
       "address": "Hyderabad, Telangana",
-      "insurance": {
-        "policyNumber": "654321",
-        "insurer": "SBI General",
-        "policytype": "Liability",
-        "startDate": "2024-07-01",
-        "endDate": "2025-06-30",
-        "payment": "cash",
-        "issueDate": "2024-06-15",
-        "premiumAmount": "11000"
-      },
       "claims": [
         {
           "claimDate": "2024-11-10",
@@ -281,6 +189,18 @@
         "longitude": 77.58983877609221,
         "timestamp": "2025-06-17T04:50:09.903Z",
         "address": "Unknown location"
+      },
+      "deletedAt": null,
+      "insurance": {
+        "policyNumber": "2158/4",
+        "insurer": "Mac Bookpro",
+        "policytype": "Third Party",
+        "startDate": "2024-06-09",
+        "endDate": "2025-07-12",
+        "payment": "card",
+        "issueDate": "2024-06-08",
+        "premiumAmount": "8900",
+        "hasInsurance": true
       }
     },
     {
@@ -328,7 +248,8 @@
         "timestamp": "2025-06-12T09:41:57.094Z",
         "address": "Sree Kanteerava Stadium, Rajaram Mohan Roy Road, Sampangirama Nagar, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
       },
-      "lastUpdated": "2025-06-12T09:41:57.824Z"
+      "lastUpdated": "2025-06-12T09:41:57.824Z",
+      "deletedAt": null
     },
     {
       "id": "i4l8",
@@ -354,7 +275,8 @@
         "payment": "bank account",
         "issueDate": "2024-08-15",
         "premiumAmount": "9000"
-      }
+      },
+      "deletedAt": null
     },
     {
       "id": "j5m9",
@@ -388,7 +310,14 @@
           "reason": "side damage",
           "status": "Rejected"
         }
-      ]
+      ],
+      "deletedAt": null,
+      "currentLocation": {
+        "latitude": 12.967535461213219,
+        "longitude": 77.59693066031109,
+        "timestamp": "2025-07-04T04:15:44.829Z",
+        "address": "Bangalore Club, 10, Residency Road, Shanthala Nagar, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560025, India"
+      }
     },
     {
       "id": "k6n0",
@@ -414,6 +343,13 @@
         "payment": "cash",
         "issueDate": "2024-07-25",
         "premiumAmount": "8500"
+      },
+      "deletedAt": null,
+      "currentLocation": {
+        "latitude": 12.976095835214274,
+        "longitude": 77.59360572399518,
+        "timestamp": "2025-07-07T04:51:49.194Z",
+        "address": "Doctor B R Ambedkar Veedhi, Fair Field Layout, Gandhinagar, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
       }
     },
     {
@@ -435,11 +371,12 @@
         "policyNumber": "852963",
         "insurer": "National Insurance",
         "policytype": "Comprehensive",
-        "startDate": "2024-12-01",
-        "endDate": "2025-11-30",
+        "startDate": "2025-12-02",
+        "endDate": "2026-11-03",
         "payment": "upi",
-        "issueDate": "2024-11-20",
-        "premiumAmount": "14000"
+        "issueDate": "2025-12-01",
+        "premiumAmount": "15600",
+        "hasInsurance": true
       },
       "claims": [
         {
@@ -461,7 +398,8 @@
         "timestamp": "2025-06-13T10:06:59.893Z",
         "address": "Bishop Cotton Boys School, Saint Mark's Road, Shanthala Nagar, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
       },
-      "lastUpdated": "2025-06-13T10:07:00.161Z"
+      "lastUpdated": "2025-06-13T10:07:00.161Z",
+      "deletedAt": null
     },
     {
       "id": "m8p2",
@@ -494,7 +432,8 @@
         "timestamp": "2025-06-12T09:57:54.014Z",
         "address": "Vydehi Superspeciality Hospital, 2, Vittal Mallya Road, D'Souza Layout, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
       },
-      "lastUpdated": "2025-06-12T09:57:54.721Z"
+      "lastUpdated": "2025-06-12T09:57:54.721Z",
+      "deletedAt": null
     },
     {
       "id": "n9q3",
@@ -534,7 +473,8 @@
         "longitude": 77.59107133960151,
         "timestamp": "2025-06-17T06:48:49.076Z",
         "address": "Cubbon Park Circle, Doctor B R Ambedkar Veedhi, Fair Field Layout, Gandhinagar, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
-      }
+      },
+      "deletedAt": null
     },
     {
       "id": "o0r4",
@@ -551,22 +491,13 @@
       "owner": "Biju Patnaik",
       "phone": "7654321098",
       "address": "Bhubaneswar, Odisha",
-      "insurance": {
-        "policyNumber": "321654",
-        "insurer": "Cholamandalam MS",
-        "policytype": "Liability",
-        "startDate": "2024-07-01",
-        "endDate": "2025-06-30",
-        "payment": "upi",
-        "issueDate": "2024-06-20",
-        "premiumAmount": "20000"
-      },
       "currentLocation": {
         "latitude": 12.966758199452437,
         "longitude": 77.59057483735717,
         "timestamp": "2025-06-17T04:49:05.929Z",
         "address": "Cross Road, Sampangi Rama Nagara, Shanti Nagar, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
-      }
+      },
+      "deletedAt": null
     },
     {
       "id": "p1s5",
@@ -600,7 +531,8 @@
           "reason": "luxury car damage",
           "status": "Approved"
         }
-      ]
+      ],
+      "deletedAt": null
     },
     {
       "id": "q2t6",
@@ -635,7 +567,8 @@
           "reason": "12d",
           "status": "Pending"
         }
-      ]
+      ],
+      "deletedAt": null
     },
     {
       "id": "r3u7",
@@ -675,7 +608,8 @@
         "longitude": 77.59427339080796,
         "timestamp": "2025-06-23T05:16:10.542Z",
         "address": "Rajaram Mohan Roy Road, Sampangirama Nagar, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
-      }
+      },
+      "deletedAt": null
     },
     {
       "id": "s4v8",
@@ -701,7 +635,8 @@
         "payment": "upi",
         "issueDate": "2024-07-20",
         "premiumAmount": "75000"
-      }
+      },
+      "deletedAt": null
     },
     {
       "id": "t5w9",
@@ -741,7 +676,8 @@
         "longitude": 77.5899459582894,
         "timestamp": "2025-06-17T04:47:12.673Z",
         "address": "Government Secretariat Club - KGSC, Doctor B R Ambedkar Veedhi, Fair Field Layout, Gandhinagar, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
-      }
+      },
+      "deletedAt": null
     },
     {
       "id": "u6x0",
@@ -767,7 +703,8 @@
         "payment": "bank account",
         "issueDate": "2024-10-20",
         "premiumAmount": "60000"
-      }
+      },
+      "deletedAt": null
     },
     {
       "id": "v7y1",
@@ -801,7 +738,8 @@
           "reason": "premium hybrid repair",
           "status": "Approved"
         }
-      ]
+      ],
+      "deletedAt": null
     },
     {
       "id": "w8z2",
@@ -818,17 +756,7 @@
       "owner": "Manoj Pillai",
       "phone": "9876543210",
       "address": "Kochi, Kerala",
-      "insurance": {
-        "policyNumber": "152535",
-        "insurer": "tata",
-        "policytype": "Third Party",
-        "startDate": "2024-07-07",
-        "endDate": "2025-06-21",
-        "payment": "cash",
-        "issueDate": "2024-07-08",
-        "premiumAmount": "1350",
-        "hasInsurance": true
-      }
+      "deletedAt": null
     },
     {
       "id": "y0b4",
@@ -868,30 +796,14 @@
           "reason": "landslide",
           "status": "Pending"
         }
-      ]
-    },
-    {
-      "id": "a2d6",
-      "make": "peugeot",
-      "model": "2008",
-      "purchaseDate": "2021-11-12",
-      "registrationNumber": "HR07JK9012",
-      "purchasePrice": "1850000",
-      "fuelType": "Petrol",
-      "engineNumber": "peugeot456opq789",
-      "chassisNumber": "peugeot123rst456",
-      "kilometers": "18000",
-      "color": "coral",
-      "owner": "Priya Malhotra",
-      "phone": "5432109876",
-      "address": "Faridabad, Haryana",
+      ],
+      "deletedAt": null,
       "currentLocation": {
-        "latitude": 12.968900433265443,
-        "longitude": 77.59513896589918,
-        "timestamp": "2025-06-12T09:32:44.807Z",
-        "address": "St. Joseph's Indian High School, Vittal Mallya Road, D'Souza Layout, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
-      },
-      "lastUpdated": "2025-06-12T09:32:45.492Z"
+        "latitude": 12.969637486087128,
+        "longitude": 77.59923183832775,
+        "timestamp": "2025-07-04T04:14:10.396Z",
+        "address": "Bishop Cotton Boys School, Residency Road, Langford Gardens, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+      }
     },
     {
       "id": "bd58",
@@ -924,23 +836,8 @@
         "timestamp": "2025-06-12T09:25:41.301Z",
         "address": "Sree Kanteerava Stadium, Rajaram Mohan Roy Road, Sampangirama Nagar, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
       },
-      "lastUpdated": "2025-06-12T09:25:41.935Z"
-    },
-    {
-      "id": "12cd",
-      "make": "ford",
-      "model": "fiesta",
-      "purchaseDate": "1993-03-03",
-      "registrationNumber": "hj05tv3435",
-      "purchasePrice": "350000",
-      "fuelType": "Diesel",
-      "engineNumber": "697869",
-      "chassisNumber": "9648356985586",
-      "kilometers": "96587",
-      "color": "maroon",
-      "owner": "Edison",
-      "phone": "9897969594",
-      "address": "evm india 123 pin: 695875"
+      "lastUpdated": "2025-06-12T09:25:41.935Z",
+      "deletedAt": null
     },
     {
       "id": "fe87",
@@ -956,7 +853,8 @@
       "color": "red",
       "owner": "derik",
       "phone": "7695828458",
-      "address": "erenelmoriaritymukk"
+      "address": "erenelmoriaritymukk",
+      "deletedAt": null
     },
     {
       "id": "01e4",
@@ -990,8 +888,15 @@
           "claimAmount": "123",
           "reason": "eee",
           "status": "Pending"
+        },
+        {
+          "claimDate": "2025-07-14",
+          "claimAmount": "8657",
+          "reason": "crashed",
+          "status": "Pending"
         }
-      ]
+      ],
+      "deletedAt": null
     },
     {
       "id": "9be8",
@@ -1008,17 +913,7 @@
       "owner": "SI",
       "phone": "1236985478",
       "address": "DSFS",
-      "insurance": {
-        "policyNumber": "12345",
-        "insurer": "bhm",
-        "policytype": "Comprehensive",
-        "startDate": "2024-06-04",
-        "endDate": "2025-06-18",
-        "payment": "cash",
-        "issueDate": "2024-06-05",
-        "premiumAmount": "1200",
-        "hasInsurance": true
-      }
+      "deletedAt": null
     },
     {
       "id": "a74b",
@@ -1035,16 +930,7 @@
       "owner": "Alice Johnson",
       "phone": "9876543210",
       "address": "Kerala, India",
-      "insurance": {
-        "policyNumber": "POL789012",
-        "insurer": "HDFC Ergo",
-        "policytype": "Comprehensive",
-        "startDate": "2024-01-01",
-        "endDate": "2024-12-31",
-        "payment": "card",
-        "issueDate": "2023-12-20",
-        "premiumAmount": "12000"
-      }
+      "deletedAt": null
     },
     {
       "id": "2705",
@@ -1061,17 +947,6 @@
       "owner": "begger",
       "phone": "3978468542",
       "address": "india europe america",
-      "insurance": {
-        "policyNumber": "9728162",
-        "insurer": "americna express",
-        "policytype": "Liability",
-        "startDate": "2022-01-05",
-        "endDate": "2023-02-05",
-        "payment": "cash",
-        "issueDate": "2022-01-07",
-        "premiumAmount": "16500",
-        "hasInsurance": true
-      },
       "claims": [
         {
           "claimDate": "2023-03-05",
@@ -1079,7 +954,8 @@
           "reason": "asd",
           "status": "Pending"
         }
-      ]
+      ],
+      "deletedAt": null
     },
     {
       "id": "2fa6",
@@ -1101,11 +977,18 @@
         "insurer": "ambaani",
         "policytype": "Liability",
         "startDate": "2019-12-24",
-        "endDate": "2025-12-25",
+        "endDate": "2025-07-08",
         "payment": "bank account",
         "issueDate": "2019-12-25",
         "premiumAmount": "75000",
         "hasInsurance": true
+      },
+      "deletedAt": null,
+      "currentLocation": {
+        "latitude": 12.967168451427783,
+        "longitude": 77.59698918356207,
+        "timestamp": "2025-07-04T04:36:42.607Z",
+        "address": "Bangalore Club, 10, Residency Road, Shanthala Nagar, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560025, India"
       }
     },
     {
@@ -1123,44 +1006,87 @@
       "owner": "Alice Johnson",
       "phone": "9876543210",
       "address": "Kerala, India",
+      "deletedAt": null
+    },
+    {
+      "id": "c44b",
+      "make": "volvo",
+      "model": "v8",
+      "purchaseDate": "2006-01-10",
+      "registrationNumber": "mm30mb3030",
+      "purchasePrice": "97685498",
+      "fuelType": "Diesel",
+      "engineNumber": "469758",
+      "chassisNumber": "1369784668",
+      "kilometers": "89576",
+      "color": "green",
+      "owner": "gimmi",
+      "phone": "4697210326",
+      "address": "ginfit huse",
+      "deletedAt": null,
+      "currentLocation": {
+        "latitude": 12.970945563367968,
+        "longitude": 77.59114363030133,
+        "timestamp": "2025-07-04T04:16:09.797Z",
+        "address": "Cubbon Park Nature Trail, Sampangirama Nagar, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+      }
+    },
+    {
+      "id": "335b",
+      "make": "force",
+      "model": "gurkha",
+      "purchaseDate": "2006-08-23",
+      "registrationNumber": "op01sh1234",
+      "purchasePrice": "1900000",
+      "fuelType": "Diesel",
+      "engineNumber": "565656",
+      "chassisNumber": "5987459685",
+      "kilometers": "56985",
+      "color": "black",
+      "owner": "Hodo",
+      "phone": "4985674854",
+      "address": "hfifhninanlkjd ",
       "insurance": {
-        "policyNumber": "POL789012",
-        "insurer": "HDFC Ergo",
+        "policyNumber": "252525",
+        "insurer": "qwerty",
         "policytype": "Comprehensive",
-        "startDate": "2024-01-01",
-        "endDate": "2024-12-31",
+        "startDate": "2025-07-01",
+        "endDate": "2026-07-03",
         "payment": "card",
-        "issueDate": "2023-12-20",
-        "premiumAmount": "12000",
+        "issueDate": "2025-06-30",
+        "premiumAmount": "16525",
+        "hasInsurance": true
+      }
+    },
+    {
+      "id": "2898",
+      "make": "ford",
+      "model": "fergusson",
+      "purchaseDate": "2006-08-25",
+      "registrationNumber": "op05opop",
+      "purchasePrice": "2500000",
+      "fuelType": "Diesel",
+      "engineNumber": "98596",
+      "chassisNumber": "4875985671",
+      "kilometers": "49856",
+      "color": "silver",
+      "owner": "gird",
+      "phone": "1369784560",
+      "address": "hgihojaohkjads",
+      "insurance": {
+        "policyNumber": "450250",
+        "insurer": "U and I",
+        "policytype": "Third Party",
+        "startDate": "2025-07-02",
+        "endDate": "2026-06-08",
+        "payment": "bank account",
+        "issueDate": "2025-07-01",
+        "premiumAmount": "3500",
         "hasInsurance": true
       }
     }
   ],
   "locationHistory": [
-    {
-      "id": "loc1",
-      "vehicleId": "a4e4",
-      "latitude": 12.9716,
-      "longitude": 77.5946,
-      "timestamp": "2025-06-12T09:25:51.910Z",
-      "address": "St. Joseph's Indian High School, Vittal Mallya Road, D'Souza Layout, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
-    },
-    {
-      "id": "loc2",
-      "vehicleId": "a4e4",
-      "latitude": 12.972,
-      "longitude": 77.595,
-      "timestamp": "2025-06-12T08:15:30.123Z",
-      "address": "Richmond Town, Bengaluru, Karnataka, India"
-    },
-    {
-      "id": "loc3",
-      "vehicleId": "c8f2",
-      "latitude": 19.076,
-      "longitude": 72.8777,
-      "timestamp": "2025-06-12T10:15:30.123Z",
-      "address": "Mumbai, Maharashtra, India"
-    },
     {
       "id": "loc4",
       "vehicleId": "d9g3",
@@ -1176,14 +1102,6 @@
       "longitude": 77.5946,
       "timestamp": "2025-06-12T12:45:20.789Z",
       "address": "Bangalore, Karnataka, India"
-    },
-    {
-      "id": "loc_1749720765519",
-      "vehicleId": "a2d6",
-      "latitude": 12.968900433265443,
-      "longitude": 77.59513896589918,
-      "timestamp": "2025-06-12T09:32:45.519Z",
-      "address": "St. Joseph's Indian High School, Vittal Mallya Road, D'Souza Layout, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
     },
     {
       "id": "loc_1749721287133",
@@ -1242,35 +1160,11 @@
       "address": "Vydehi Superspeciality Hospital, 2, Vittal Mallya Road, D'Souza Layout, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
     },
     {
-      "id": "loc_1749722375160",
-      "vehicleId": "a4e4",
-      "latitude": 12.968781414749165,
-      "longitude": 77.59518691833674,
-      "timestamp": "2025-06-12T09:59:35.160Z",
-      "address": "St. Joseph's Indian High School, Vittal Mallya Road, D'Souza Layout, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
-    },
-    {
-      "id": "loc_1749722384456",
-      "vehicleId": "a4e4",
-      "latitude": 12.965019229955242,
-      "longitude": 77.59316564360695,
-      "timestamp": "2025-06-12T09:59:44.456Z",
-      "address": "೧೨ನೇ ಅಡ್ಡ ರಸ್ತೆ, Sampangi Rama Nagara, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
-    },
-    {
       "id": "loc_1749791702107",
       "vehicleId": "f1i5",
       "latitude": 12.9716,
       "longitude": 77.5946,
       "timestamp": "2025-06-13T05:15:02.107Z",
-      "address": "St. Joseph's Indian High School, Vittal Mallya Road, D'Souza Layout, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
-    },
-    {
-      "id": "loc_1749802877358",
-      "vehicleId": "a4e4",
-      "latitude": 12.969902923936484,
-      "longitude": 77.59556670903353,
-      "timestamp": "2025-06-13T08:21:17.358Z",
       "address": "St. Joseph's Indian High School, Vittal Mallya Road, D'Souza Layout, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
     },
     {
@@ -1288,59 +1182,139 @@
       "longitude": 77.59905854416311,
       "timestamp": "2025-06-13T10:07:00.166Z",
       "address": "Bishop Cotton Boys School, Saint Mark's Road, Shanthala Nagar, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+    },
+    {
+      "id": "loc_1751602438472",
+      "vehicleId": "y0b4",
+      "latitude": 12.969776838790931,
+      "longitude": 77.59489127306749,
+      "timestamp": "2025-07-04T04:13:57.686Z",
+      "address": "St. Joseph's Indian High School, Vittal Mallya Road, D'Souza Layout, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+    },
+    {
+      "id": "loc_1751602441468",
+      "vehicleId": "y0b4",
+      "latitude": 12.974710454201372,
+      "longitude": 77.59558882057479,
+      "timestamp": "2025-07-04T04:14:01.213Z",
+      "address": "Karnataka Government Museum, Kasturba Road, Sampangirama Nagar, Shivajinagar, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+    },
+    {
+      "id": "loc_1751602443200",
+      "vehicleId": "y0b4",
+      "latitude": 12.96969662473255,
+      "longitude": 77.59147564003314,
+      "timestamp": "2025-07-04T04:14:02.940Z",
+      "address": "Sree Kanteerava Stadium, Rajaram Mohan Roy Road, Sampangirama Nagar, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+    },
+    {
+      "id": "loc_1751602444221",
+      "vehicleId": "y0b4",
+      "latitude": 12.975314606316536,
+      "longitude": 77.59227647465504,
+      "timestamp": "2025-07-04T04:14:03.820Z",
+      "address": "Shanthala Nagar, Gandhinagar, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+    },
+    {
+      "id": "loc_1751602446345",
+      "vehicleId": "y0b4",
+      "latitude": 12.970764376189136,
+      "longitude": 77.59604394581629,
+      "timestamp": "2025-07-04T04:14:06.084Z",
+      "address": "St. Joseph's Indian High School, Vittal Mallya Road, D'Souza Layout, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+    },
+    {
+      "id": "loc_1751602448039",
+      "vehicleId": "y0b4",
+      "latitude": 12.974888351419656,
+      "longitude": 77.59754014422043,
+      "timestamp": "2025-07-04T04:14:07.749Z",
+      "address": "Dhanlaxmi Bank, Kasturba Road, Sampangirama Nagar, Shivajinagar, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+    },
+    {
+      "id": "loc_1751602449567",
+      "vehicleId": "y0b4",
+      "latitude": 12.970902461674935,
+      "longitude": 77.59091697955,
+      "timestamp": "2025-07-04T04:14:09.308Z",
+      "address": "Cubbon Park Nature Trail, Sampangirama Nagar, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+    },
+    {
+      "id": "loc_1751602450684",
+      "vehicleId": "y0b4",
+      "latitude": 12.969637486087128,
+      "longitude": 77.59923183832775,
+      "timestamp": "2025-07-04T04:14:10.396Z",
+      "address": "Bishop Cotton Boys School, Residency Road, Langford Gardens, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+    },
+    {
+      "id": "loc_1751602545575",
+      "vehicleId": "j5m9",
+      "latitude": 12.967535461213219,
+      "longitude": 77.59693066031109,
+      "timestamp": "2025-07-04T04:15:44.829Z",
+      "address": "Bangalore Club, 10, Residency Road, Shanthala Nagar, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560025, India"
+    },
+    {
+      "id": "loc_1751602570469",
+      "vehicleId": "c44b",
+      "latitude": 12.970945563367968,
+      "longitude": 77.59114363030133,
+      "timestamp": "2025-07-04T04:16:09.797Z",
+      "address": "Cubbon Park Nature Trail, Sampangirama Nagar, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+    },
+    {
+      "id": "loc_1751603800292",
+      "vehicleId": "2fa6",
+      "latitude": 12.96959157947462,
+      "longitude": 77.59821528898031,
+      "timestamp": "2025-07-04T04:36:39.566Z",
+      "address": "Bishop Cotton Boys School, Saint Mark's Road, Shanthala Nagar, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+    },
+    {
+      "id": "loc_1751603802866",
+      "vehicleId": "2fa6",
+      "latitude": 12.967168451427783,
+      "longitude": 77.59698918356207,
+      "timestamp": "2025-07-04T04:36:42.607Z",
+      "address": "Bangalore Club, 10, Residency Road, Shanthala Nagar, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560025, India"
+    },
+    {
+      "id": "loc_1751603811620",
+      "vehicleId": "12cd",
+      "latitude": 12.975736416104157,
+      "longitude": 77.59599648528888,
+      "timestamp": "2025-07-04T04:36:50.614Z",
+      "address": "Bal Bhavan Toy Train, Kasturba Road, Sampangirama Nagar, Shivajinagar, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
     }
   ],
   "drivers": [
     {
-      "id": "d1",
-      "name": "John Doe",
-      "licenseNumber": "DL1234567890",
-      "phone": "9876543210",
-      "address": "123 Main St, City, State",
-      "isActive": true,
-      "assignedVehicleIds": [
-        "a4e4",
-        "6b1e"
-      ]
-    },
-    {
-      "id": "287a",
-      "name": "dom T",
-      "licenseNumber": "kl01kl09879081",
-      "phone": "9638527410",
-      "address": "ambadaaaaaaaa",
-      "isActive": true,
-      "assignedVehicleIds": [
-        "i4l8",
-        "q2t6",
-        "w8z2",
-        "fe87",
-        "2705",
-        "6b1e",
-        "a2d6",
-        "z1c5"
-      ]
-    },
-    {
-      "id": "ed95",
-      "name": "johnson",
+      "name": "siva",
       "licenseNumber": "908909",
-      "phone": "918",
-      "address": "india usa",
+      "phone": "9865784965",
+      "address": "india",
       "isActive": true,
-      "assignedVehicleIds": []
+      "assignedVehicleIds": [
+        "a4e4"
+      ],
+      "id": "cae6",
+      "deletedAt": null
     },
     {
-      "id": "f4cc",
-      "name": "test",
-      "licenseNumber": "test123",
-      "phone": "5289484",
-      "address": "asdfg",
+      "name": "george kulangara",
+      "licenseNumber": "798689",
+      "phone": "9867985485",
+      "address": "india",
       "isActive": false,
       "assignedVehicleIds": [
-        "6b1e",
-        "a4e4"
-      ]
+        "i4l8",
+        "p1s5",
+        "w8z2",
+        "d9g3"
+      ],
+      "id": "0d72",
+      "deletedAt": null
     }
   ]
 }

@@ -79,6 +79,7 @@
     position: relative;
     display: flex;
     align-items: center;
+    width: 200px;
 }
 
 .search-icon {
@@ -236,7 +237,7 @@
     width: fit-content;
     max-height: fit-content;
     border-radius: 12px;
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -440,7 +441,7 @@ button[type="submit"]:hover {
 .modal h2 {
     font-size: 1.25rem;
     font-weight: 600;
-    color: #0d92ae;
+    color: #5a5a5a;
     margin-bottom: 1.5rem;
     border: none;
 }
@@ -448,7 +449,7 @@ button[type="submit"]:hover {
 .modal label {
     font-size: 0.95rem;
     font-weight: 500;
-    color: #0d92ae;
+    color: #5a5a5a;
     margin-bottom: 0.25rem;
 }
 
@@ -573,15 +574,59 @@ button[type="submit"]:hover {
     margin-bottom: 0.5rem;
 }
 
-.driver-checkbox label {
+.driver-label {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-    cursor: pointer;
+    width: 100%;
 }
 
 .driver-checkbox input[type="checkbox"] {
-    margin: 0;
+    margin-left: 10px;
+    /* margin-top: 10px; */
     width: auto;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #5a6268 0%, #495057 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #20c997 0%, #1e7e34 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
 }

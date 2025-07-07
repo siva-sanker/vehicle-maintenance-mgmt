@@ -8,17 +8,12 @@ import Dashboard from './pages/Dashboard.tsx';
 import VehicleRegistration from './pages/VehicleRegistration.tsx';
 import VehicleList from './pages/VehicleList.tsx';
 import InsuranceManagement from './pages/InsuranceManagement.tsx';
+import InsuranceList from './pages/InsuranceList.tsx';
 import DocumentRepository from './pages/DocumentRepository.tsx';
 import VehicleClaims from './pages/VehicleClaims.tsx';
 import VehicleLocation from './pages/VehicleLocation.tsx';
 import ApiExample from './components/ApiExample.tsx';
 import Driver from './pages/Driver.tsx';
-
-// Define the props interface for components that receive sidebar props
-// interface SidebarProps {
-//   sidebarCollapsed: boolean;
-//   toggleSidebar: () => void;
-// }
 
 const App: React.FC = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
@@ -43,6 +38,7 @@ const App: React.FC = () => {
               <Route path="/register-vehicle" element={<VehicleRegistration sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />} />
               <Route path="/vehicle-list" element={<VehicleList sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />} />
               <Route path="/insurance" element={<InsuranceManagement sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />} />
+              <Route path="/insurance-history" element={<InsuranceList sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />} />
               <Route path="/documents" element={<DocumentRepository sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />} />
               <Route path="/claims" element={<VehicleClaims sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />} />
               <Route path="/location" element={<VehicleLocation sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />} />

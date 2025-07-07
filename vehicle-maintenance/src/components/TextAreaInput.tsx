@@ -1,30 +1,24 @@
-import React, { Children } from 'react';
+import React from 'react';
 
-interface InputTextProps {
-  id?:string;
+interface TextAreaInputProps {
   label?: string;
-  type?: string;
   name: string;
   placeholder?: string;
   required?: boolean;
   error?: string;
-  className?: string; 
-  disabled?: boolean;
+  className?: string;
   value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
 }
 
-const InputText: React.FC<InputTextProps> = ({
-  id,
+const TextAreaInput: React.FC<TextAreaInputProps> = ({
   label,
-  type = 'text',
   name,
   placeholder = '',
   required = false,
   error = '',
   className = '',
-  disabled = false,
   value = '',
   onChange,
   onBlur,
@@ -36,21 +30,20 @@ const InputText: React.FC<InputTextProps> = ({
           {label}
         </label>
       )}
-      <input
-        type={type}
-        className={`form-control ${error ? 'is-invalid' : ''} ${className}`}
-        id={id}
+      <textarea
+        id={name}
         name={name}
         placeholder={placeholder}
         required={required}
-        disabled={disabled}
         value={value}
         onChange={onChange}
         onBlur={onBlur}
+        rows={2}
+        className={`form-control ${error ? 'is-invalid' : ''} ${className}`}
       />
       {error && <div className="invalid-feedback">{error}</div>}
     </div>
   );
 };
 
-export default InputText;
+export default TextAreaInput;

@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/style.css';
+// import '../styles/style.css';
 
 interface FormDateInputProps {
   value: string;
@@ -22,7 +22,7 @@ const FormDateInput: React.FC<FormDateInputProps> = ({
 }) => {
   return (
     <div className="form-group">
-      <label htmlFor={name}>{label}:</label>
+      <label htmlFor={name} className='mb-0'>{label}</label>
       <input
         type="date"
         id={name}
@@ -30,7 +30,7 @@ const FormDateInput: React.FC<FormDateInputProps> = ({
         value={value}
         onChange={onChange}
         onBlur={onBlur}
-        className={`custom-date ${className}`.trim()}
+        className={`form-control ${className}`.trim()}
       />
       {error && <div className="error-message">{error}</div>}
     </div>

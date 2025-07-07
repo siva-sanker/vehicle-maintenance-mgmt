@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Header from './Header';
 import {
     vehicleAPI,
-    maintenanceAPI,
-    fuelLogsAPI,
     expensesAPI,
     dashboardAPI
 } from '../services/api';
@@ -63,17 +61,17 @@ interface ApiExampleProps {
   toggleSidebar: () => void;
 }
 
-interface FuelLog {
-    id: string;
-    vehicleId: string;
-    fuelDate: string;
-    fuelType: string;
-    quantity: number;
-    cost: number;
-    odometerReading: number;
-    fuelStation: string;
-    location: string;
-}
+// interface FuelLog {
+//     id: string;
+//     vehicleId: string;
+//     fuelDate: string;
+//     fuelType: string;
+//     quantity: number;
+//     cost: number;
+//     odometerReading: number;
+//     fuelStation: string;
+//     location: string;
+// }
 
 interface Expense {
     id: string;
@@ -115,34 +113,34 @@ const ApiExample: React.FC<ApiExampleProps> = ({ sidebarCollapsed, toggleSidebar
     };
 
     // Example: Fetch maintenance records
-    const fetchMaintenance = async (): Promise<void> => {
-        try {
-            setLoading(true);
-            const data = await maintenanceAPI.getAllMaintenance();
-            setMaintenance(data);
-            setError(null);
-        } catch (err) {
-            setError('Failed to fetch maintenance records');
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
-    };
+    // const fetchMaintenance = async (): Promise<void> => {
+    //     try {
+    //         setLoading(true);
+    //         const data = await maintenanceAPI.getAllMaintenance();
+    //         setMaintenance(data);
+    //         setError(null);
+    //     } catch (err) {
+    //         setError('Failed to fetch maintenance records');
+    //         console.error(err);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
 
     // Example: Fetch dashboard statistics
-    const fetchDashboardStats = async (): Promise<void> => {
-        try {
-            setLoading(true);
-            const stats = await dashboardAPI.getDashboardStats();
-            setDashboardStats(stats);
-            setError(null);
-        } catch (err) {
-            setError('Failed to fetch dashboard stats');
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
-    };
+    // const fetchDashboardStats = async (): Promise<void> => {
+    //     try {
+    //         setLoading(true);
+    //         const stats = await dashboardAPI.getDashboardStats();
+    //         setDashboardStats(stats);
+    //         setError(null);
+    //     } catch (err) {
+    //         setError('Failed to fetch dashboard stats');
+    //         console.error(err);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
 
     // Example: Create a new vehicle
     const createNewVehicle = async (): Promise<void> => {
@@ -195,32 +193,32 @@ const ApiExample: React.FC<ApiExampleProps> = ({ sidebarCollapsed, toggleSidebar
             return;
         }
 
-        const newMaintenance: Omit<Maintenance, 'id'> = {
-            vehicleId: vehicles[0].id,
-            serviceDate: "2024-12-25",
-            serviceType: "Regular Service",
-            description: "Oil change, filter replacement, brake inspection",
-            cost: 3500,
-            nextServiceDate: "2025-06-25",
-            serviceCenter: "Honda Service Center",
-            technician: "John Doe",
-            status: "Completed",
-            odometerReading: 55000
-        };
+        // const newMaintenance: Omit<Maintenance, 'id'> = {
+        //     vehicleId: vehicles[0].id,
+        //     serviceDate: "2024-12-25",
+        //     serviceType: "Regular Service",
+        //     description: "Oil change, filter replacement, brake inspection",
+        //     cost: 3500,
+        //     nextServiceDate: "2025-06-25",
+        //     serviceCenter: "Honda Service Center",
+        //     technician: "John Doe",
+        //     status: "Completed",
+        //     odometerReading: 55000
+        // };
 
-        try {
-            setLoading(true);
-            const createdMaintenance = await maintenanceAPI.createMaintenance(newMaintenance);
-            console.log('Created maintenance:', createdMaintenance);
-            // Refresh maintenance list
-            await fetchMaintenance();
-            setError(null);
-        } catch (err) {
-            setError('Failed to create maintenance record');
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
+        // try {
+        //     setLoading(true);
+        //     const createdMaintenance = await maintenanceAPI.createMaintenance(newMaintenance);
+        //     console.log('Created maintenance:', createdMaintenance);
+        //     // Refresh maintenance list
+        //     await fetchMaintenance();
+        //     setError(null);
+        // } catch (err) {
+        //     setError('Failed to create maintenance record');
+        //     console.error(err);
+        // } finally {
+        //     setLoading(false);
+        // }
     };
 
     // Example: Add fuel log
@@ -230,28 +228,28 @@ const ApiExample: React.FC<ApiExampleProps> = ({ sidebarCollapsed, toggleSidebar
             return;
         }
 
-        const newFuelLog: Omit<FuelLog, 'id'> = {
-            vehicleId: vehicles[0].id,
-            fuelDate: "2024-12-25",
-            fuelType: "Petrol",
-            quantity: 40,
-            cost: 3200,
-            odometerReading: 55000,
-            fuelStation: "Indian Oil Station",
-            location: "Trivandrum"
-        };
+        // const newFuelLog: Omit<FuelLog, 'id'> = {
+        //     vehicleId: vehicles[0].id,
+        //     fuelDate: "2024-12-25",
+        //     fuelType: "Petrol",
+        //     quantity: 40,
+        //     cost: 3200,
+        //     odometerReading: 55000,
+        //     fuelStation: "Indian Oil Station",
+        //     location: "Trivandrum"
+        // };
 
-        try {
-            setLoading(true);
-            const createdFuelLog = await fuelLogsAPI.createFuelLog(newFuelLog);
-            console.log('Created fuel log:', createdFuelLog);
-            setError(null);
-        } catch (err) {
-            setError('Failed to create fuel log');
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
+        // try {
+        //     setLoading(true);
+        //     const createdFuelLog = await fuelLogsAPI.createFuelLog(newFuelLog);
+        //     console.log('Created fuel log:', createdFuelLog);
+        //     setError(null);
+        // } catch (err) {
+        //     setError('Failed to create fuel log');
+        //     console.error(err);
+        // } finally {
+        //     setLoading(false);
+        // }
     };
 
     // Example: Add expense
@@ -342,8 +340,8 @@ const ApiExample: React.FC<ApiExampleProps> = ({ sidebarCollapsed, toggleSidebar
     useEffect(() => {
         // Load initial data
         fetchVehicles();
-        fetchMaintenance();
-        fetchDashboardStats();
+        // fetchMaintenance();
+        // fetchDashboardStats();
     }, []);
 
     return (
@@ -437,12 +435,12 @@ const ApiExample: React.FC<ApiExampleProps> = ({ sidebarCollapsed, toggleSidebar
                 {/* Maintenance Operations */}
                 <div style={{ border: '1px solid #ddd', padding: '20px', borderRadius: '8px' }}>
                     <h2>Maintenance Operations</h2>
-                    <button onClick={fetchMaintenance} style={{ margin: '5px', padding: '8px 16px' }}>
+                    {/* <button onClick={fetchMaintenance} style={{ margin: '5px', padding: '8px 16px' }}>
                         Fetch Maintenance
-                    </button>
-                    <button onClick={addMaintenanceRecord} style={{ margin: '5px', padding: '8px 16px' }}>
+                    </button> */}
+                    {/* <button onClick={addMaintenanceRecord} style={{ margin: '5px', padding: '8px 16px' }}>
                         Add Maintenance
-                    </button>
+                    </button> */}
 
                     <h3>Maintenance Records ({maintenance.length})</h3>
                     <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
@@ -479,9 +477,9 @@ const ApiExample: React.FC<ApiExampleProps> = ({ sidebarCollapsed, toggleSidebar
                 {/* Dashboard Stats */}
                 <div style={{ border: '1px solid #ddd', padding: '20px', borderRadius: '8px' }}>
                     <h2>Dashboard Statistics</h2>
-                    <button onClick={fetchDashboardStats} style={{ margin: '5px', padding: '8px 16px' }}>
+                    {/* <button onClick={fetchDashboardStats} style={{ margin: '5px', padding: '8px 16px' }}>
                         Refresh Stats
-                    </button>
+                    </button> */}
 
                     {dashboardStats && (
                         <div>

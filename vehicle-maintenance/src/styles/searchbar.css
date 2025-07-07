@@ -2,13 +2,13 @@
   display: flex;
   flex: 1;
   position: relative;
-  width: 100%;
+  max-width: fit-content;
   display: flex;
   justify-content: flex-end;
 }
 
-.search-input {
-  max-width: 200px;
+.form-control.search {
+  max-width: 100%;
   padding-left: 30px !important; /* Make space for the icon */
 }
 

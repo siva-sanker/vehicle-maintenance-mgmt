@@ -7,7 +7,8 @@ import Footer from '../components/Footer';
 import PageContainer from '../components/PageContainer';
 import SectionHeading from '../components/SectionHeading';
 import '../styles/VehicleLocation.css';
-import ButtonWithGradient from '../components/ButtonWithGradient';
+// import ButtonWithGradient from '../components/ButtonWithGradient';
+import Searchbar from '../components/Searchbar';
 
 interface VehicleLocationProps {
   sidebarCollapsed: boolean;
@@ -123,7 +124,7 @@ const VehicleLocation: React.FC<VehicleLocationProps> = ({ sidebarCollapsed, tog
   // Helper function to get base URL (copied from api.js)
   const getBaseURL = (): string => {
     if (import.meta.env.DEV) {
-      return 'http://192.168.50.154:4000';
+      return 'http://192.168.50.148:4000';
     } else {
       return import.meta.env.VITE_API_URL || 'http://localhost:4000';
     }
@@ -260,17 +261,8 @@ const VehicleLocation: React.FC<VehicleLocationProps> = ({ sidebarCollapsed, tog
     <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator />
     {/* <div className="vehicle-location-container"> */}
     <PageContainer>
+      <div className="dashboard-content">
       <SectionHeading title='Vehicle Location Tracking' subtitle='Track and monitor vehicle locations in real-time'/>
-      {/* Header */}
-      {/* <div className="vehicle-location-header">
-        <div className="header-content">
-          <h1 className="page-title">
-            <MapPin className="page-icon" size={28} />
-            Vehicle Location Tracking
-          </h1>
-          <p className="page-subtitle">Track and monitor vehicle locations in real-time</p>
-        </div>
-      </div> */}
 
       {/* Main Content */}
       <div className="location-content-grid">
@@ -282,15 +274,7 @@ const VehicleLocation: React.FC<VehicleLocationProps> = ({ sidebarCollapsed, tog
               Vehicles <span className="vehicle-list-count">({filteredVehicles.length})</span>
             </h2>
             <div className="search-container3">
-              {/* <Search size={16} className="search-icon" /> */}
-              <i className="search-icon fa-solid fa-magnifying-glass"></i>
-              <input
-                type="text"
-                placeholder="Search vehicles..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="search-input"
-              />
+              <Searchbar type='search' value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder='Search vehicles...'/>
             </div>
           </div>
 
@@ -328,7 +312,6 @@ const VehicleLocation: React.FC<VehicleLocationProps> = ({ sidebarCollapsed, tog
                     simulateVehicleMovement(vehicle);
                   }}
                 >
-                  <Navigation size={14} />
                   Update
                 </button>
               </div>
@@ -429,8 +412,9 @@ const VehicleLocation: React.FC<VehicleLocationProps> = ({ sidebarCollapsed, tog
           )}
         </div>
       </div>
-    </PageContainer>
     {/* </div> */}
+      </div>
+    </PageContainer>
       <Footer />
     </>
   );

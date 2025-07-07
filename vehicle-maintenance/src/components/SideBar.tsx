@@ -1,16 +1,8 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import "../styles/Sidebar.css";
-// import { GraphIcon } from '@primer/octicons-react'
-// import { PlusCircleIcon } from '@primer/octicons-react'
-// import { ListUnorderedIcon } from '@primer/octicons-react'
-// import { ReportIcon } from '@primer/octicons-react'
-// import { ShieldCheckIcon } from '@primer/octicons-react'
-// import { FileDirectoryIcon } from '@primer/octicons-react'
-// import { LocationIcon } from '@primer/octicons-react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretRight } from "@fortawesome/free-solid-svg-icons";
-// import logo from '../assets/logo.png';
 import sidebarLogo from "../assets/sidebar-logo.jpg";
 
 interface SideBarProps {
@@ -55,6 +47,7 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
       </div>
       <nav>
         <ul>
+
           <li className="sidebar-title">
             <NavLink
               to="/dashboard"
@@ -66,7 +59,9 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
               Vehicle Management
             </NavLink>
           </li>
+
           <ul className="sidebar-sublist">
+
             <li>
               <NavLink
                 to="/dashboard"
@@ -82,6 +77,7 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
                 {!collapsed && "Dashboard"}
               </NavLink>
             </li>
+
             <li>
               <NavLink
                 to="/register-vehicle" style={{fontWeight:400,color:"#cccccc"}}
@@ -96,6 +92,7 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
                 {!collapsed && "Vehicle Registration"}
               </NavLink>
             </li>
+
             <li>
               <NavLink
                 to="/vehicle-list" style={{fontWeight:400,color:"#cccccc"}}
@@ -110,6 +107,7 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
                 {!collapsed && "Vehicle List"}
               </NavLink>
             </li>
+
             <li>
               <NavLink
                 to="/insurance" style={{fontWeight:400,color:"#cccccc"}}
@@ -124,6 +122,22 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
                 {!collapsed && "Insurance Management"}
               </NavLink>
             </li>
+
+            <li>
+              <NavLink
+                to="/insurance-history" style={{fontWeight:400,color:"#cccccc"}}
+                className={({ isActive }) =>
+                  isActive ? "nav-item active" : "nav-item"
+                }
+                title={collapsed ? "Insurance History" : ""}
+              >
+                <span>
+                  <FontAwesomeIcon icon={faCaretRight} />
+                </span>
+                {!collapsed && "Insurance History"}
+              </NavLink>
+            </li>
+
             <li>
               <NavLink
                 to="/documents" style={{fontWeight:400,color:"#cccccc"}}
@@ -138,6 +152,7 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
                 {!collapsed && "Document Repository"}
               </NavLink>
             </li>
+
             <li>
               <NavLink
                 to="/claims" style={{fontWeight:400,color:"#cccccc"}}
@@ -152,6 +167,7 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
                 {!collapsed && "Claims"}
               </NavLink>
             </li>
+
             <li>
               <NavLink
                 to="/location" style={{fontWeight:400,color:"#cccccc"}}
@@ -166,6 +182,7 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
                 {!collapsed && "Vehicle Location"}
               </NavLink>
             </li>
+
             <li>
               <NavLink
                 to="/driver" style={{fontWeight:400,color:"#cccccc"}}
@@ -180,8 +197,11 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
                 {!collapsed && "Driver Management"}
               </NavLink>
             </li>
+
           </ul>
+
         </ul>
+
       </nav>
     </div>
   );

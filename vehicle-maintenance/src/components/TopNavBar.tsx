@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import "../styles/Topnavbar.css";
 import logo from "../assets/logo.png";
 import { Plus } from "lucide-react";
+import ButtonWithGradient from "./ButtonWithGradient";
 import { vehicleAPI, Vehicle } from "../services/api";
 
 const TopNavBar: React.FC = () => {
@@ -102,7 +103,7 @@ const TopNavBar: React.FC = () => {
   return (
     <nav className="top-navbar">
       <div className="navItem">
-        <a href=""><img src={logo} alt="Logo" /></a>
+        <a href="/dashboard"><img src={logo} alt="Logo" /></a>
         <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle navigation">
           <span className="bar"></span>
           <span className="bar"></span>
@@ -205,8 +206,18 @@ const TopNavBar: React.FC = () => {
             <input type="search" name="search" className='searchBarInput' placeholder="Search Patient with Name or Card No. or Mobile No." />
           </div>
           <div className="nav-buttons">
-            <li className='nav-list-button'><NavLink to="/dashboard" className={({ isActive }) => isActive ? 'active' : ''} style={{fontWeight:400}}>New Sale</NavLink></li>
-            <li className='nav-list-button'><NavLink to="/register-vehicle" className={({ isActive }) => isActive ? 'active' : ''} style={{fontWeight:400}}> <Plus size={16} /> Add Patient</NavLink></li>
+            <li className='nav-list-button'>
+              <NavLink to="/dashboard" className={({ isActive }) => isActive ? 'active' : ''} style={{fontWeight:400}}>
+              {/* <ButtonWithGradient text="New Sale" /> */}
+              New Sale
+              </NavLink>
+              </li>
+            <li className='nav-list-button'>
+              <NavLink to="/register-vehicle" className={({ isActive }) => isActive ? 'active' : ''} style={{fontWeight:400}}>
+              <Plus size={16} />Add Patient
+               {/* <ButtonWithGradient text="+ Add Patient" /> */}
+               </NavLink>
+               </li>
           </div>
           <div className="nav-div-main">
             <div className="nav-div">

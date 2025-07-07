@@ -10,7 +10,7 @@ interface Column {
 }
 
 interface TableProps {
-  columns: Column[]| string;
+  columns: Column[];
   data: Record<string, any>[];
 }
 

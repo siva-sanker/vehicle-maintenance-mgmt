@@ -1,10 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { driverAPI, vehicleAPI, Driver, Vehicle } from '../services/api';
+import EditButton from '../components/EditButton';
+import DeleteButton from '../components/DeleteButton';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import PageContainer from '../components/PageContainer';
 import SectionHeading from '../components/SectionHeading';
-import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
+import ButtonWithGradient from '../components/ButtonWithGradient';
+import RestoreButton from '../components/RestoreButton';
+import InputText from '../components/InputText';
+import TextAreaInput from '../components/TextAreaInput';
+import CancelButton from '../components/CancelButton';
+import Searchbar from '../components/Searchbar';
+import Table from '../components/Table';
+import DriverRestoreModal from '../components/DriverRestoreModal';
+import { Plus } from 'lucide-react';
 import '../styles/Driver.css';
 
 interface DriverProps {
@@ -30,10 +40,9 @@ const DriverPage: React.FC<DriverProps> = ({ sidebarCollapsed, toggleSidebar }) 
 
   // Search state
   const [searchTerm, setSearchTerm] = useState<string>('');
-
-  // Pagination state
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [driversPerPage] = useState<number>(10); // Number of drivers to show per page
+  
+  // Restore modal state
+  const [showRestoreModal, setShowRestoreModal] = useState(false);
 
   // Fetch drivers and vehicles
   useEffect(() => {
@@ -62,19 +71,17 @@ const DriverPage: React.FC<DriverProps> = ({ sidebarCollapsed, toggleSidebar }) 
     driver.phone.includes(searchTerm)
   );
 
-  // Pagination logic
-  const indexOfLastDriver = currentPage * driversPerPage;
-  const indexOfFirstDriver = indexOfLastDriver - driversPerPage;
-  const currentDrivers = filteredDrivers.slice(indexOfFirstDriver, indexOfLastDriver);
-  const totalPages = Math.ceil(filteredDrivers.length / driversPerPage);
-
-  // Change page
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-
-  // Reset to first page when search term changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm]);
+  // Transform drivers data for the Table component
+  const tableData = filteredDrivers.map((driver, index) => ({
+    ...driver,
+    globalIndex: index + 1,
+    assignedVehicles: driver.assignedVehicleIds.map((vid) => {
+      const v = vehicles.find((veh) => veh.id === vid);
+      return v ? v.registrationNumber : null;
+    }).filter(Boolean).join(', '),
+    status: driver.isActive ? 'Active' : 'Inactive',
+    actions: driver.id // We'll use this for the renderCell function
+  }));
 
   // Handle form input
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -152,12 +159,19 @@ const DriverPage: React.FC<DriverProps> = ({ sidebarCollapsed, toggleSidebar }) 
     }
   };
 
-  // Delete driver
+  // Handle driver restored
+  const handleDriverRestored = async () => {
+    const driversData = await driverAPI.getAllDrivers();
+    setDrivers(driversData);
+  };
+
+  // Soft delete driver
   const handleDelete = async (id: string) => {
-    if (!window.confirm('Delete this driver?')) return;
+    if (!window.confirm('Are you sure you want to delete this driver? This action can be undone by an administrator.')) return;
     try {
-      await driverAPI.deleteDriver(id);
+      await driverAPI.softDeleteDriver(id);
       setDrivers(drivers.filter((d) => d.id !== id));
+      alert('Driver has been deleted successfully');
     } catch {
       alert('Failed to delete driver');
     }
@@ -165,35 +179,23 @@ const DriverPage: React.FC<DriverProps> = ({ sidebarCollapsed, toggleSidebar }) 
 
   return (
     <>
-      {/* <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} /> */}
       <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator />
       {/* <div className="driver-page"> */}
       <PageContainer>
-        {/* <div className="driver-header">
-          <div className="header-content">
-            <h1 className="page-title">Drivers</h1>
-            <p className="page-subtitle">Manage and view all your registered drivers</p>
-          </div>
-          <div className="header-actions">
-            <button className="btn-primary" onClick={() => openModal()}>
-              <Plus size={16} />
-              Add Driver
-            </button>
+        <div className="dashboard-content">
+
+        <SectionHeading title='Driver' subtitle="Driver's page" />
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center',marginBottom:'-10px' }}>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <ButtonWithGradient onClick={()=>openModal()} text='+ Add Driver'/>
+              <RestoreButton onClick={() => setShowRestoreModal(true)} 
+                text='Restore Deleted'/>
+            </div>
             <div className="search-wrapper">
-              <i className="search-icon fa-solid fa-magnifying-glass"></i>
-              <input
-                type="search"
-                name="search"
-                id="search"
-                placeholder='Search by name, license number, or phone...'
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="search-input"
-              />
+              <Searchbar type='search' value={searchTerm} onChange={(e)=>setSearchTerm(e.target.value)} placeholder='Search by name'/>
             </div>
           </div>
-        </div> */}
-        <SectionHeading title='Driver' subtitle="Driver's page"/>
 
         {loading ? (
           <div>Loading...</div>
@@ -210,105 +212,68 @@ const DriverPage: React.FC<DriverProps> = ({ sidebarCollapsed, toggleSidebar }) 
           </div>
         ) : (
           <div className="table-container">
-            <table className="drivers-table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Name</th>
-                  <th>License Number</th>
-                  <th>Phone</th>
-                  <th>Address</th>
-                  <th>Active</th>
-                  <th>Assigned Vehicles</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentDrivers.length === 0 ? (
-                  <tr>
-                    <td colSpan={8} className="no-data">
-                      <div className="no-data-content">
-                        <p>No drivers found matching your search criteria.</p>
-                      </div>
-                    </td>
-                  </tr>
-                ) : (
-                  currentDrivers.map((driver, index) => (
-                    <tr key={driver.id} className="table-row">
-                      <td className="row-number">{indexOfFirstDriver + index + 1}</td>
-                      <td className='text-capitalize'>{driver.name}</td>
-                      <td className='text-uppercase'>{driver.licenseNumber}</td>
-                      <td>{driver.phone}</td>
-                      <td className='text-capitalize'>{driver.address}</td>
-                      <td>
-                        <span className={`status-badge ${driver.isActive ? 'active' : 'inactive'}`}>
-                          {driver.isActive ? 'Active' : 'Inactive'}
-                        </span>
-                      </td>
-                      <td>
-                        {driver.assignedVehicleIds.map((vid) => {
-                          const v = vehicles.find((veh) => veh.id === vid);
-                          return v ? (
-                            <span key={vid} className="driver-vehicle-badge text-uppercase">
-                              {v.registrationNumber}
-                            </span>
-                          ) : null;
-                        })}
-                      </td>
-                      <td>
-                        <button className="btn-details" onClick={() => openModal(driver)}>
-                          Edit
-                        </button>
-                        <button className="btn-details" style={{ marginLeft: 8 }} onClick={() => handleDelete(driver.id)}>
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        {/* Pagination Controls */}
-        {filteredDrivers.length > driversPerPage && (
-          <div className="pagination-container-list">
-            <div className="pagination-info">
-              Showing {indexOfFirstDriver + 1} to {Math.min(indexOfLastDriver, filteredDrivers.length)} of {filteredDrivers.length} drivers
-              {searchTerm && ` (filtered from ${drivers.length} total)`}
-            </div>
-            <div className="pagination-controls">
-              <button
-                className="pagination-btn"
-                onClick={() => paginate(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                <ChevronLeft size={16} />
-                Previous
-              </button>
-
-              <div className="page-numbers">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(number => (
-                  <button
-                    key={number}
-                    className={`page-number ${currentPage === number ? 'active' : ''}`}
-                    onClick={() => paginate(number)}
-                  >
-                    {number}
-                  </button>
-                ))}
-              </div>
-
-              <button
-                className="pagination-btn"
-                onClick={() => paginate(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              >
-                Next
-                <ChevronRight size={16} />
-              </button>
-            </div>
+            <Table
+              columns={[
+                {
+                  key: 'globalIndex',
+                  header: '#',
+                },
+                {
+                  key: 'name',
+                  header: 'Name',
+                  renderCell: (value: string) => (
+                    <span className='text-capitalize'>{value}</span>
+                  )
+                },
+                {
+                  key: 'licenseNumber',
+                  header: 'License Number',
+                  renderCell: (value: string) => (
+                    <span className='text-uppercase'>{value}</span>
+                  )
+                },
+                { key: 'phone', header: 'Phone' },
+                {
+                  key: 'address',
+                  header: 'Address',
+                  renderCell: (value: string) => (
+                    <span className='text-capitalize'>{value}</span>
+                  )
+                },
+                {
+                  key: 'status',
+                  header: 'Active',
+                  renderCell: (value: string, row: any) => (
+                    <span className={`status-badge ${row.isActive ? 'active' : 'inactive'}`}>
+                      {value}
+                    </span>
+                  )
+                },
+                {
+                  key: 'assignedVehicles',
+                  header: 'Assigned Vehicles',
+                  renderCell: (value: string) => {
+                    if (!value) return <span>No vehicles assigned</span>;
+                    return value.split(', ').map((vid, index) => (
+                      <span key={index} className="driver-vehicle-badge text-uppercase">
+                        {vid}
+                      </span>
+                    ));
+                  }
+                },
+                {
+                  key: 'actions',
+                  header: 'Actions',
+                  renderCell: (value: string) => (
+                    <div className='actions-div' style={{ display: 'flex', gap: '10px' }}>
+                      <EditButton onClick={()=> openModal(drivers.find(d=>d.id === value))}/>
+                        <DeleteButton onClick={() => handleDelete(value)}/>
+                    </div>
+                  )
+                }
+              ]}
+              data={tableData}
+            />
           </div>
         )}
 
@@ -319,30 +284,28 @@ const DriverPage: React.FC<DriverProps> = ({ sidebarCollapsed, toggleSidebar }) 
               <h2>{editDriver ? 'Edit Driver' : 'Add Driver'}</h2>
               <form onSubmit={handleSubmit}>
                 <div style={{ marginBottom: 12 }}>
-                  <label>Name*</label>
-                  <input name="name" value={form.name} onChange={handleChange} required />
+                  <InputText label='Name *' name="name" value={form.name} onChange={handleChange} placeholder='Name of Driver' required/>
                 </div>
                 <div style={{ marginBottom: 12 }}>
-                  <label>License Number*</label>
-                  <input name="licenseNumber" value={form.licenseNumber} onChange={handleChange} required />
+                  <InputText label='License Number' name="licenseNumber" value={form.licenseNumber} placeholder='License Number' onChange={handleChange} required />
                 </div>
                 <div style={{ marginBottom: 12 }}>
-                  <label>Phone*</label>
-                  <input name="phone" value={form.phone} onChange={handleChange} required />
+                  <InputText label='Phone *' type='number' name="phone" value={form.phone} onChange={handleChange} placeholder='Phone Number' required />
                 </div>
                 <div style={{ marginBottom: 12 }}>
-                  <label>Address</label>
-                  <textarea name="address" value={form.address} onChange={handleChange} />
+                  <TextAreaInput label='Address' name="address" value={form.address} onChange={handleChange} placeholder='Address' />
                 </div>
-                <div style={{ marginBottom: 12 }} className='driver-checkbox'>
+                <div style={{marginBottom: 12 }} className='driver-checkbox'>
                   <label>
                     Active Driver
-                    <input
-                      type="checkbox"
-                      name="isActive"
-                      checked={form.isActive}
-                      onChange={handleChange}
-                    />
+                    <div style={{display:'inline-flex'}}> 
+                      <input
+                        type="checkbox"
+                        name="isActive"
+                        checked={form.isActive}
+                        onChange={handleChange}
+                      />
+                    </div> 
                   </label>
                 </div>
                 <div style={{ marginBottom: 12 }}>
@@ -350,13 +313,13 @@ const DriverPage: React.FC<DriverProps> = ({ sidebarCollapsed, toggleSidebar }) 
                   <div className="vehicle-list">
                     {vehicles.map((v) => (
                       <div key={v.id} className='driver-checkbox'>
-                        <label className='text-capitalize'>
+                        <label className='driver-label text-capitalize'>
                           {v.make} {v.model} <span className='text-uppercase'>({v.registrationNumber})</span>
-                          <input
-                            type="checkbox"
-                            checked={form.assignedVehicleIds.includes(v.id)}
-                            onChange={() => handleVehicleSelect(v.id)} 
-                          />
+                            <input
+                              type="checkbox"
+                              checked={form.assignedVehicleIds.includes(v.id)}
+                              onChange={() => handleVehicleSelect(v.id)} 
+                            />
                         </label>
                       </div>
                     ))}
@@ -364,14 +327,22 @@ const DriverPage: React.FC<DriverProps> = ({ sidebarCollapsed, toggleSidebar }) 
                 </div>
                 {error && <div className="error">{error}</div>}
                 <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
-                  <button type="button" onClick={closeModal}>Cancel</button>
-                  <button type="submit">{editDriver ? 'Update' : 'Add'}</button>
+                  <CancelButton onClick={closeModal} text='Cancel'/>
+                  <ButtonWithGradient type='submit' className='btn'>{editDriver ? 'Update' : 'Add'}</ButtonWithGradient>
                 </div>
               </form>
             </div>
           </div>
         )}
+
+        {/* Restore Deleted Drivers Modal */}
+        <DriverRestoreModal
+          isOpen={showRestoreModal}
+          onClose={() => setShowRestoreModal(false)}
+          onDriverRestored={handleDriverRestored}
+        />
       {/* </div> */}
+        </div>
       </PageContainer>
       <Footer/>
     </>
