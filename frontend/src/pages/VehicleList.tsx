@@ -11,24 +11,24 @@ import {
   calculateVehicleAge,
   filterVehicles,
   fetchVehiclesData,
-} from '../utils/vehicleUtils';
-import { processExpiredInsurance } from '../utils/insuranceUtils';
+} from '../utils/vehicleUtils.ts';
+import { processExpiredInsurance } from '../utils/insuranceUtils.ts';
 import '../styles/Vehiclelist.css';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import Searchbar from '../components/Searchbar';
+import Header from '../components/Header.tsx';
+import Footer from '../components/Footer.tsx';
+import Searchbar from '../components/Searchbar.tsx';
 import DeleteButton from '../components/DeleteButton.tsx';
 import SectionHeading from '../components/SectionHeading.tsx';
-import ButtonWithGradient from '../components/ButtonWithGradient';
+import ButtonWithGradient from '../components/ButtonWithGradient.tsx';
 import RestoreButton from '../components/RestoreButton.tsx';
-import Table from '../components/Table';
+import Table from '../components/Table.tsx';
 import PageContainer from '../components/PageContainer.tsx';
 import { vehicleAPI } from '../services/api.ts';
-import VehicleRestoreModal from '../components/VehicleRestoreModal';
-import ReusableModal from '../components/ReusableModal';
-import InsuranceModal from '../components/InsuranceModal';
-import ClaimsModal from '../components/ClaimsModal';
-import UpdateVehicleModal from '../components/UpdateVehicleModal';
+import VehicleRestoreModal from '../components/VehicleRestoreModal.tsx';
+import ReusableModal from '../components/ReusableModal.tsx';
+import InsuranceModal from '../components/InsuranceModal.tsx';
+import ClaimsModal from '../components/ClaimsModal.tsx';
+import UpdateVehicleModal from '../components/UpdateVehicleModal.tsx';
 import infoLogo from '../assets/info.png'
 // import { faL } from '@fortawesome/free-solid-svg-icons';
 // import { Shield } from 'lucide-react';
@@ -301,7 +301,7 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
             <Car size={64} className="empty-icon" />
             <h3>No vehicles registered yet</h3>
             <p>Start by adding your first vehicle to the system</p>
-            <ButtonWithGradient text='Click here to register' onClick={()=>navigate('\register-vehicle')} />
+            <ButtonWithGradient text='Click here to register' onClick={()=>navigate('/register-vehicle')} />
           </div>
         ) : (
           <div className="table-container">
@@ -322,6 +322,7 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
               data={filteredVehicles.map((vehicle, index) => ({
                 number: index + 1,
                 ...vehicle,
+                registrationNumber:vehicle.registrationNumber.toUpperCase(),
                 age: `${calculateVehicleAge(vehicle.purchaseDate)} years`,
                 fuelType: (
                   <span className={`fuel-badge ${vehicle.fuelType.toLowerCase()}`}>
@@ -330,10 +331,6 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
                 ),
                 purchasePrice: `${vehicle.purchasePrice} /-`,
                 actions: (
-                  // <button
-                  //   className="btn-details"
-                  //   onClick={() => showVehicleDetails(vehicle)}
-                  // >
                   <div className="d-flex gap-3">
                     <div className='d-flex align-items-center justify-content-center'>
                       <a onClick={()=>showVehicleDetails(vehicle)}><img src={infoLogo} alt="infoLogo"/></a>
@@ -351,8 +348,6 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
                     }}
                   />
                   </div>
-                    
-                  // </button>
                 ),
                 status: (
                   <select name="status" id="" className="status-selector">

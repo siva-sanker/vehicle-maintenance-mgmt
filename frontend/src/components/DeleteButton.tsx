@@ -1,5 +1,4 @@
 import React from 'react';
-import { FaTrash } from 'react-icons/fa';
 import '../styles/deletebutton.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';

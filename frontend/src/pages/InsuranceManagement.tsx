@@ -25,7 +25,11 @@ const InsuranceManagement: React.FC<InsuranceManagementProps> = ({ sidebarCollap
     { key: 'number', header: '#' },
     { key: 'make', header: 'Make' },
     { key: 'model', header: 'Model' },
-    { key: 'registrationNumber', header: 'Reg. Number' },
+    { 
+      key: 'registrationNumber', 
+      header: 'Reg. Number',
+      renderCell: (value: string) => value.toUpperCase()
+    },
     { key: 'policyNumber', header: 'Policy #' },
     { key: 'insurer', header: 'Insurer' },
     { key: 'policyType', header: 'Type' },
@@ -38,8 +42,12 @@ const InsuranceManagement: React.FC<InsuranceManagementProps> = ({ sidebarCollap
       )
     },
     { key: 'premiumAmount', header: 'Premium' },
-    { key: 'chassisNumber', header: 'Chassis' },
-    { key: 'engineNumber', header: 'Engine' },
+    { key: 'chassisNumber', header: 'Chassis',
+      renderCell:(value:string)=>value.toUpperCase()
+     },
+    { key: 'engineNumber', header: 'Engine',
+      renderCell:(value:string)=>value.toUpperCase()
+     },
     { key: 'issueDate', header: 'Issue Date' },
     { key: 'payment', header: 'Payment' }
   ];

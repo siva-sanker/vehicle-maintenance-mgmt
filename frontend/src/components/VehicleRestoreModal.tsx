@@ -70,6 +70,9 @@ const VehicleRestoreModal: React.FC<VehicleRestoreModalProps> = ({
       <div className="modal" style={{ maxWidth: '900px', maxHeight: '80vh' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <h2>Restore Deleted Vehicles</h2>
+          <div>
+            <CancelButton onClick={onClose} text="Close" />
+          </div>
         </div>
         
         {loading ? (
@@ -78,7 +81,6 @@ const VehicleRestoreModal: React.FC<VehicleRestoreModalProps> = ({
           <div style={{ textAlign: 'center', padding: '40px' }}>
             <h3>No deleted vehicles found</h3>
             <p>All vehicles are currently active</p>
-            <CancelButton onClick={onClose} text="Close" />
           </div>
         ) : (
           <div className="table-container">

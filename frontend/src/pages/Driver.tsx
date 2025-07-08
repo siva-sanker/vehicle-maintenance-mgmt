@@ -198,9 +198,9 @@ const DriverPage: React.FC<DriverProps> = ({ sidebarCollapsed, toggleSidebar }) 
           </div>
 
         {loading ? (
-          <div>Loading...</div>
+          <div className='mt-3'>Loading...</div>
         ) : error ? (
-          <div style={{ color: 'red' }}>{error}</div>
+          <div style={{ color: 'red',marginTop:'20px' }}>{error}</div>
         ) : drivers.length === 0 ? (
           <div className="empty-state">
             <h3>No drivers registered yet</h3>

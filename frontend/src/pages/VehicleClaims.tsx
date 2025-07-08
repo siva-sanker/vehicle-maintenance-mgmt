@@ -11,8 +11,6 @@ import SelectInput from '../components/SelectInput';
 import FormDateInput from '../components/Date';
 import TextAreaInput from '../components/TextAreaInput';
 import Table from '../components/Table';
-// import DatePicker from 'react-datepicker';
-// import 'react-datepicker/dist/react-datepicker.css';
 import {
   FileText,
   CheckCircle,
@@ -281,7 +279,7 @@ const VehicleClaims: React.FC<VehicleClaimsProps> = ({ sidebarCollapsed, toggleS
                       {
                         key: 'globalIndex',
                         header: '#',
-                        renderCell: (value: any, row: any) => (
+                        renderCell: (_value: any, row: any) => (
                           <span className="index-cell">{row.globalIndex}</span>
                         )
                       },

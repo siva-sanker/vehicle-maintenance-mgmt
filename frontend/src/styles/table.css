@@ -15,8 +15,8 @@
     border-collapse: separate;
     border-spacing: 0;
     background: #fff;
-    font-family: 'poppins';   
-    font-size: 14px;
+    font-family: 'Poppins','sans-serif';   
+    /* font-size: 14px; */
   }
   
   .custom-table th, .custom-table td {

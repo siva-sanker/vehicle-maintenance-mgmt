@@ -20,7 +20,7 @@ const EditButton: React.FC<EditButtonProps> = ({
       className={`editButton ${className}`}
       aria-label="Edit"
     >
-     <FontAwesomeIcon icon={faPenToSquare} />
+     <FontAwesomeIcon icon={faPenToSquare}/>
     </button>
   );
 };

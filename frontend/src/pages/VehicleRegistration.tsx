@@ -11,13 +11,13 @@ import InputText from '../components/InputText';
 import FormDateInput from '../components/Date';
 import TextAreaInput from '../components/TextAreaInput';
 import CancelButton from '../components/CancelButton';
-import {
-  Car,
-  Calendar,
-  Settings,
-  User,
-  // Plus
-} from 'lucide-react';
+// import {
+//   Car,
+//   Calendar,
+//   Settings,
+//   User,
+//   // Plus
+// } from 'lucide-react';
 import {
   FormData,
   FormErrors,
@@ -66,22 +66,6 @@ const VehicleRegistration: React.FC<VehicleRegistrationProps> = ({ sidebarCollap
       <PageContainer>
       <div className="dashboard-content">
         <SectionHeading title='Vehicle Registration' subtitle='Register a new vehicle in your fleet'/>
-      {/* <div className="registration-container"> */}
-        {/* <div className="registration-header">
-          <div className="header-content">
-            <h1 className="page-title">
-              <Car className="page-icon" />
-              Vehicle Registration
-            </h1>
-            <p className="page-subtitle">Register a new vehicle in your fleet</p>
-          </div>
-          <div className="header-actions">
-            <ButtonWithGradient
-              text="View All Vehicles"
-              onClick={() => navigate('/vehicle-list')}
-            />
-          </div>
-        </div> */}
 
         <div className="registration-form-container">
           {successMessage && (
