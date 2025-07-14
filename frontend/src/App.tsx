@@ -35,7 +35,7 @@ const App: React.FC = () => {
         <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
           <SideBar collapsed={sidebarCollapsed} />
           <div style={{ flex: 1, padding: '10px', overflowY: 'auto' }}>
-              <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showTime showDate showCalculator/> 
+            <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showTime showDate showCalculator/> 
             <Routes>
               {/* <Route path="/" element={<Dashboard /> */}
               <Route path="/dashboard" element={<Dashboard />} />

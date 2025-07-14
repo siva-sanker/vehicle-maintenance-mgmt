@@ -1,5 +1,4 @@
 import express from 'express';
-import mongoose from 'mongoose';
 import cors from 'cors';
 import router from './routes/vehicleRoutes';
 
@@ -13,14 +12,10 @@ app.get('/', (_req, res) => {
   res.send('Vehicle Maintenance Backend Running');
 });
 
-app.use('/api/vehicles', router);
+app.use('/api', router);
 
-mongoose.connect('mongodb://localhost:5000/vehicle-maintenance')
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
-  })
-  .catch((err) => {
-    console.error('MongoDB connection error:', err);
-  });
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+  console.log('hello from the other side');
+  
+});

@@ -1,13 +1,18 @@
 import { Router } from 'express';
-import Vehicle from '../models/Vehicle';
+// import Vehicle from '../models/Vehicle';
+import fs from "fs";
+import path from 'path';
 
 const router = Router();
 
-router.get('/', async (_req, res) => {
-  const vehicles = await Vehicle.find();
-  res.json(vehicles);
+router.get("/data", (req, res) => {
+  const dbPath = path.join(__dirname, "../data/db.json");
+  fs.readFile(dbPath, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to read data" });
+    }
+    res.json(JSON.parse(data));
+  });
 });
-
-// Add more CRUD routes as needed
 
 export default router;
