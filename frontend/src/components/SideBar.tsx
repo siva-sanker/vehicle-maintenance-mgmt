@@ -198,6 +198,21 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
               </NavLink>
             </li>
 
+            <li>
+              <NavLink
+                to="/main" style={{fontWeight:400,color:"#cccccc"}}
+                className={({ isActive }) =>
+                  isActive ? "nav-item active" : "nav-item"
+                }
+                title={collapsed ? "Vehicle Maintenance" : ""}
+              >
+                <span>
+                  <FontAwesomeIcon icon={faCaretRight} />
+                </span>
+                {!collapsed && "Vehicle Maintenance"}
+              </NavLink>
+            </li>
+
           </ul>
 
         </ul>

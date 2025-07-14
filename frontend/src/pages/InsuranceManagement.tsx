@@ -1,20 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { fetchVehicles, filterVehicles, getTableData, getDateStatusClass, InsuranceData, processExpiredInsurance } from '../utils/insuranceUtils';
 import { Vehicle } from '../services/api';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 import Searchbar from '../components/Searchbar';
 import SectionHeading from '../components/SectionHeading';
 import PageContainer from '../components/PageContainer';
 import Table from '../components/Table';
-import '../styles/insurance.css';
+import '../styles/Insurance.css';
 
-interface InsuranceManagementProps {
-  sidebarCollapsed: boolean;
-  toggleSidebar: () => void;
-}
-
-const InsuranceManagement: React.FC<InsuranceManagementProps> = ({ sidebarCollapsed, toggleSidebar }) => {
+const InsuranceManagement: React.FC = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const filteredVehicles = filterVehicles(vehicles, searchTerm);
@@ -74,7 +67,7 @@ const InsuranceManagement: React.FC<InsuranceManagementProps> = ({ sidebarCollap
 
   return (
     <>
-      <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator />
+      {/* <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator /> */}
       {/* <div className="insurance-container"> */}
       <PageContainer>
       <div className="dashboard-content">
@@ -114,7 +107,7 @@ const InsuranceManagement: React.FC<InsuranceManagementProps> = ({ sidebarCollap
       </div>
       {/* </div> */}
       </PageContainer>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

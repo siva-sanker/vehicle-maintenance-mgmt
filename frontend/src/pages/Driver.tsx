@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { driverAPI, vehicleAPI, Driver, Vehicle } from '../services/api';
 import EditButton from '../components/EditButton';
 import DeleteButton from '../components/DeleteButton';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 import PageContainer from '../components/PageContainer';
 import SectionHeading from '../components/SectionHeading';
 import ButtonWithGradient from '../components/ButtonWithGradient';
@@ -17,12 +15,7 @@ import DriverRestoreModal from '../components/DriverRestoreModal';
 import { Plus } from 'lucide-react';
 import '../styles/Driver.css';
 
-interface DriverProps {
-  sidebarCollapsed: boolean;
-  toggleSidebar: () => void;
-}
-
-const DriverPage: React.FC<DriverProps> = ({ sidebarCollapsed, toggleSidebar }) => {
+const DriverPage: React.FC = () => {
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
@@ -179,7 +172,7 @@ const DriverPage: React.FC<DriverProps> = ({ sidebarCollapsed, toggleSidebar }) 
 
   return (
     <>
-      <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator />
+      {/* <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator /> */}
       {/* <div className="driver-page"> */}
       <PageContainer>
         <div className="dashboard-content">
@@ -205,10 +198,7 @@ const DriverPage: React.FC<DriverProps> = ({ sidebarCollapsed, toggleSidebar }) 
           <div className="empty-state">
             <h3>No drivers registered yet</h3>
             <p>Start by adding your first driver to the system</p>
-            <button className="btn-primary" onClick={() => openModal()}>
-              <Plus size={16} />
-              Add Driver
-            </button>
+            <ButtonWithGradient text='' onClick={() => openModal()}><Plus size={16} />Add Driver</ButtonWithGradient>
           </div>
         ) : (
           <div className="table-container">
@@ -344,7 +334,7 @@ const DriverPage: React.FC<DriverProps> = ({ sidebarCollapsed, toggleSidebar }) 
       {/* </div> */}
         </div>
       </PageContainer>
-      <Footer/>
+      {/* <Footer/> */}
     </>
   );
 };

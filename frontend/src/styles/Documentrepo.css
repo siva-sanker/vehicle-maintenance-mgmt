@@ -16,45 +16,6 @@
   margin-right: 30px;
 }
 
-/* Header */
-.document-repository-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-  padding: 2rem;
-  background-color: white;
-  border: 1px solid white;
-  border-left: 5px solid #0d92ae;
-  border-radius: 4px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.header-content {
-  flex: 1;
-}
-
-.page-title {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  font-size: 2rem;
-  font-weight: 600;
-  color: #0d92ae;
-  margin: 0 0 0.5rem 0;
-}
-
-.page-icon {
-  color: #0d92ae;
-}
-
-.page-subtitle {
-  font-size: 1rem;
-  color: #6c757d;
-  margin: 0;
-  font-weight: 400;
-}
-
 /* Upload Form Card */
 .upload-form-card {
   background-color: white;
@@ -100,24 +61,6 @@
   flex: 1;
   min-width: 200px; /* Prevents them from becoming too narrow */
 }
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.form-group label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #0d92ae;
-}
-
-.input-icon {
-  color: #0d92ae;
-}
 
 .form-group input,
 .form-group select {
@@ -135,27 +78,6 @@
   outline: none;
   border-color: #0d92ae;
   box-shadow: 0 0 0 3px rgba(13, 146, 174, 0.1);
-}
-
-.btn-primary {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background-color: #37a9be;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-weight: 500;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  justify-content: center;
-}
-
-.btn-primary:hover {
-  background-color: #0d92ae;
-  transform: translateY(-1px);
 }
 
 /* Documents Section */
@@ -347,7 +269,7 @@
   color: white;
 }
 
-.doc-tile {
+/* .doc-tile {
   font-size: 0.85rem;
   background-color: #f8f9fa;
   transition: box-shadow 0.2s ease;
@@ -355,4 +277,4 @@
 
 .doc-tile:hover {
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
-}
+} */

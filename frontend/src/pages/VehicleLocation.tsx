@@ -2,18 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { MapPin, Car, Navigation, Clock } from 'lucide-react';
 import { vehicleAPI, Vehicle } from '../services/api';
 import { toast } from 'react-toastify';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+// import Header from '../components/Header';
+// import Footer from '../components/Footer';
 import PageContainer from '../components/PageContainer';
 import SectionHeading from '../components/SectionHeading';
 import '../styles/VehicleLocation.css';
 // import ButtonWithGradient from '../components/ButtonWithGradient';
 import Searchbar from '../components/Searchbar';
-
-interface VehicleLocationProps {
-  sidebarCollapsed: boolean;
-  toggleSidebar: () => void;
-}
 
 interface Location {
   latitude: number;
@@ -35,7 +30,7 @@ interface VehicleWithLocation extends Vehicle {
   currentLocation?: Location;
 }
 
-const VehicleLocation: React.FC<VehicleLocationProps> = ({ sidebarCollapsed, toggleSidebar }) => {
+const VehicleLocation: React.FC = () => {
   const [vehicles, setVehicles] = useState<VehicleWithLocation[]>([]);
   const [selectedVehicle, setSelectedVehicle] = useState<VehicleWithLocation | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -243,13 +238,11 @@ const VehicleLocation: React.FC<VehicleLocationProps> = ({ sidebarCollapsed, tog
   if (loading) {
     return (
       <>
-      <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />
       <div className="vehicle-location-container">
         <div className="loading-container">
           <div className="loading-spinner"></div>
           <p>Loading vehicle locations...</p>
         </div>
-        <Footer />
       </div>
       </>
     );
@@ -257,8 +250,6 @@ const VehicleLocation: React.FC<VehicleLocationProps> = ({ sidebarCollapsed, tog
 
   return (
     <>
-    {/* <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} /> */}
-    <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator />
     {/* <div className="vehicle-location-container"> */}
     <PageContainer>
       <div className="dashboard-content">
@@ -415,7 +406,7 @@ const VehicleLocation: React.FC<VehicleLocationProps> = ({ sidebarCollapsed, tog
     {/* </div> */}
       </div>
     </PageContainer>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

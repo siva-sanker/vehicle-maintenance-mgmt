@@ -159,12 +159,13 @@ const TopNavBar: React.FC = () => {
 
             <li className='nav-link dropdown' style={{ position: 'relative' }} ref={dropdownRef}>
               <button
-                className="dropdown-toggle"
+                className="dropdown"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 style={{ fontSize: '14px', fontWeight: 400, color: '#cccccc', background: 'none', border: 'none', cursor: 'pointer' }}
               >
                 {/* <a href="" className="dropdown-toggle" onClick={() => setDropdownOpen(!dropdownOpen)}>More</a> */}
-                More 
+                More
+                <i className="fa fa-caret-down"></i>
               </button>
               {dropdownOpen && (
                 <ul className="dropdown-menu">

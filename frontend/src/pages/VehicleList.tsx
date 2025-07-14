@@ -33,12 +33,7 @@ import infoLogo from '../assets/info.png'
 // import { faL } from '@fortawesome/free-solid-svg-icons';
 // import { Shield } from 'lucide-react';
 
-interface VehicleListProps {
-  sidebarCollapsed: boolean;
-  toggleSidebar: () => void;
-}
-
-const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSidebar }) => {
+const VehicleList: React.FC = () => {
   const [claimsModalOpen, setClaimsModalOpen] = useState<boolean>(false);
   const [claims, setClaims] = useState<Claim[]>([]);
   const [loadingClaims, setLoadingClaims] = useState<boolean>(false);
@@ -193,11 +188,11 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
         <div className="info-grid">
           <div>
             <span className="info-label">Engine No.:</span>
-            <span>{vehicle.engineNumber}</span>
+            <span>{vehicle.engineNumber.toUpperCase()}</span>
           </div>
           <div>
             <span className="info-label">Chassis No.:</span>
-            <span>{vehicle.chassisNumber}</span>
+            <span>{vehicle.chassisNumber.toUpperCase()}</span>
           </div>
           <div>
             <span className="info-label">Price:</span>
@@ -275,7 +270,7 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
 
   return (
     <>
-      <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator />
+      {/* <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator /> */}
       {/* <div className="vehicle-list-container"> */}
       <PageContainer>
       <div className="dashboard-content">
@@ -421,7 +416,7 @@ const VehicleList: React.FC<VehicleListProps> = ({ sidebarCollapsed, toggleSideb
       {/* </div> */}
       </div>
       </PageContainer>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

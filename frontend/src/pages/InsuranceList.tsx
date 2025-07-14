@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { vehicleAPI, Vehicle } from '../services/api';
 import { 
-  isInsuranceExpired, 
+  // isInsuranceExpired, 
   processExpiredInsurance, 
   transformToInsuranceHistory,
   InsuranceHistory 
 } from '../utils/insuranceUtils';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 import Searchbar from '../components/Searchbar';
 import SectionHeading from '../components/SectionHeading';
 import PageContainer from '../components/PageContainer';
@@ -15,16 +13,10 @@ import Table from '../components/Table';
 import SelectInput from '../components/SelectInput';
 import RestoreButton from '../components/RestoreButton';
 import Cards from '../components/Cards';
-import '../styles/insurance.css';
+import '../styles/Insurance.css';
 
 
-
-interface InsuranceListProps {
-  sidebarCollapsed: boolean;
-  toggleSidebar: () => void;
-}
-
-const InsuranceList: React.FC<InsuranceListProps> = ({ sidebarCollapsed, toggleSidebar }) => {
+const InsuranceList: React.FC = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [insuranceHistory, setInsuranceHistory] = useState<InsuranceHistory[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -44,6 +36,10 @@ const InsuranceList: React.FC<InsuranceListProps> = ({ sidebarCollapsed, toggleS
     
     return vehicleFilter && searchFilter;
   });
+
+  function capitalizeFirstLetter(str:any) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
 
   // Get date status class for styling
   const getDateStatusClass = (endDate: string): string => {
@@ -124,9 +120,9 @@ const InsuranceList: React.FC<InsuranceListProps> = ({ sidebarCollapsed, toggleS
 
   // Create vehicle options for dropdown
   const vehicleOptions = [
-    { label: 'Select a vehicle to view insurance history', value: '' },
+    { label: 'Select a vehicle to view insurance history', value: '',disabled:true },
     ...vehicles.map(vehicle => ({
-      label: `${vehicle.registrationNumber} - ${vehicle.make} ${vehicle.model}`,
+      label: `${vehicle.registrationNumber.toUpperCase()} - ${capitalizeFirstLetter(vehicle.make)} ${capitalizeFirstLetter(vehicle.model)}`,
       value: vehicle.id
     }))
   ];
@@ -166,7 +162,7 @@ const InsuranceList: React.FC<InsuranceListProps> = ({ sidebarCollapsed, toggleS
   if (loading) {
     return (
       <>
-        <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator />
+        {/* <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator /> */}
         <PageContainer>
           <div className="dashboard-content">
             <SectionHeading title='Insurance History' subtitle='View past and current insurance records for all vehicles' />
@@ -178,14 +174,14 @@ const InsuranceList: React.FC<InsuranceListProps> = ({ sidebarCollapsed, toggleS
             </div>
           </div>
         </PageContainer>
-        <Footer />
+        {/* <Footer /> */}
       </>
     );
   }
 
   return (
     <>
-      <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator />
+      {/* <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator /> */}
       <PageContainer>
         <div className="dashboard-content">
           <SectionHeading 
@@ -300,7 +296,7 @@ const InsuranceList: React.FC<InsuranceListProps> = ({ sidebarCollapsed, toggleS
           )}
         </div>
       </PageContainer>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

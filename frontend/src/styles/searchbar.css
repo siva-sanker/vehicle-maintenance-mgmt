@@ -14,13 +14,20 @@
 
 .search-icon {
   position: absolute;
-  left: calc(100% - 240px);
+  /* left: calc(100% - 240px); */
+  left: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
   color: #888;
   pointer-events: none; /* Icon won't block clicks */
   font-size: 18px;
 }
+/* .search-icon {
+  position: absolute;
+  left: 0.75rem;
+  color: #6c757d;
+  z-index: 1;
+} */
 
 .form-control.search-input:focus {
   box-shadow: none;

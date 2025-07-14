@@ -40,6 +40,7 @@ const TextAreaInput: React.FC<TextAreaInputProps> = ({
         onBlur={onBlur}
         rows={2}
         className={`form-control ${error ? 'is-invalid' : ''} ${className}`}
+        style={{height:'60px'}}
       />
       {error && <div className="invalid-feedback">{error}</div>}
     </div>

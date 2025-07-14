@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FileText, Upload, Eye } from 'lucide-react';
 import '../styles/Documentrepo.css';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 import ButtonWithGradient from '../components/ButtonWithGradient';
 import PageContainer from '../components/PageContainer';
 import SectionHeading from '../components/SectionHeading';
@@ -10,10 +8,10 @@ import { vehicleAPI, Vehicle } from '../services/api';
 import InputText from '../components/InputText';
 import SelectInput from '../components/SelectInput';
 
-interface DocumentRepositoryProps {
-  sidebarCollapsed: boolean;
-  toggleSidebar: () => void;
-}
+// interface DocumentRepositoryProps {
+//   sidebarCollapsed: boolean;
+//   toggleSidebar: () => void;
+// }
 
 interface Document {
   name: string;
@@ -27,7 +25,7 @@ interface Documents {
   "Pollution PDF": Document[];
 }
 
-const DocumentRepository: React.FC<DocumentRepositoryProps> = ({ sidebarCollapsed, toggleSidebar }) => {
+const DocumentRepository: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [customName, setCustomName] = useState<string>('');
   const [category, setCategory] = useState<string>('');
@@ -74,7 +72,7 @@ const DocumentRepository: React.FC<DocumentRepositoryProps> = ({ sidebarCollapse
 
   return (
     <>
-      <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator  />
+      {/* <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator  /> */}
       <PageContainer>
       {/* <div className="document-repository-container"> */}
       <div className="dashboard-content">
@@ -137,7 +135,11 @@ const DocumentRepository: React.FC<DocumentRepositoryProps> = ({ sidebarCollapse
                 />
               </div>
             </div>
-            <ButtonWithGradient text='Upload Document' type='button' className='btn' onClick={handleUpload} />
+            <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16}}>
+              <div>
+                <ButtonWithGradient text='Upload Document' type='button' onClick={handleUpload} />
+              </div>
+            </div>
           </form>
         </div>
 
@@ -183,7 +185,7 @@ const DocumentRepository: React.FC<DocumentRepositoryProps> = ({ sidebarCollapse
       {/* </div> */}
       </div>
       </PageContainer>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

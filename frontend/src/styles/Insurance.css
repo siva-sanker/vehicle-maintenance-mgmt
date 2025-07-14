@@ -6,56 +6,6 @@
   box-sizing: border-box;
 }
 
-/* Insurance Container */
-.insurance-container {
-  min-height: 100vh;
-  background-color: white;
-  border-top: 5px solid #0d92ae;
-  padding: 2rem;
-  margin-left: 30px;
-  margin-right: 30px;
-}
-
-/* Header */
-.insurance-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-  padding: 2rem;
-  background-color: white;
-  border: 1px solid white;
-  border-left: 5px solid #0d92ae;
-  border-radius: 4px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.header-content {
-  flex: 1;
-}
-
-.page-title {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  font-size: 2rem;
-  font-weight: 600;
-  color: #0d92ae;
-  margin: 0 0 0.5rem 0;
-}
-
-.page-icon {
-  color: #0d92ae;
-}
-
-.page-subtitle {
-  font-size: 1rem;
-  color: #6c757d;
-  margin: 0;
-  font-weight: 400;
-}
-
-
 /* Search Container */
 
 .header-actions2 {
@@ -66,39 +16,6 @@
   /* border: 1px solid yellow !important; */
 }
 
-/* Content */
-.insurance-content {
-  background-color: white;
-  border: 1px solid #eeeeee;
-  border-radius: 4px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.content-header {
-  margin-bottom: 1.5rem;
-}
-
-.section-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid #f8f9fa;
-}
-
-.section-icon {
-  color: #0d92ae;
-}
-
-.section-header h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #0d92ae;
-  margin: 0;
-}
-
 /* Table Container */
 .table-container {
   overflow-x: auto;
@@ -106,83 +23,6 @@
   border: 1px solid #dee2e6;
 }
 
-/* Table Styles */
-.insurance-table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: white;
-  font-size: 0.9rem;
-}
-
-.insurance-table thead {
-  background-color: #f8f9fa;
-  border-bottom: 2px solid #dee2e6;
-}
-
-.insurance-table th {
-  padding: 1rem 0.75rem;
-  text-align: left;
-  font-weight: 600;
-  color: #0d92ae;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border-bottom: 1px solid #dee2e6;
-  white-space: nowrap;
-}
-
-.insurance-table td {
-  padding: 1rem 0.75rem;
-  border-bottom: 1px solid #f1f3f4;
-  color: #333;
-  /* font-size: 0.9rem; */
-  vertical-align: middle;
-}
-
-.insurance-table tbody tr {
-  transition: all 0.2s ease;
-}
-
-.insurance-table tbody tr:hover {
-  background-color: #f8f9fa;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.insurance-table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-/* Table Icons */
-.table-icon {
-  color: #0d92ae;
-  margin-right: 0.5rem;
-  vertical-align: middle;
-}
-
-/* Row Styling */
-.row-number {
-  font-weight: 600;
-  color: #0d92ae;
-  text-align: center;
-  width: 50px;
-}
-
-.reg-number {
-  font-weight: 600;
-  color: #0d92ae;
-  /* font-family: 'Courier New', monospace; */
-}
-
-.policy-number {
-  font-weight: 700;
-  /* font-family: 'Courier New', monospace; */
-}
-
-.policy-type {
-  font-weight: 500;
-  color: #6c757d;
-}
 
 /* Date Cell Styling */
 .date-cell {
@@ -273,32 +113,11 @@
   outline: none;
 }
 
-.vehicle-selector .form-label {
-  font-weight: 600;
-  color: #0d92ae;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-}
-
 /* Filter Actions */
 .filter-actions {
   display: flex;
   align-items: flex-end;
   gap: 1rem;
-}
-
-.clear-filters-btn {
-  height: fit-content;
-  padding: 0.5rem 1rem;
-  font-size: 0.8rem;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-}
-
-.clear-filters-btn:hover {
-  background-color: #6c757d;
-  border-color: #6c757d;
-  color: white;
 }
 
 /* Insurance Summary */
@@ -373,17 +192,6 @@
   white-space: nowrap;
 }
 
-.premium-amount {
-  font-weight: 600;
-  color: #28a745;
-  /* font-family: 'Courier New', monospace; */
-}
-
-.payment-mode {
-  font-weight: 500;
-  color: #6c757d;
-}
-
 /* No Data State */
 .no-data {
   text-align: center;
@@ -416,25 +224,11 @@
   margin: 0;
 }
 
-/* Text Utilities */
-.text-capitalize {
-  text-transform: capitalize;
-}
-
-.text-uppercase {
-  text-transform: uppercase;
-}
 
 /* Responsive Design */
 @media (max-width: 1200px) {
   .insurance-container {
     padding: 1rem;
-  }
-
-  .insurance-header {
-    flex-direction: column;
-    gap: 1rem;
-    align-items: flex-start;
   }
 
   .search-input {
@@ -458,33 +252,6 @@
 
   .insurance-content {
     padding: 1rem;
-  }
-
-  .insurance-table {
-    font-size: 0.8rem;
-  }
-
-  .insurance-table th,
-  .insurance-table td {
-    padding: 0.75rem 0.5rem;
-  }
-
-  .pagination-container {
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-  }
-
-  .pagination-controls {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .page-numbers {
-    order: -1;
-    width: 100%;
-    justify-content: center;
-    margin-bottom: 0.5rem;
   }
 
   /* Mobile responsive for vehicle selector */
@@ -524,19 +291,6 @@
     font-size: 1.1rem;
   }
 
-  .insurance-table {
-    font-size: 0.75rem;
-  }
-
-  .insurance-table th,
-  .insurance-table td {
-    padding: 0.5rem 0.25rem;
-  }
-
-  .pagination-controls {
-    flex-direction: column;
-    gap: 1rem;
-  }
 
   .page-numbers {
     order: -1;
@@ -558,89 +312,4 @@
     width: 100%;
     justify-content: flex-start;
   }
-}
-
-/* Pagination Styles */
-.pagination-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  background-color: white;
-  border: 1px solid #eeeeee;
-  border-top: none;
-  border-radius: 0 0 4px 4px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.pagination-info {
-  font-size: 0.9rem;
-  color: #6c757d;
-  font-weight: 500;
-}
-
-.pagination-controls {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.pagination-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background-color: #f8f9fa;
-  color: #6c757d;
-  border: 1px solid #dee2e6;
-  border-radius: 4px;
-  font-weight: 500;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.pagination-btn:hover:not(:disabled) {
-  background-color: #0d92ae;
-  color: white;
-  border-color: #0d92ae;
-}
-
-.pagination-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.page-numbers {
-  display: flex;
-  gap: 0.25rem;
-}
-
-.page-number {
-  padding: 0.5rem 0.75rem;
-  background-color: #f8f9fa;
-  color: #6c757d;
-  border: 1px solid #dee2e6;
-  border-radius: 4px;
-  font-weight: 500;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 2.5rem;
-  text-align: center;
-}
-
-.page-number:hover {
-  background-color: #e9ecef;
-  border-color: #adb5bd;
-}
-
-.page-number.active {
-  background-color: #0d92ae;
-  color: white;
-  border-color: #0d92ae;
-}
-
-.page-number.active:hover {
-  background-color: #0a7a8f;
 }

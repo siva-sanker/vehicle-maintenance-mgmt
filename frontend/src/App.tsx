@@ -14,6 +14,9 @@ import VehicleClaims from './pages/VehicleClaims.tsx';
 import VehicleLocation from './pages/VehicleLocation.tsx';
 import ApiExample from './components/ApiExample.tsx';
 import Driver from './pages/Driver.tsx';
+import VehicleMaintenance from './pages/VehicleMaintenance.tsx';
+import Header from './components/Header.tsx';
+import Footer from './components/Footer.tsx';
 
 const App: React.FC = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
@@ -32,19 +35,22 @@ const App: React.FC = () => {
         <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
           <SideBar collapsed={sidebarCollapsed} />
           <div style={{ flex: 1, padding: '10px', overflowY: 'auto' }}>
+              <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showTime showDate showCalculator/> 
             <Routes>
-              {/* <Route path="/" element={<Dashboard sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />} /> */}
-              <Route path="/dashboard" element={<Dashboard sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />} />
-              <Route path="/register-vehicle" element={<VehicleRegistration sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />} />
-              <Route path="/vehicle-list" element={<VehicleList sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />} />
-              <Route path="/insurance" element={<InsuranceManagement sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />} />
-              <Route path="/insurance-history" element={<InsuranceList sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />} />
-              <Route path="/documents" element={<DocumentRepository sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />} />
-              <Route path="/claims" element={<VehicleClaims sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />} />
-              <Route path="/location" element={<VehicleLocation sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />} />
-              <Route path="/api" element={<ApiExample sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />} />
-              <Route path="/driver" element={<Driver sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />} />
+              {/* <Route path="/" element={<Dashboard /> */}
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/register-vehicle" element={<VehicleRegistration />}/>
+              <Route path="/vehicle-list" element={<VehicleList />}/>
+              <Route path="/insurance" element={<InsuranceManagement />}/>
+              <Route path="/insurance-history" element={<InsuranceList />}/>
+              <Route path="/documents" element={<DocumentRepository />} />
+              <Route path="/claims" element={<VehicleClaims />}/>
+              <Route path="/location" element={<VehicleLocation />}/>
+              <Route path="/api" element={<ApiExample />}/>
+              <Route path="/driver" element={<Driver />}/>
+              <Route path="/main" element={<VehicleMaintenance />}/>
             </Routes>
+            <Footer/>
           </div>
         </div>
 

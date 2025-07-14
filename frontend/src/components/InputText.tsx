@@ -47,6 +47,7 @@ const InputText: React.FC<InputTextProps> = ({
         value={value}
         onChange={onChange}
         onBlur={onBlur}
+        // style={{padding:'0.75rem'}}
       />
       {error && <div className="invalid-feedback">{error}</div>}
     </div>

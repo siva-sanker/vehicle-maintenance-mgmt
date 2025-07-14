@@ -66,7 +66,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
 
   return (
     <div 
-      className="modal-overlay" 
+      className="modal-overlay " 
       style={{ 
         display: 'flex', 
         alignItems: 'center', 
@@ -85,7 +85,7 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
         className="modal" 
         style={{
           backgroundColor: 'white',
-          padding: '20px',
+          padding: '10px',
           maxWidth: maxWidth,
           width: width,
           maxHeight: maxHeight,
@@ -132,30 +132,18 @@ const ReusableModal: React.FC<ReusableModalProps> = ({
           </button>
         </div>
         
-        <div className="modal-body" style={{ marginBottom: '20px' }}>
+        <div className="modal-body">
           {children}
         </div>
         
-        <div className="modal-footer border border-black" style={{
+        <div className="modal-footer" style={{
           display: 'none',
           justifyContent: 'flex-end',
           gap: '10px',
           borderTop: '1px solid #e0e0e0',
           paddingTop: '0px'
           }}>
-          {/* {showCancelButton && (
-            <CancelButton 
-              onClick={handleClose} 
-              text={cancelButtonText}
-              disabled={isCurrentlySubmitting}
-            />
-          )}
-          <ButtonWithGradient
-            onClick={handleSubmit}
-            disabled={isCurrentlySubmitting}
-          >
-            {isCurrentlySubmitting ? submittingText : submitButtonText}
-          </ButtonWithGradient> */}
+            {children}
         </div>
       </div>
     </div>

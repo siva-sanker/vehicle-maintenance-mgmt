@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {  useLocation } from 'react-router-dom';
-import Footer from '../components/Footer';
-import Header from '../components/Header';
 import Cards from '../components/Cards';
 // import ButtonWithGradient from '../components/ButtonWithGradient';
 import PageContainer from '../components/PageContainer';
@@ -22,6 +20,7 @@ import {
   Filler,
 } from 'chart.js';
 import { Line, Bar, Doughnut } from 'react-chartjs-2';
+
 import {
   Car,
   FileText,
@@ -32,7 +31,6 @@ import {
   // RefreshCw,
 } from 'lucide-react';
 import {
-  DashboardProps,
   // ClaimStatusData,
   // FuelTypeData,
   // MonthlyData,
@@ -66,7 +64,7 @@ ChartJS.register(
             { label: 'Insurance', path: '/insurance', icon: Shield },
 
           ];
-const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed=false, toggleSidebar }) => {
+const Dashboard: React.FC = () => {
   const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   // const navigate = useNavigate();
@@ -104,7 +102,7 @@ const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed=false, toggleSid
     return (
       <>
       {/* <div className="dashboard-container"> */}
-      <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator />
+      {/* <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator /> */}
       <PageContainer>
         <div className="loading-container">
           <div className="loading-spinner"></div>
@@ -112,7 +110,7 @@ const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed=false, toggleSid
         </div>
 
       </PageContainer>
-        <Footer />
+        {/* <Footer /> */}
       {/* </div> */}
       </>
     );
@@ -120,7 +118,7 @@ const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed=false, toggleSid
 
   return (
     <>
-      <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator/>
+      {/* <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator/> */}
 
       <PageContainer>
     {/* <div className="dashboard-container"> */}
@@ -164,7 +162,7 @@ const Dashboard: React.FC<DashboardProps> = ({ sidebarCollapsed=false, toggleSid
       </div>
     {/* </div> */}
     </PageContainer>
-      <Footer />
+      {/* <Footer /> */}
   </>
   );
 };

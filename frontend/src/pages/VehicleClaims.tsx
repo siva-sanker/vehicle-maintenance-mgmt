@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 import PageContainer from '../components/PageContainer';
 import ButtonWithGradient from '../components/ButtonWithGradient';
 import SectionHeading from '../components/SectionHeading';
@@ -33,12 +31,7 @@ import {
 } from '../utils/claimsUtils';
 import '../styles/claims.css';
 
-interface VehicleClaimsProps {
-  sidebarCollapsed: boolean;
-  toggleSidebar: () => void;
-}
-
-const VehicleClaims: React.FC<VehicleClaimsProps> = ({ sidebarCollapsed, toggleSidebar }) => {
+const VehicleClaims: React.FC = () => {
   // const [claims, setClaims] = useState<Claim[]>([]);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -153,7 +146,7 @@ const VehicleClaims: React.FC<VehicleClaimsProps> = ({ sidebarCollapsed, toggleS
 
   return (
     <>
-      <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator  />
+      {/* <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator  /> */}
       {/* <div className="claims-container"> */}
       <PageContainer>
       <div className="dashboard-content">
@@ -316,7 +309,7 @@ const VehicleClaims: React.FC<VehicleClaimsProps> = ({ sidebarCollapsed, toggleS
       {/* </div> */}
       </div>
       </PageContainer>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

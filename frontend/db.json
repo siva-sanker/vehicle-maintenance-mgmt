@@ -12,9 +12,10 @@
       "chassisNumber": "32s32d32rf32f",
       "kilometers": "68000",
       "color": "white",
-      "owner": "Jane Smith",
+      "owner": "Jane Smitha",
       "phone": "9748569785",
-      "address": "adsff",
+      "address": "assdffgabc",
+      "status": "active",
       "claims": [
         {
           "claimDate": "2025-06-12",
@@ -58,6 +59,7 @@
       "owner": "Priya Sharma",
       "phone": "8765432109",
       "address": "New Delhi, Delhi",
+      "status": "maintenance",
       "insurance": {
         "policyNumber": "456789",
         "insurer": "HDFC Ergo",
@@ -92,6 +94,7 @@
       "owner": "Amit Patel",
       "phone": "7654321098",
       "address": "Bangalore, Karnataka",
+      "status": "maintenance",
       "insurance": {
         "policyNumber": "321654",
         "insurer": "Bajaj Allianz",
@@ -135,6 +138,7 @@
       "owner": "Sneha Reddy",
       "phone": "6543210987",
       "address": "Chennai, Tamil Nadu",
+      "status": "active",
       "insurance": {
         "policyNumber": "987123",
         "insurer": "tata bhk",
@@ -170,6 +174,7 @@
       "owner": "Vikram Singh",
       "phone": "5432109876",
       "address": "Hyderabad, Telangana",
+      "status": "active",
       "claims": [
         {
           "claimDate": "2024-11-10",
@@ -218,6 +223,7 @@
       "owner": "Rahul Mehta",
       "phone": "4321098765",
       "address": "Ahmedabad, Gujarat",
+      "status": "maintenance",
       "insurance": {
         "policyNumber": "147258",
         "insurer": "Tata AIG",
@@ -449,6 +455,7 @@
       "color": "maroon",
       "owner": "Sourav Ganguly",
       "phone": "8765432109",
+      "status": "maintenance",
       "address": "Kolkata, West Bengal",
       "insurance": {
         "policyNumber": "12154",
@@ -913,7 +920,7 @@
       "owner": "SI",
       "phone": "1236985478",
       "address": "DSFS",
-      "deletedAt": null
+      "deletedAt": "2025-07-14T04:55:57.777Z"
     },
     {
       "id": "a74b",
@@ -955,7 +962,7 @@
           "status": "Pending"
         }
       ],
-      "deletedAt": null
+      "deletedAt": "2025-07-14T04:55:47.978Z"
     },
     {
       "id": "2fa6",
@@ -1083,6 +1090,12 @@
         "issueDate": "2025-07-01",
         "premiumAmount": "3500",
         "hasInsurance": true
+      },
+      "currentLocation": {
+        "latitude": 12.976529452666469,
+        "longitude": 77.59313522017057,
+        "timestamp": "2025-07-14T10:18:45.306Z",
+        "address": "Doctor B R Ambedkar Veedhi, Fair Field Layout, Gandhinagar, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
       }
     }
   ],
@@ -1286,6 +1299,99 @@
       "longitude": 77.59599648528888,
       "timestamp": "2025-07-04T04:36:50.614Z",
       "address": "Bal Bhavan Toy Train, Kasturba Road, Sampangirama Nagar, Shivajinagar, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
+    }
+  ],
+  "maintenance": [
+    {
+      "id": "maint_001",
+      "vehicleId": "6b1e",
+      "serviceDate": "2025-01-15",
+      "serviceType": "Regular Service",
+      "description": "Oil change, filter replacement, brake inspection",
+      "cost": 2500,
+      "status": "Completed",
+      "odometerReadingBefore": 65000,
+      "odometerReadingAfter": 65000,
+      "serviceCenter": "ABC Auto Service",
+      "technician": "John Smith"
+    },
+    {
+      "id": "maint_002",
+      "vehicleId": "d9g3",
+      "serviceDate": "2025-02-20",
+      "serviceType": "Brake Service",
+      "description": "Brake pad replacement and brake fluid check",
+      "cost": 3500,
+      "status": "Completed",
+      "odometerReadingBefore": 30000,
+      "odometerReadingAfter": 30000,
+      "serviceCenter": "XYZ Garage",
+      "technician": "Mike Johnson"
+    },
+    {
+      "id": "maint_003",
+      "vehicleId": "e0h4",
+      "serviceDate": "2025-03-10",
+      "serviceType": "Engine Tune-up",
+      "description": "Spark plug replacement, air filter change, fuel system cleaning",
+      "cost": 4200,
+      "status": "Completed",
+      "odometerReadingBefore": 52000,
+      "odometerReadingAfter": 52000,
+      "serviceCenter": "Premium Auto Care",
+      "technician": "David Wilson"
+    },
+    {
+      "id": "ddeb",
+      "vehicleId": "01e4",
+      "serviceDate": "2025-07-18",
+      "serviceType": "Oil Change",
+      "description": "done",
+      "cost": 3500,
+      "status": "Completed",
+      "odometerReadingBefore": 1250,
+      "odometerReadingAfter": 1255,
+      "serviceCenter": "Auto Service Center",
+      "technician": "Technician"
+    },
+    {
+      "id": "523f",
+      "vehicleId": "2898",
+      "serviceDate": "2025-07-01",
+      "serviceType": "Other",
+      "description": "service completed\noil change done",
+      "cost": 1656,
+      "status": "Completed",
+      "odometerReadingBefore": 1548,
+      "odometerReadingAfter": 1555,
+      "serviceCenter": "Auto Service Center",
+      "technician": "Technician"
+    },
+    {
+      "id": "f611",
+      "vehicleId": "w8z2",
+      "serviceDate": "2025-07-08",
+      "serviceType": "Engine Tune-up",
+      "description": "iiiiiii",
+      "cost": 13250.23,
+      "status": "Completed",
+      "odometerReadingBefore": 2350,
+      "odometerReadingAfter": 2352,
+      "serviceCenter": "Auto Service Center",
+      "technician": "Technician"
+    },
+    {
+      "id": "39de",
+      "vehicleId": "c44b",
+      "serviceDate": "2025-07-31",
+      "serviceType": "Battery Replacement",
+      "description": "deomtonads",
+      "cost": 15000,
+      "status": "Completed",
+      "odometerReadingBefore": 35698.2,
+      "odometerReadingAfter": 35700.9,
+      "serviceCenter": "Auto Service Center",
+      "technician": "Technician"
     }
   ],
   "drivers": [

@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 import PageContainer from '../components/PageContainer';
 import ButtonWithGradient from '../components/ButtonWithGradient';
 import SectionHeading from '../components/SectionHeading';
@@ -31,12 +29,7 @@ import {
 } from '../utils/registrationUtils';
 import '../styles/registration.css';
 
-interface VehicleRegistrationProps {
-  sidebarCollapsed: boolean;
-  toggleSidebar: () => void;
-}
-
-const VehicleRegistration: React.FC<VehicleRegistrationProps> = ({ sidebarCollapsed, toggleSidebar }) => {
+const VehicleRegistration: React.FC = () => {
   const [formData, setFormData] = useState<FormData>(getInitialFormData());
 
   const [errors, setErrors] = useState<FormErrors>({});
@@ -62,7 +55,7 @@ const VehicleRegistration: React.FC<VehicleRegistrationProps> = ({ sidebarCollap
 
   return (
     <>
-      <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator />
+      {/* <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator /> */}
       <PageContainer>
       <div className="dashboard-content">
         <SectionHeading title='Vehicle Registration' subtitle='Register a new vehicle in your fleet'/>
@@ -243,7 +236,7 @@ const VehicleRegistration: React.FC<VehicleRegistrationProps> = ({ sidebarCollap
                 <h3>Owner Information</h3>
               </div>
               <div className="form-grid">
-                <div className="form-group">
+                <div className="form-group ">
                   <InputText
                     label="Owner Name"
                     type="text"
@@ -271,24 +264,22 @@ const VehicleRegistration: React.FC<VehicleRegistrationProps> = ({ sidebarCollap
                   />
                 </div>
 
-                <div className="form-group full-width ">
-                  {/* <div style={{ display: 'flex', alignItems: 'flex-end', gap: '1rem' }}> */}
-                    <div className='form-group'>
-                      <div className="input-with-icon">
-                        <TextAreaInput value={formData.address} name='address' onChange={handleChange} onBlur={handleBlur} placeholder='Owner Address' label='Address'/>
-                      </div>
-                      {touched['address'] && errors['address'] && (
-                        <div className="error-message">{errors['address']}</div>
-                      )}
-                    </div>
+                  <div className='form-group'>
+                      <TextAreaInput value={formData.address} name='address' onChange={handleChange} onBlur={handleBlur} placeholder='Owner Address' label='Address'/>
+                    {touched['address'] && errors['address'] && (
+                      <div className="error-message">{errors['address']}</div>
+                    )}
+                  </div>
 
-                    <div className="form-actions">
-                      {/* <ButtonWithGradient text='Cancel' type='button' className='btn' onClick={() => navigate('/dashboard')} /> */}
-                        <CancelButton text='Cancel' type='button' onClick={() => navigate('/dashboard')}  />
-                      <ButtonWithGradient text='Register Vehicle' type='submit' className='btn' />
-                    </div>
-                  {/* </div> */}
-                </div>
+                  <div className="form-group"></div>
+                  
+                  <div className="form-group">
+                    <CancelButton text='Cancel' type='button' onClick={() => navigate('/dashboard')}  />
+                  </div>
+                  <div className="form-group">
+                    <ButtonWithGradient text='Register Vehicle' type='submit' className='btn' />
+                  </div>
+
               </div>
             </div>
           </form>
@@ -296,7 +287,7 @@ const VehicleRegistration: React.FC<VehicleRegistrationProps> = ({ sidebarCollap
       {/* </div> */}
       </div>
       </PageContainer>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

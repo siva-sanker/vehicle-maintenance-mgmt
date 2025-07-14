@@ -18,6 +18,7 @@ interface Vehicle {
     owner: string;
     phone: string;
     address: string;
+    status?: string; // 'active', 'maintenance', etc.
     insurance?: {
         policyNumber: string;
         insurer: string;
@@ -49,19 +50,17 @@ interface Driver {
     deletedAt?: string; // For soft delete functionality
 }
 
-// interface Maintenance {
-//     id: string;
-//     vehicleId: string;
-//     serviceDate: string;
-//     serviceType: string;
-//     description: string;
-//     cost: number;
-//     nextServiceDate: string;
-//     serviceCenter: string;
-//     technician: string;
-//     status: string;
-//     odometerReading: number;
-// }
+interface Maintenance {
+    id: string;
+    vehicleId: string;
+    serviceDate: string;
+    serviceType: string;
+    description: string;
+    cost: number;
+    status: string;
+    odometerReadingBefore: number;
+    odometerReadingAfter: number;
+}
 
 // interface FuelLog {
 //     id: string;
@@ -103,7 +102,7 @@ const getBaseURL = (): string => {
     // Check if we're in development or production
     if (import.meta.env.DEV) {
         // In development, use network IP for cross-system access
-        return 'http://192.168.50.133:4000';
+        return 'http://192.168.50.141:4000';
         // return import.meta.env.VITE_API_URL || 'https://7h0mm7mt-3044.asse.devtunnels.ms';
     } else {
         // In production, use the actual server URL
@@ -293,31 +292,31 @@ export const vehicleAPI = {
 };
 
 // Maintenance API methods
-// export const maintenanceAPI = {
-//     // Get all maintenance records
-//     getAllMaintenance: (): Promise<Maintenance[]> => api.get<Maintenance[]>('/maintenance'),
+export const maintenanceAPI = {
+    // Get all maintenance records
+    getAllMaintenance: (): Promise<Maintenance[]> => api.get<Maintenance[]>('/maintenance'),
 
-//     // Get maintenance by ID
-//     getMaintenanceById: (id: string): Promise<Maintenance> => api.get<Maintenance>(`/maintenance/${id}`),
+    // Get maintenance by ID
+    getMaintenanceById: (id: string): Promise<Maintenance> => api.get<Maintenance>(`/maintenance/${id}`),
 
-//     // Get maintenance by vehicle ID
-//     getMaintenanceByVehicle: (vehicleId: string): Promise<Maintenance[]> => api.get<Maintenance[]>(`/maintenance?vehicleId=${vehicleId}`),
+    // Get maintenance by vehicle ID
+    getMaintenanceByVehicle: (vehicleId: string): Promise<Maintenance[]> => api.get<Maintenance[]>(`/maintenance?vehicleId=${vehicleId}`),
 
-//     // Create new maintenance record
-//     createMaintenance: (maintenanceData: Omit<Maintenance, 'id'>): Promise<Maintenance> => api.post<Maintenance>('/maintenance', maintenanceData),
+    // Create new maintenance record
+    createMaintenance: (maintenanceData: Omit<Maintenance, 'id'>): Promise<Maintenance> => api.post<Maintenance>('/maintenance', maintenanceData),
 
-//     // Update maintenance record
-//     updateMaintenance: (id: string, maintenanceData: Partial<Maintenance>): Promise<Maintenance> => api.put<Maintenance>(`/maintenance/${id}`, maintenanceData),
+    // Update maintenance record
+    updateMaintenance: (id: string, maintenanceData: Partial<Maintenance>): Promise<Maintenance> => api.put<Maintenance>(`/maintenance/${id}`, maintenanceData),
 
-//     // Delete maintenance record
-//     deleteMaintenance: (id: string): Promise<void> => api.delete<void>(`/maintenance/${id}`),
+    // Delete maintenance record
+    deleteMaintenance: (id: string): Promise<void> => api.delete<void>(`/maintenance/${id}`),
 
-//     // Get completed maintenance
-//     getCompletedMaintenance: (): Promise<Maintenance[]> => api.get<Maintenance[]>('/maintenance?status=Completed'),
+    // Get completed maintenance
+    getCompletedMaintenance: (): Promise<Maintenance[]> => api.get<Maintenance[]>('/maintenance?status=Completed'),
 
-//     // Get scheduled maintenance
-//     getScheduledMaintenance: (): Promise<Maintenance[]> => api.get<Maintenance[]>('/maintenance?status=Scheduled'),
-// };
+    // Get scheduled maintenance
+    getScheduledMaintenance: (): Promise<Maintenance[]> => api.get<Maintenance[]>('/maintenance?status=Scheduled'),
+};
 
 // Fuel Logs API methods
 // export const fuelLogsAPI = {
@@ -405,4 +404,4 @@ export const driverAPI = {
 };
 
 // Export types for use in other files
-export type { Vehicle, Expense, DashboardStats, Driver };
+export type { Vehicle, Expense, DashboardStats, Driver, Maintenance };

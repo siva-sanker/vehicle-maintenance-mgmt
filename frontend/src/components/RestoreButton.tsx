@@ -27,6 +27,7 @@ const RestoreButton: React.FC<RestoreButtonProps> = ({
         height: '36px',
         fontSize:'14px',
         border:'1px solid #80888B',  
+        borderRadius:'4px',
         backgroundColor: '#ffffff',  
         whiteSpace: 'nowrap'
       }}

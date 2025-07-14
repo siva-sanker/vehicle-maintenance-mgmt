@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Header from './Header';
 import {
     vehicleAPI,
     expensesAPI,
@@ -56,10 +55,6 @@ interface DashboardStats {
     insuredVehicles: number;
 }
 
-interface ApiExampleProps {
-  sidebarCollapsed: boolean;
-  toggleSidebar: () => void;
-}
 
 // interface FuelLog {
 //     id: string;
@@ -89,7 +84,7 @@ interface Expense {
 //     toggleSidebar?: () => void;
 // }
 
-const ApiExample: React.FC<ApiExampleProps> = ({ sidebarCollapsed, toggleSidebar }) => {
+const ApiExample: React.FC = () => {
     const [vehicles, setVehicles] = useState<Vehicle[]>([]);
     const [maintenance, setMaintenance] = useState<Maintenance[]>([]);
     const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
@@ -346,7 +341,7 @@ const ApiExample: React.FC<ApiExampleProps> = ({ sidebarCollapsed, toggleSidebar
 
     return (
         <>
-        <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} />
+        {/* <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} /> */}
         <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
             <h1>API Usage Examples</h1>
 
