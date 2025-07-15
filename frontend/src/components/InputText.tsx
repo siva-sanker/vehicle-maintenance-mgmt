@@ -5,6 +5,7 @@ interface InputTextProps {
   label?: string;
   type?: string;
   name: string;
+  step?:number;
   placeholder?: string;
   required?: boolean;
   error?: string;
@@ -20,6 +21,7 @@ const InputText: React.FC<InputTextProps> = ({
   label,
   type = 'text',
   name,
+  step,
   placeholder = '',
   required = false,
   error = '',
@@ -47,7 +49,8 @@ const InputText: React.FC<InputTextProps> = ({
         value={value}
         onChange={onChange}
         onBlur={onBlur}
-        // style={{padding:'0.75rem'}}
+        step={step}
+        // style={{width:'50%'}}
       />
       {error && <div className="invalid-feedback">{error}</div>}
     </div>

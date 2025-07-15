@@ -11,6 +11,9 @@ import SelectInput from "../components/SelectInput";
 import TextAreaInput from "../components/TextAreaInput";
 import FormDateInput from "../components/Date";
 import Table from "../components/Table";
+import EditButton from "../components/EditButton";
+import DeleteButton from "../components/DeleteButton";
+import RestoreButton from '../components/RestoreButton';
 import { vehicleAPI, Vehicle, maintenanceAPI, Maintenance } from "../services/api";
 
 const VehicleMaintenance: React.FC = () => {
@@ -21,7 +24,8 @@ const VehicleMaintenance: React.FC = () => {
     vehicleId: "",
     serviceDate: "",
     serviceType: "",
-    description: "",
+    descriptionBefore: "",
+    descriptionAfter: "",
     cost: "",
     nextServiceDate: "",
     serviceCenter: "",
@@ -32,7 +36,12 @@ const VehicleMaintenance: React.FC = () => {
   });
   const [maintenanceRecords, setMaintenanceRecords] = useState<Maintenance[]>([]);
   const [maintenanceLoading, setMaintenanceLoading] = useState(true);
+  const [editingRecord, setEditingRecord] = useState<Maintenance | null>(null);
+  const [showRestoreMaintenanceModal, setShowRestoreMaintenanceModal] = useState(false);
+  const [deletedMaintenance, setDeletedMaintenance] = useState<Maintenance[]>([]);
+  const [restoreMaintenanceLoading, setRestoreMaintenanceLoading] = useState(false);
 
+  // for cards
   useEffect(() => {
     const fetchVehicles = async () => {
       setLoading(true);
@@ -52,6 +61,7 @@ const VehicleMaintenance: React.FC = () => {
     const fetchMaintenance = async () => {
       setMaintenanceLoading(true);
       try {
+        // Only fetch non-deleted maintenance records
         const data = await maintenanceAPI.getAllMaintenance();
         setMaintenanceRecords(data);
       } catch (err) {
@@ -88,8 +98,11 @@ const VehicleMaintenance: React.FC = () => {
       errors.push('Service type is required');
     }
 
-    if (!form.description || form.description.trim() === '') {
-      errors.push('Description is required');
+    if (!form.descriptionBefore || form.descriptionBefore.trim() === '') {
+      errors.push('Description Before Maintenance is required');
+    }
+    if (!form.descriptionAfter || form.descriptionAfter.trim() === '') {
+      errors.push('Description Afetr Maintenance is required');
     }
 
     if (!form.cost || form.cost.trim() === '') {
@@ -108,6 +121,44 @@ const VehicleMaintenance: React.FC = () => {
     };
   };
 
+  const openAddModal = () => {
+    setEditingRecord(null);
+    setForm({
+      vehicleId: "",
+      serviceDate: "",
+      serviceType: "",
+      descriptionBefore: "",
+      descriptionAfter: "",
+      cost: "",
+      nextServiceDate: "",
+      serviceCenter: "",
+      technician: "",
+      status: "Scheduled",
+      odometerReadingBefore: "",
+      odometerReadingAfter: ""
+    });
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (record: Maintenance) => {
+    setEditingRecord(record);
+    setForm({
+      vehicleId: record.vehicleId,
+      serviceDate: record.serviceDate,
+      serviceType: record.serviceType,
+      descriptionBefore: record.descriptionBefore, // Only one description field exists
+      descriptionAfter: record.descriptionAfter, // Use same for both
+      cost: record.cost.toString(),
+      nextServiceDate: "",
+      serviceCenter: "",
+      technician: "",
+      status: record.status || "Scheduled",
+      odometerReadingBefore: record.odometerReadingBefore?.toString() || "",
+      odometerReadingAfter: record.odometerReadingAfter?.toString() || ""
+    });
+    setIsModalOpen(true);
+  };
+
   const handleSubmit = async () => {
     // Validate form before submission
     const validation = validateForm();
@@ -124,27 +175,34 @@ const VehicleMaintenance: React.FC = () => {
         vehicleId: form.vehicleId,
         serviceDate: form.serviceDate,
         serviceType: form.serviceType,
-        description: form.description,
+        descriptionBefore: form.descriptionBefore,
+        descriptionAfter: form.descriptionAfter,
         cost: parseFloat(form.cost),
         status: "Completed",
         odometerReadingBefore: parseFloat(form.odometerReadingBefore) || 0,
         odometerReadingAfter: parseFloat(form.odometerReadingAfter) || 0,
         serviceCenter: "Auto Service Center",
-        technician: "Technician"
+        technician: "Technician",
+        deleted: false
       };
 
-      await maintenanceAPI.createMaintenance(maintenanceData);
-      
+      if (editingRecord) {
+        await maintenanceAPI.updateMaintenance(editingRecord.id, maintenanceData);
+        toast.success('Maintenance record updated successfully!');
+      } else {
+        await maintenanceAPI.createMaintenance(maintenanceData);
+        toast.success('Maintenance record added successfully!');
+      }
       // Refresh maintenance records
       const updatedRecords = await maintenanceAPI.getAllMaintenance();
       setMaintenanceRecords(updatedRecords);
-      
       // Reset form
       setForm({
         vehicleId: "",
         serviceDate: "",
         serviceType: "",
-        description: "",
+        descriptionBefore: "",
+        descriptionAfter: "",
         cost: "",
         nextServiceDate: "",
         serviceCenter: "",
@@ -153,14 +211,56 @@ const VehicleMaintenance: React.FC = () => {
         odometerReadingBefore: "",
         odometerReadingAfter: ""
       });
-      
+      setEditingRecord(null);
       setIsModalOpen(false);
-      
-      // Show success toast message
-      toast.success('Maintenance record added successfully!');
     } catch (error) {
-      console.error('Error creating maintenance record:', error);
-      toast.error('Failed to add maintenance record. Please try again.');
+      console.error('Error saving maintenance record:', error);
+      toast.error('Failed to save maintenance record. Please try again.');
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this record? This action can be undone by an administrator.')) return;
+    try {
+      await maintenanceAPI.updateMaintenance(id, { deleted: true });
+      toast.success('Record deleted');
+      const updatedRecords = await maintenanceAPI.getAllMaintenance();
+      setMaintenanceRecords(updatedRecords);
+    } catch {
+      toast.error('Failed to delete record');
+    }
+  };
+
+  const fetchDeletedMaintenance = async () => {
+    setRestoreMaintenanceLoading(true);
+    try {
+      const all = await maintenanceAPI.getAllMaintenance();
+      setDeletedMaintenance(all.filter(m => m.deleted));
+    } catch {
+      setDeletedMaintenance([]);
+    } finally {
+      setRestoreMaintenanceLoading(false);
+    }
+  };
+
+  const handleOpenRestoreMaintenanceModal = async () => {
+    await fetchDeletedMaintenance();
+    setShowRestoreMaintenanceModal(true);
+  };
+
+  const handleRestoreMaintenance = async (id: string) => {
+    if (!window.confirm('Are you sure you want to restore this maintenance record?')) return;
+    setRestoreMaintenanceLoading(true);
+    try {
+      toast.success('Maintenance record restored successfully');
+      await maintenanceAPI.updateMaintenance(id, { deleted: false });
+      await fetchDeletedMaintenance();
+      const updatedRecords = await maintenanceAPI.getAllMaintenance();
+      setMaintenanceRecords(updatedRecords);
+    } catch {
+      toast.error('Failed to restore maintenance record');
+    } finally {
+      setRestoreMaintenanceLoading(false);
     }
   };
 
@@ -174,18 +274,19 @@ const VehicleMaintenance: React.FC = () => {
           <Cards title="Vehicles in Maintenance" subtitle={loading ? "-" : maintenanceCount} />
         </div>
         <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16}}>
-          <div>
-            <ButtonWithGradient onClick={() => setIsModalOpen(true)}>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <ButtonWithGradient onClick={openAddModal}>
               Add Maintenance Record
             </ButtonWithGradient>
+            <RestoreButton onClick={handleOpenRestoreMaintenanceModal} text="Restore Deleted Maintenance" />
           </div>
         </div>
         <ReusableModal
           isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          title="Add Maintenance Record"
+          onClose={() => { setIsModalOpen(false); setEditingRecord(null); }}
+          title={editingRecord ? "Edit Maintenance Record" : "Add Maintenance Record"}
           onSubmit={handleSubmit}
-          submitButtonText="Add"
+          submitButtonText={editingRecord ? "Update" : "Add"}
         >
           <form>
             <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
@@ -269,6 +370,10 @@ const VehicleMaintenance: React.FC = () => {
                   onChange={handleFormChange}
                 />
               </div>
+              <div style={{ flex: 1 }}>
+                <label htmlFor="">Upload image</label>
+                <input type="file" name="" id="" accept="jpg/png" className="form-control" multiple />
+              </div>
               {/* <div className="form-group" style={{ flex: 1 }}>
                 <SelectInput
                   label="Status"
@@ -276,33 +381,82 @@ const VehicleMaintenance: React.FC = () => {
                   value={form.status}
                   onChange={handleFormChange}
                   options={[
-                    { value: '', label: 'Set status', disabled: true },
+                    { label: 'Set status',value: '', disabled: true},
                     { label: "Scheduled", value: "Scheduled" },
                     { label: "Completed", value: "Completed" },
                     { label: "In Progress", value: "In Progress" }
-                  ]}
-                  required
-                />
+                    ]}
+                    required
+                    />
               </div> */}
             </div>
             <div className="form-group" style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
-              <div style={{ flex: 1 }}>
-                <label htmlFor="">Upload image</label>
-                <input type="file" name="" id="" accept="jpg/png" className="form-control" multiple />
-              </div>
+                    <div className="form-group" style={{flex:1}}>
+                      <TextAreaInput
+                        label="Description Before Maintenance *"
+                        name="descriptionBefore"
+                        value={form.descriptionBefore}
+                        onChange={handleFormChange}
+                        placeholder="service description before maintenance"
+                        required
+                      />
+                    </div>
             </div>
             <div style={{ marginBottom: 0 }}>
               <TextAreaInput
-                label="Description *"
-                name="description"
-                value={form.description}
+                label="Description After Maintenance *"
+                name="descriptionAfter"
+                value={form.descriptionAfter}
                 onChange={handleFormChange}
-                placeholder="service description"
+                placeholder="service description after maintenance"
                 required
               />
             </div>
             <ButtonWithGradient text="Add Record" onClick={handleSubmit}/>
           </form>
+        </ReusableModal>
+
+        <ReusableModal
+          isOpen={showRestoreMaintenanceModal}
+          onClose={() => setShowRestoreMaintenanceModal(false)}
+          title="Restore Deleted Maintenance Records"
+          onSubmit={() => setShowRestoreMaintenanceModal(false)}
+          submitButtonText="Close"
+          showCancelButton={false}
+          maxWidth="900px"
+          maxHeight="80vh"
+        >
+          {restoreMaintenanceLoading ? (
+            <div>Loading deleted maintenance records...</div>
+          ) : deletedMaintenance.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '40px' }}>
+              <h3>No deleted maintenance records found</h3>
+            </div>
+          ) : (
+            <div className="table-container" style={{width:'100%'}}>
+              <Table
+                columns={[
+                  { key: 'vehicleInfo', header: 'Vehicle', renderCell: (_: any, row: any) => {
+                      const vehicle = vehicles.find(v => v.id === row.vehicleId);
+                      return vehicle ? `${vehicle.registrationNumber.toUpperCase()}` : 'Unknown Vehicle';
+                  }},
+                  { key: 'serviceDate', header: 'Service Date' },
+                  // { key: 'serviceType', header: 'Service Type' },
+                  { key: 'cost', header: 'Cost', renderCell: (cost: number) => `₹${cost.toLocaleString()}` },
+                  { key: 'odometerReadingBefore', header: 'Odometer Before', renderCell: (v: number) => `${v.toLocaleString()} km` },
+                  { key: 'odometerReadingAfter', header: 'Odometer After', renderCell: (v: number) => `${v.toLocaleString()} km` },
+                  { key: 'actions', header: 'Actions', renderCell: (id: string) => (
+                    <ButtonWithGradient onClick={() => handleRestoreMaintenance(id)} text="Restore" className="btn-success" />
+                  ) }
+                ]}
+                data={deletedMaintenance.map(m => ({
+                  ...m,
+                  vehicleInfo: m.vehicleId, // needed for Table to pass row to renderCell
+                  actions: m.id
+                }))}
+              />
+            </div>
+          )}
         </ReusableModal>
         <Table
           columns={[
@@ -310,22 +464,38 @@ const VehicleMaintenance: React.FC = () => {
             { key: "vehicleInfo", header: "Vehicle" },
             { key: "serviceDate", header: "Service Date" },
             { key: "serviceType", header: "Service Type" },
-            { key: "cost", header: "Cost" },
-            { key: "odometerReadingBefore", header: "Odometer Before" },
-            { key: "odometerReadingAfter", header: "Odometer After" },
-            { key: "description", header: "Description" },
+            { key: "cost", header: "Cost" ,
+              renderCell: (cost) => `₹${cost.toLocaleString()}`
+            },
+            { key: "odometerReadingBefore", header: "Odometer Before",
+              renderCell: (odometerReadingBefore) => `${odometerReadingBefore.toLocaleString()} km`
+             },
+            { key: "odometerReadingAfter", header: "Odometer After",
+              renderCell: (odometerReadingAfter) => `${odometerReadingAfter.toLocaleString()} km`
+             },
+            { key: "descriptionBefore", header: "Description Before" },
+            { key: "descriptionAfter", header: "Description After" },
+            { key: "actions", header: "Actions",
+              renderCell: (_: any, row: any) => (
+                <div style={{display:"flex",gap:'10px'}}>
+                  <EditButton onClick={() => openEditModal(row)} />
+                  <DeleteButton onClick={() => handleDelete(row.id)} />
+                </div>
+              )
+            }
           ]}
-          data={maintenanceRecords.map((record, index) => {
-            const vehicle = vehicles.find(v => v.id === record.vehicleId);
-            return {
-              ...record,
-              number: index + 1,
-              vehicleInfo: vehicle ? `${vehicle.registrationNumber.toUpperCase()} (${vehicle.make} ${vehicle.model})` : 'Unknown Vehicle',
-              cost: `₹${record.cost.toLocaleString()}`,
-              odometerReadingBefore: `${record.odometerReadingBefore.toLocaleString()} km`,
-              odometerReadingAfter: `${record.odometerReadingAfter.toLocaleString()} km`,
-            };
-          })}
+          data={maintenanceRecords
+            .filter(record => !record.deleted)
+            .map((record, index) => {
+              const vehicle = vehicles.find(v => v.id === record.vehicleId);
+              return {
+                ...record,
+                number: index + 1,
+                vehicleInfo: vehicle ? `${vehicle.registrationNumber.toUpperCase()} (${vehicle.make} ${vehicle.model})` : 'Unknown Vehicle',
+                descriptionBefore: record.descriptionBefore,
+                descriptionAfter: record.descriptionAfter
+              };
+            })}
         />
       </PageContainer>
     </>

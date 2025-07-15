@@ -17,6 +17,7 @@ import Driver from './pages/Driver.tsx';
 import VehicleMaintenance from './pages/VehicleMaintenance.tsx';
 import Header from './components/Header.tsx';
 import Footer from './components/Footer.tsx';
+// import PageContainer from './components/PageContainer.tsx';
 
 const App: React.FC = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
@@ -36,6 +37,7 @@ const App: React.FC = () => {
           <SideBar collapsed={sidebarCollapsed} />
           <div style={{ flex: 1, padding: '10px', overflowY: 'auto' }}>
             <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showTime showDate showCalculator/> 
+            {/* <PageContainer> */}
             <Routes>
               {/* <Route path="/" element={<Dashboard /> */}
               <Route path="/dashboard" element={<Dashboard />} />
@@ -50,6 +52,7 @@ const App: React.FC = () => {
               <Route path="/driver" element={<Driver />}/>
               <Route path="/main" element={<VehicleMaintenance />}/>
             </Routes>
+            {/* </PageContainer> */}
             <Footer/>
           </div>
         </div>

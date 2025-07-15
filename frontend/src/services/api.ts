@@ -55,11 +55,13 @@ interface Maintenance {
     vehicleId: string;
     serviceDate: string;
     serviceType: string;
-    description: string;
+    descriptionBefore: string;
+    descriptionAfter: string;
     cost: number;
     status: string;
     odometerReadingBefore: number;
     odometerReadingAfter: number;
+    deleted:boolean;
 }
 
 // interface FuelLog {
@@ -306,7 +308,7 @@ export const maintenanceAPI = {
     createMaintenance: (maintenanceData: Omit<Maintenance, 'id'>): Promise<Maintenance> => api.post<Maintenance>('/maintenance', maintenanceData),
 
     // Update maintenance record
-    updateMaintenance: (id: string, maintenanceData: Partial<Maintenance>): Promise<Maintenance> => api.put<Maintenance>(`/maintenance/${id}`, maintenanceData),
+    updateMaintenance: (id: string, maintenanceData: Partial<Maintenance>): Promise<Maintenance> => api.patch<Maintenance>(`/maintenance/${id}`, maintenanceData),
 
     // Delete maintenance record
     deleteMaintenance: (id: string): Promise<void> => api.delete<void>(`/maintenance/${id}`),

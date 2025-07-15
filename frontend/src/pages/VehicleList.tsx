@@ -14,8 +14,6 @@ import {
 } from '../utils/vehicleUtils.ts';
 import { processExpiredInsurance } from '../utils/insuranceUtils.ts';
 import '../styles/Vehiclelist.css';
-import Header from '../components/Header.tsx';
-import Footer from '../components/Footer.tsx';
 import Searchbar from '../components/Searchbar.tsx';
 import DeleteButton from '../components/DeleteButton.tsx';
 import SectionHeading from '../components/SectionHeading.tsx';

@@ -28,7 +28,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
   required = false,
   error = '',
   className = '',
-  disabled = false,
+  disabled = false
 }) => {
   return (
     <div className="mb-3">
