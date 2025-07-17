@@ -255,7 +255,6 @@ const VehicleClaims: React.FC = () => {
                 placeholder='Search registration number'
                   value={searchTerm}
                   onChange={handleSearchChange}
-
                 />
               </div>
 

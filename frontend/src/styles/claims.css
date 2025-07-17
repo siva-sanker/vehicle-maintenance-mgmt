@@ -144,7 +144,7 @@
 
 /* Search */
 .search-container2 {
-  width: fit-content;
+  width: 50%;
   /* position: relative; */
   /* border: 1px solid red !important; */
   display: flex;

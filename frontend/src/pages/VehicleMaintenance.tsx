@@ -343,7 +343,7 @@ const VehicleMaintenance: React.FC = () => {
                   name="cost"
                   type="number"
                   value={form.cost}
-                  placeholder="total service cost"
+                  placeholder="Total service cost"
                   onChange={handleFormChange}
                   required
                 />
@@ -352,7 +352,7 @@ const VehicleMaintenance: React.FC = () => {
                 <InputText
                   label="Odometer Reading Before *"
                   name="odometerReadingBefore"
-                  placeholder="odometer reading before service"
+                  placeholder="Odometer reading before service"
                   type="number"
                   value={form.odometerReadingBefore}
                   onChange={handleFormChange}
@@ -364,7 +364,7 @@ const VehicleMaintenance: React.FC = () => {
               <InputText
                   label="Odometer Reading After *"
                   name="odometerReadingAfter"
-                  placeholder="odometer reading after service"
+                  placeholder="Odometer reading after service"
                   type="number"
                   value={form.odometerReadingAfter}
                   onChange={handleFormChange}
@@ -397,7 +397,7 @@ const VehicleMaintenance: React.FC = () => {
                         name="descriptionBefore"
                         value={form.descriptionBefore}
                         onChange={handleFormChange}
-                        placeholder="service description before maintenance"
+                        placeholder="Service description before maintenance"
                         required
                       />
                     </div>
@@ -408,7 +408,7 @@ const VehicleMaintenance: React.FC = () => {
                 name="descriptionAfter"
                 value={form.descriptionAfter}
                 onChange={handleFormChange}
-                placeholder="service description after maintenance"
+                placeholder="Service description after maintenance"
                 required
               />
             </div>

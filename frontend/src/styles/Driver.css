@@ -122,14 +122,14 @@
     border: none;
 }
 
-.modal label {
+/* .modal label {
     font-size: 0.95rem;
     font-weight: 500;
     color: #5a5a5a;
     margin-bottom: 0.25rem;
-}
+} */
 
-.modal input,
+/* .modal input,
 .modal textarea {
     width: 100%;
     padding: 0.75rem;
@@ -145,12 +145,12 @@
     outline: none;
     border-color: #0d92ae;
     box-shadow: 0 0 0 2px rgba(13, 146, 174, 0.1);
-}
+} */
 
-.modal textarea {
+/* .modal textarea {
     resize: vertical;
     min-height: 80px;
-}
+} */
 
 .modal .vehicle-list {
     max-height: 120px;
@@ -211,11 +211,6 @@
     .modal {
         margin: 0.5rem;
         padding: 1rem 0.75rem;
-    }
-
-    .search-input {
-        width: 100%;
-        min-width: auto;
     }
 }
 

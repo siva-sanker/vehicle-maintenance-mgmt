@@ -241,7 +241,7 @@ const InsuranceList: React.FC = () => {
                   }}/>
               )}
               {selectedVehicle && (
-                <div className="search-wrapper">
+                <div>
                   <Searchbar
                     placeholder='Search by registration number, policy number, or insurer'
                     type='search'

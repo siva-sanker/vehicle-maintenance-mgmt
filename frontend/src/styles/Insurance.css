@@ -230,11 +230,6 @@
   .insurance-container {
     padding: 1rem;
   }
-
-  .search-input {
-    width: 100%;
-    max-width: 300px;
-  }
 }
 
 @media (max-width: 768px) {

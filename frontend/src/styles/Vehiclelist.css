@@ -103,6 +103,8 @@
 } */
 
 .search-wrapper {
+  width: 15% !important;
+  /* border: 1px solid red; */
   position: relative;
   display: flex;
   align-items: center;
