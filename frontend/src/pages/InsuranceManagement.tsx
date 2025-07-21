@@ -6,11 +6,29 @@ import SectionHeading from '../components/SectionHeading';
 import PageContainer from '../components/PageContainer';
 import Table from '../components/Table';
 import '../styles/Insurance.css';
+import FormDateInput from '../components/Date';
+import { formatDateDDMMYYYY } from '../utils/vehicleUtils';
 
 const InsuranceManagement: React.FC = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const filteredVehicles = filterVehicles(vehicles, searchTerm);
+  const [fromDate, setFromDate] = useState<string>('');
+  const [toDate, setToDate] = useState<string>('');
+  // Filter vehicles based on search term and date range
+  const filteredVehicles = vehicles.filter(vehicle => {
+    const matchesSearch = vehicle.registrationNumber.toLowerCase().includes(searchTerm.toLowerCase());
+    let matchesFrom = true;
+    let matchesTo = true;
+    const startDate = vehicle.insurance?.startDate || '';
+    const endDate = vehicle.insurance?.endDate || '';
+    if (fromDate) {
+      matchesFrom = startDate >= fromDate;
+    }
+    if (toDate) {
+      matchesTo = endDate <= toDate;
+    }
+    return matchesSearch && matchesFrom && matchesTo;
+  });
   const tableData = getTableData(filteredVehicles);
 
   // Define table columns
@@ -26,12 +44,12 @@ const InsuranceManagement: React.FC = () => {
     { key: 'policyNumber', header: 'Policy #' },
     { key: 'insurer', header: 'Insurer' },
     { key: 'policyType', header: 'Type' },
-    { key: 'startDate', header: 'Start' },
+    { key: 'startDate', header: 'Start', renderCell: (value: string) => formatDateDDMMYYYY(value) },
     { 
       key: 'endDate', 
       header: 'End',
       renderCell: (value: string) => (
-        <span className={getDateStatusClass(value)}>{value}</span>
+        <span className={getDateStatusClass(value)}>{formatDateDDMMYYYY(value)}</span>
       )
     },
     { key: 'premiumAmount', header: 'Premium' },
@@ -41,9 +59,16 @@ const InsuranceManagement: React.FC = () => {
     { key: 'engineNumber', header: 'Engine',
       renderCell:(value:string)=>value.toUpperCase()
      },
-    { key: 'issueDate', header: 'Issue Date' },
+    { key: 'issueDate', header: 'Issue Date', renderCell: (value: string) => formatDateDDMMYYYY(value) },
     { key: 'payment', header: 'Payment' }
   ];
+
+  const handleFromDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFromDate(e.target.value);
+  };
+  const handleToDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setToDate(e.target.value);
+  };
 
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
@@ -72,7 +97,11 @@ const InsuranceManagement: React.FC = () => {
       <PageContainer>
       <div className="dashboard-content">
         <SectionHeading title='Insurance Management' subtitle='Manage vehicle insurance policies and details'/>
-            <div className="header-actions2 d-flex justify-content-end">
+            <div className="header-actions2 d-flex justify-content-between">
+              <div style={{display:'flex',gap:'15px'}}>
+                <FormDateInput name='fromDate' label='From Date' value={fromDate} onChange={handleFromDateChange}/>
+                <FormDateInput name='toDate' label='To Date' value={toDate} onChange={handleToDateChange}/>
+              </div>
               <div className="search-wrapper">
                 <Searchbar
                 placeholder='Search registration number'

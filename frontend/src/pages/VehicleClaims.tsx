@@ -9,6 +9,7 @@ import SelectInput from '../components/SelectInput';
 import FormDateInput from '../components/Date';
 import TextAreaInput from '../components/TextAreaInput';
 import Table from '../components/Table';
+import { formatDateDDMMYYYY } from '../utils/vehicleUtils';
 import {
   FileText,
   CheckCircle,
@@ -46,6 +47,9 @@ const VehicleClaims: React.FC = () => {
     status: 'Pending',
   });
 
+  const [fromDate, setFromDate] = useState<string>('');
+  const [toDate, setToDate] = useState<string>('');
+
   const fetchData = async (): Promise<void> => {
     try {
       const vehiclesData = await fetchVehiclesData();
@@ -78,11 +82,29 @@ const VehicleClaims: React.FC = () => {
     setSearchTerm(e.target.value);
   };
 
+  const handleFromDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFromDate(e.target.value);
+  };
+  const handleToDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setToDate(e.target.value);
+  };
+
   // Get all claims from all vehicles
   const allClaims = getAllClaims(vehicles);
 
-  // Filter claims based on search term
-  const filteredClaims = filterClaims(allClaims, searchTerm);
+  // Filter claims based on search term and date range
+  const filteredClaims = allClaims.filter(claim => {
+    const matchesSearch = claim.registrationNumber.toLowerCase().includes(searchTerm.toLowerCase());
+    let matchesFrom = true;
+    let matchesTo = true;
+    if (fromDate) {
+      matchesFrom = claim.claimDate >= fromDate;
+    }
+    if (toDate) {
+      matchesTo = claim.claimDate <= toDate;
+    }
+    return matchesSearch && matchesFrom && matchesTo;
+  });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -249,14 +271,21 @@ const VehicleClaims: React.FC = () => {
                 <p>View and search through all claims</p>
               </div>
 
-              <div className="search-container2">
+            <div className="search-container2" style={{ justifyContent: 'space-between'}}>
+              <div style={{ display: 'flex', gap: '15px' }}>
                 <Searchbar
-                type='search'
-                placeholder='Search registration number'
+                  type='search'
+                  placeholder='Search registration number'
                   value={searchTerm}
                   onChange={handleSearchChange}
                 />
               </div>
+
+              <div style={{ display: 'flex', gap: '15px' }}>
+                <FormDateInput label='From Date' name='fromDate' value={fromDate} onChange={handleFromDateChange} />
+                <FormDateInput label='To Date' name='toDate' value={toDate} onChange={handleToDateChange} />
+              </div>
+            </div>
 
               <div className="claims-table-container">
                 {filteredClaims.length === 0 ? (
@@ -282,7 +311,7 @@ const VehicleClaims: React.FC = () => {
                           <span className="vehicle-cell text-uppercase">{value}</span>
                         )
                       },
-                      { key: 'claimDate', header: 'Date' },
+                      { key: 'claimDate', header: 'Date', renderCell: (value) => formatDateDDMMYYYY(value) },
                       {
                         key: 'claimAmount',
                         header: 'Amount',

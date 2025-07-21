@@ -2,10 +2,10 @@ import React from 'react';
 // import '../styles/style.css';
 
 interface FormDateInputProps {
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
-  name: string;
+  name?: string;
   className?: string;
   label?: string;
   error?: string;
@@ -22,7 +22,7 @@ const FormDateInput: React.FC<FormDateInputProps> = ({
 }) => {
   return (
     <div className="form-group">
-      <label htmlFor={name} className='mb-0'>{label}</label>
+      <label htmlFor={name} className='mb-0' style={{fontSize:'14px'}}>{label}</label>
       <input
         type="date"
         id={name}

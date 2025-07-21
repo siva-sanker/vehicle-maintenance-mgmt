@@ -323,4 +323,15 @@ export const getUpdateFieldClassName = (
         return `${baseClass} valid`;
     }
     return baseClass;
+};
+
+// Format a date string as dd-mm-yyyy
+export const formatDateDDMMYYYY = (dateString: string): string => {
+    if (!dateString || dateString === '-') return '-';
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return dateString;
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
 }; 

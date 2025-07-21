@@ -32,7 +32,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
 }) => {
   return (
     <div className="mb-3">
-      {label && <label htmlFor={name} className="form-label">{label}</label>}
+      {label && <label htmlFor={name} className="form-label" style={{fontSize:'14px'}}>{label}</label>}
       <select
         id={name}
         name={name}

@@ -104,7 +104,7 @@ const getBaseURL = (): string => {
     // Check if we're in development or production
     if (import.meta.env.DEV) {
         // In development, use network IP for cross-system access
-        return 'http://192.168.50.141:4000';
+        return 'http://192.168.50.149:4000';
         // return import.meta.env.VITE_API_URL || 'https://7h0mm7mt-3044.asse.devtunnels.ms';
     } else {
         // In production, use the actual server URL

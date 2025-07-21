@@ -34,7 +34,7 @@ const InputText: React.FC<InputTextProps> = ({
   return (
     <div className="mb-2">
       {label && (
-        <label htmlFor={name} className="form-label">
+        <label htmlFor={name} className="form-label" style={{fontSize:'14px'}}>
           {label}
         </label>
       )}

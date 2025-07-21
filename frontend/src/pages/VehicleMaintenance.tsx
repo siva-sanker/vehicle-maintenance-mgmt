@@ -15,6 +15,7 @@ import EditButton from "../components/EditButton";
 import DeleteButton from "../components/DeleteButton";
 import RestoreButton from '../components/RestoreButton';
 import { vehicleAPI, Vehicle, maintenanceAPI, Maintenance } from "../services/api";
+import { formatDateDDMMYYYY } from '../utils/vehicleUtils';
 
 const VehicleMaintenance: React.FC = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
@@ -40,6 +41,8 @@ const VehicleMaintenance: React.FC = () => {
   const [showRestoreMaintenanceModal, setShowRestoreMaintenanceModal] = useState(false);
   const [deletedMaintenance, setDeletedMaintenance] = useState<Maintenance[]>([]);
   const [restoreMaintenanceLoading, setRestoreMaintenanceLoading] = useState(false);
+  const [fromDate, setFromDate] = useState<string>('');
+  const [toDate, setToDate] = useState<string>('');
 
   // for cards
   useEffect(() => {
@@ -79,6 +82,13 @@ const VehicleMaintenance: React.FC = () => {
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleFromDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFromDate(e.target.value);
+  };
+  const handleToDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setToDate(e.target.value);
   };
 
   // Simple form validation to prevent null/empty values
@@ -269,11 +279,15 @@ const VehicleMaintenance: React.FC = () => {
       {/* <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator /> */}
       <PageContainer>
         <SectionHeading title="Vehicle Maintenance" subtitle="Vehicle maintenance records" />
-        <div style={{ display: "flex", gap: 16, marginBottom: 24 }}>
+        <div style={{ display: "flex", gap: 16, marginBottom: 20 }}>
           <Cards title="Total Active Vehicles" subtitle={loading ? "-" : activeCount} />
           <Cards title="Vehicles in Maintenance" subtitle={loading ? "-" : maintenanceCount} />
         </div>
-        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16}}>
+        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5}}>
+          <div style={{display:'flex',gap:'15px'}}>
+            <FormDateInput name="fromDate" label="From Date" value={fromDate} onChange={handleFromDateChange}/>
+            <FormDateInput name="toDate" label="To Date" value={toDate} onChange={handleToDateChange}/>
+          </div>
           <div style={{ display: 'flex', gap: 8 }}>
             <ButtonWithGradient onClick={openAddModal}>
               Add Maintenance Record
@@ -462,7 +476,7 @@ const VehicleMaintenance: React.FC = () => {
           columns={[
             { key: "number", header: "#" },
             { key: "vehicleInfo", header: "Vehicle" },
-            { key: "serviceDate", header: "Service Date" },
+            { key: "serviceDate", header: "Service Date", renderCell: (value) => formatDateDDMMYYYY(value) },
             { key: "serviceType", header: "Service Type" },
             { key: "cost", header: "Cost" ,
               renderCell: (cost) => `₹${cost.toLocaleString()}`
@@ -485,7 +499,18 @@ const VehicleMaintenance: React.FC = () => {
             }
           ]}
           data={maintenanceRecords
-            .filter(record => !record.deleted)
+            .filter(record => {
+              if (record.deleted) return false;
+              let matchesFrom = true;
+              let matchesTo = true;
+              if (fromDate) {
+                matchesFrom = record.serviceDate >= fromDate;
+              }
+              if (toDate) {
+                matchesTo = record.serviceDate <= toDate;
+              }
+              return matchesFrom && matchesTo;
+            })
             .map((record, index) => {
               const vehicle = vehicles.find(v => v.id === record.vehicleId);
               return {

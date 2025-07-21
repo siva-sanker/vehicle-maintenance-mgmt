@@ -103,7 +103,7 @@ const DocumentRepository: React.FC = () => {
               </div>
 
               <div className="form-group">
-                <label className='mb-0'>
+                <label className='mb-0' style={{fontSize:'14px'}}>
                   Upload PDF
                 </label>
                 <input
