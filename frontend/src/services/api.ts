@@ -114,7 +114,7 @@ const getBaseURL = (): string => {
 };
 
 const BASE_URL = getBaseURL();
-console.log(BASE_URL);
+// console.log(BASE_URL);
 
 
 // Generic API methods
@@ -122,10 +122,10 @@ const api = {
     // GET request
     async get<T>(endpoint: string): Promise<T> {
         try {
-            console.log(`Making GET request to: ${BASE_URL}${endpoint}`);
+            // console.log(`Making GET request to: ${BASE_URL}${endpoint}`);
             const response = await fetch(`${BASE_URL}${endpoint}`);
-            console.log(`Response status: ${response.status}`);
-            console.log(`Response headers:`, response.headers);
+            // console.log(`Response status: ${response.status}`);
+            // console.log(`Response headers:`, response.headers);
 
             if (!response.ok) {
                 const errorText = await response.text();
@@ -134,7 +134,7 @@ const api = {
             }
 
             const data = await response.json();
-            console.log(`Successfully fetched data:`, data);
+            // console.log(`Successfully fetched data:`, data);
             return data;
         } catch (error) {
             console.error('API GET Error:', error);

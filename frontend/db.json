@@ -1105,6 +1105,23 @@
         "timestamp": "2025-07-14T10:18:45.306Z",
         "address": "Doctor B R Ambedkar Veedhi, Fair Field Layout, Gandhinagar, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
       }
+    },
+    {
+      "id": "d467",
+      "make": "qwerty",
+      "model": "qwertyy",
+      "purchaseDate": "2006-06-06",
+      "registrationNumber": "234fe243r",
+      "purchasePrice": "1352526",
+      "fuelType": "Diesel",
+      "engineNumber": "58748",
+      "chassisNumber": "7985468985",
+      "kilometers": "2.56",
+      "color": "df",
+      "owner": "joseph",
+      "phone": "1548795856",
+      "address": "122gihiuhijhkjbkj",
+      "deletedAt": "2025-07-21T11:41:51.448Z"
     }
   ],
   "locationHistory": [
@@ -1408,11 +1425,20 @@
       "assignedVehicleIds": [
         "i4l8",
         "p1s5",
-        "w8z2",
-        "d9g3"
+        "w8z2"
       ],
-      "id": "0d72",
-      "deletedAt": null
+      "id": "0d72"
+    },
+    {
+      "name": "aswin",
+      "licenseNumber": "123344",
+      "phone": "43333333333",
+      "address": "qwerrty",
+      "isActive": false,
+      "assignedVehicleIds": [
+        "6b1e"
+      ],
+      "id": "eceb"
     }
   ]
 }
