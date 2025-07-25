@@ -1,0 +1,660 @@
+openapi: 3.0.0
+info:
+  title: Fleet Management API
+  version: 1.0.0
+
+tags:
+  - name: Vehicles
+    description: Endpoints related to vehicle management
+  - name: Drivers
+    description: Endpoints related to driver management
+  - name: Maintenance
+    description: Endpoints related to vehicle maintenance
+
+paths:
+  /api/vehicles:
+    get:
+      tags:
+        - Vehicles
+      summary: Get all vehicles
+      responses:
+        200:
+          description: List of vehicles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vehicle'
+    post:
+      tags:
+        - Vehicles
+      summary: Create a new vehicle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Vehicle'
+            example:
+              make: Toyota
+              model: Corolla
+              purchaseDate: 2022-01-01
+              registrationNumber: TN01AB1234
+              purchasePrice: "10000"
+              fuelType: Petrol
+              engineNumber: EN123456
+              chassisNumber: CH654321
+              kilometers: "50000"
+              color: White
+              owner: John Doe
+              phone: "1234567890"
+              address: "123 Main St"
+              status: Active
+              claims: []
+              currentLocation: { latitude: 12.9716, longitude: 77.5946, timestamp: "2023-01-01T10:00:00Z", address: "Bangalore" }
+              insurance: { policyNumber: "POL123", insurer: "ABC Insurance", policytype: "Comprehensive", startDate: "2023-01-01", endDate: "2024-01-01", payment: "Paid", issueDate: "2023-01-01", premiumAmount: "500", hasInsurance: true }
+              lastUpdated: "2023-01-01T10:00:00Z"
+              deletedAt: null
+      responses:
+        201:
+          description: Vehicle created
+
+  /api/vehicles/{id}:
+    get:
+      tags:
+        - Vehicles
+      summary: Get a vehicle by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the vehicle
+      responses:
+        200:
+          description: Vehicle data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vehicle'
+    put:
+      tags:
+        - Vehicles
+      summary: Update a vehicle
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the vehicle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Vehicle'
+            example:
+              make: Toyota
+              model: Corolla
+              purchaseDate: 2022-01-01
+              registrationNumber: TN01AB1234
+              purchasePrice: "10000"
+              fuelType: Petrol
+              engineNumber: EN123456
+              chassisNumber: CH654321
+              kilometers: "50000"
+              color: White
+              owner: John Doe
+              phone: "1234567890"
+              address: "123 Main St"
+              status: Active
+              claims: []
+              currentLocation: { latitude: 12.9716, longitude: 77.5946, timestamp: "2023-01-01T10:00:00Z", address: "Bangalore" }
+              insurance: { policyNumber: "POL123", insurer: "ABC Insurance", policytype: "Comprehensive", startDate: "2023-01-01", endDate: "2024-01-01", payment: "Paid", issueDate: "2023-01-01", premiumAmount: "500", hasInsurance: true }
+              lastUpdated: "2023-01-01T10:00:00Z"
+              deletedAt: null
+      responses:
+        200:
+          description: Vehicle updated
+    patch:
+      tags:
+        - Vehicles
+      summary: Partially update a vehicle
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the vehicle
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+            example:
+              color: Red
+      responses:
+        200:
+          description: Vehicle partially updated
+    delete:
+      tags:
+        - Vehicles
+      summary: Delete a vehicle
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the vehicle
+      responses:
+        204:
+          description: Vehicle deleted
+
+  /api/vehicles/search:
+    get:
+      tags:
+        - Vehicles
+      summary: Search vehicles
+      parameters:
+        - in: query
+          name: make
+          schema:
+            type: string
+          description: Filter vehicles by make (e.g., Toyota)
+        - in: query
+          name: model
+          schema:
+            type: string
+          description: Filter vehicles by model (e.g., Corolla)
+      responses:
+        200:
+          description: Matching vehicles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vehicle'
+
+  /api/vehicles/{id}/soft-delete:
+    patch:
+      tags:
+        - Vehicles
+      summary: Soft delete a vehicle
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the vehicle
+      responses:
+        200:
+          description: Vehicle soft deleted
+
+  /api/vehicles/{id}/restore:
+    patch:
+      tags:
+        - Vehicles
+      summary: Restore a soft-deleted vehicle
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the vehicle
+      responses:
+        200:
+          description: Vehicle restored
+
+  /api/drivers:
+    get:
+      tags:
+        - Drivers
+      summary: Get all drivers
+      responses:
+        200:
+          description: List of drivers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Driver'
+    post:
+      tags:
+        - Drivers
+      summary: Create a driver
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Driver'
+            example:
+              name: Jane Smith
+              phone: "9876543210"
+              licenseNumber: "DL1234567"
+              address: "456 Side St"
+              isActive: true
+              assignedVehicles: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+              deletedAt: false
+      responses:
+        201:
+          description: Driver created
+
+  /api/drivers/{id}:
+    get:
+      tags:
+        - Drivers
+      summary: Get driver by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the driver
+      responses:
+        200:
+          description: Driver data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+    put:
+      tags:
+        - Drivers
+      summary: Update a driver
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the driver
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Driver'
+            example:
+              name: Jane Smith
+              phone: "9876543210"
+              licenseNumber: "DL1234567"
+              address: "456 Side St"
+              isActive: true
+              assignedVehicles: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+              deletedAt: false
+      responses:
+        200:
+          description: Driver updated
+    patch:
+      tags:
+        - Drivers
+      summary: Partially update a driver
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the driver
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+            example:
+              phone: "1112223333"
+      responses:
+        200:
+          description: Driver partially updated
+    delete:
+      tags:
+        - Drivers
+      summary: Delete a driver
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the driver
+      responses:
+        204:
+          description: Driver deleted
+
+  /api/drivers/{id}/soft-delete:
+    patch:
+      tags:
+        - Drivers
+      summary: Soft delete a driver
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the driver
+      responses:
+        200:
+          description: Driver soft deleted
+
+  /api/drivers/{id}/restore:
+    patch:
+      tags:
+        - Drivers
+      summary: Restore a soft-deleted driver
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the driver
+      responses:
+        200:
+          description: Driver restored
+
+  /api/maintenance:
+    get:
+      tags:
+        - Maintenance
+      summary: Get all maintenance records
+      responses:
+        200:
+          description: List of maintenance records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MaintenanceRecord'
+    post:
+      tags:
+        - Maintenance
+      summary: Create a maintenance record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MaintenanceRecord'
+            example:
+              vehicleId: "a1b2c3d4"
+              description: "Oil change"
+              date: "2023-01-15"
+              cost: 100
+      responses:
+        201:
+          description: Maintenance record created
+
+  /api/maintenance/{id}:
+    get:
+      tags:
+        - Maintenance
+      summary: Get maintenance by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the maintenance record
+      responses:
+        200:
+          description: Maintenance record
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaintenanceRecord'
+    put:
+      tags:
+        - Maintenance
+      summary: Update a maintenance record
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the maintenance record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MaintenanceRecord'
+            example:
+              vehicleId: "a1b2c3d4"
+              description: "Oil change"
+              date: "2023-01-15"
+              cost: 100
+      responses:
+        200:
+          description: Maintenance record updated
+    patch:
+      tags:
+        - Maintenance
+      summary: Partially update maintenance
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the maintenance record
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+            example:
+              cost: 120
+      responses:
+        200:
+          description: Maintenance record partially updated
+    delete:
+      tags:
+        - Maintenance
+      summary: Delete a maintenance record
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the maintenance record
+      responses:
+        204:
+          description: Maintenance record deleted
+
+  /api/maintenance/vehicle/{vehicleId}:
+    get:
+      tags:
+        - Maintenance
+      summary: Get maintenance by vehicle ID
+      parameters:
+        - in: path
+          name: vehicleId
+          required: true
+          schema:
+            type: string
+          description: The unique identifier of the vehicle
+      responses:
+        200:
+          description: Maintenance records for a vehicle
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MaintenanceRecord'
+
+  /api/maintenance/completed:
+    get:
+      tags:
+        - Maintenance
+      summary: Get completed maintenance
+      responses:
+        200:
+          description: Completed maintenance list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MaintenanceRecord'
+
+  /api/maintenance/scheduled:
+    get:
+      tags:
+        - Maintenance
+      summary: Get scheduled maintenance
+      responses:
+        200:
+          description: Scheduled maintenance list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MaintenanceRecord'
+
+components:
+  schemas:
+    Vehicle:
+      type: object
+      properties:
+        id:
+          type: string
+        make:
+          type: string
+        model:
+          type: string
+        purchaseDate:
+          type: string
+          format: date
+        registrationNumber:
+          type: string
+        purchasePrice:
+          type: string
+        fuelType:
+          type: string
+        engineNumber:
+          type: string
+        chassisNumber:
+          type: string
+        kilometers:
+          type: string
+        color:
+          type: string
+        owner:
+          type: string
+        phone:
+          type: string
+        address:
+          type: string
+        status:
+          type: string
+        claims:
+          type: array
+          items:
+            type: object
+            properties:
+              claimDate:
+                type: string
+                format: date
+              claimAmount:
+                type: string
+              reason:
+                type: string
+              status:
+                type: string
+        currentLocation:
+          type: object
+          properties:
+            latitude:
+              type: number
+            longitude:
+              type: number
+            timestamp:
+              type: string
+              format: date-time
+            address:
+              type: string
+        insurance:
+          type: object
+          properties:
+            policyNumber:
+              type: string
+            insurer:
+              type: string
+            policytype:
+              type: string
+            startDate:
+              type: string
+              format: date
+            endDate:
+              type: string
+              format: date
+            payment:
+              type: string
+            issueDate:
+              type: string
+              format: date
+            premiumAmount:
+              type: string
+            hasInsurance:
+              type: boolean
+        lastUpdated:
+          type: string
+          format: date-time
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    Driver:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        phone:
+          type: string
+        licenseNumber:
+          type: string
+        address:
+          type: string
+        isActive:
+          type: boolean
+        assignedVehicles:
+          type: string
+          format: uuid
+        deletedAt:
+          type: boolean
+
+    MaintenanceRecord:
+      type: object
+      properties:
+        id:
+          type: string
+        vehicleId:
+          type: string
+        description:
+          type: string
+        date:
+          type: string
+          format: date
+        cost:
+          type: number

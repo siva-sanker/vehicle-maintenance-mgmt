@@ -3,7 +3,7 @@
     {
       "id": "6b1e",
       "make": "suzuki",
-      "model": "swift",
+      "model": "swiftbazaar",
       "purchaseDate": "2004-02-03",
       "registrationNumber": "tn01tb2323",
       "purchasePrice": "6500000",
@@ -30,10 +30,10 @@
         "timestamp": "2025-06-17T04:37:21.928Z",
         "address": "Woodlands, Sri Ram Mandir Road, Sampangi Rama Nagara, Shanti Nagar, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
       },
-      "lastUpdated": "2025-06-12T09:41:33.406Z",
+      "lastUpdated": "2025-07-25T06:37:12.367Z",
       "deletedAt": null,
       "insurance": {
-        "policyNumber": "95869",
+        "policyNumber": "95869121",
         "insurer": "U and I",
         "policytype": "Liability",
         "startDate": "2025-07-06",
@@ -125,7 +125,7 @@
     },
     {
       "id": "f1i5",
-      "make": "tata",
+      "make": "tatatata",
       "model": "nexon",
       "purchaseDate": "2021-03-18",
       "registrationNumber": "TN02GH5678",
@@ -156,8 +156,16 @@
         "timestamp": "2025-06-13T05:15:01.379Z",
         "address": "St. Joseph's Indian High School, Vittal Mallya Road, D'Souza Layout, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
       },
-      "lastUpdated": "2025-06-13T05:15:02.058Z",
-      "deletedAt": null
+      "lastUpdated": "2025-07-25T11:33:33.764Z",
+      "deletedAt": null,
+      "claims": [
+        {
+          "claimDate": "2025-07-10",
+          "claimAmount": "66666",
+          "reason": "bcdedfg",
+          "status": "Pending"
+        }
+      ]
     },
     {
       "id": "g2j6",
@@ -206,7 +214,8 @@
         "issueDate": "2024-06-08",
         "premiumAmount": "8900",
         "hasInsurance": true
-      }
+      },
+      "lastUpdated": "2025-07-25T11:33:21.320Z"
     },
     {
       "id": "h3k7",
@@ -684,7 +693,7 @@
         "timestamp": "2025-06-17T04:47:12.673Z",
         "address": "Government Secretariat Club - KGSC, Doctor B R Ambedkar Veedhi, Fair Field Layout, Gandhinagar, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
       },
-      "deletedAt": null
+      "deletedAt": "2025-07-16T03:50:21.686Z"
     },
     {
       "id": "u6x0",
@@ -996,7 +1005,8 @@
         "longitude": 77.59698918356207,
         "timestamp": "2025-07-04T04:36:42.607Z",
         "address": "Bangalore Club, 10, Residency Road, Shanthala Nagar, Richmond Town, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560025, India"
-      }
+      },
+      "lastUpdated": "2025-07-25T11:33:21.324Z"
     },
     {
       "id": "abf1",
@@ -1097,6 +1107,43 @@
         "timestamp": "2025-07-14T10:18:45.306Z",
         "address": "Doctor B R Ambedkar Veedhi, Fair Field Layout, Gandhinagar, Bengaluru, Bangalore North, Bengaluru Urban, Karnataka, 560001, India"
       }
+    },
+    {
+      "id": "f72e",
+      "make": "Toyota",
+      "model": "Corolla",
+      "purchaseDate": "2022-01-01T00:00:00.000Z",
+      "registrationNumber": "TN01AB1234",
+      "purchasePrice": "10000",
+      "fuelType": "Petrol",
+      "engineNumber": "EN123456",
+      "chassisNumber": "CH654321",
+      "kilometers": "50000",
+      "color": "White",
+      "owner": "John Doe",
+      "phone": "1234567890",
+      "address": "123 Main St",
+      "status": "Active",
+      "claims": [],
+      "currentLocation": {
+        "latitude": 12.9716,
+        "longitude": 77.5946,
+        "timestamp": "2023-01-01T10:00:00Z",
+        "address": "Bangalore"
+      },
+      "insurance": {
+        "policyNumber": "POL123",
+        "insurer": "ABC Insurance",
+        "policytype": "Comprehensive",
+        "startDate": "2023-01-01",
+        "endDate": "2024-01-01",
+        "payment": "Paid",
+        "issueDate": "2023-01-01",
+        "premiumAmount": "500",
+        "hasInsurance": true
+      },
+      "lastUpdated": "2025-07-25T11:33:21.327Z",
+      "deletedAt": null
     }
   ],
   "locationHistory": [
@@ -1303,95 +1350,79 @@
   ],
   "maintenance": [
     {
-      "id": "maint_001",
-      "vehicleId": "6b1e",
-      "serviceDate": "2025-01-15",
-      "serviceType": "Regular Service",
-      "description": "Oil change, filter replacement, brake inspection",
-      "cost": 2500,
-      "status": "Completed",
-      "odometerReadingBefore": 65000,
-      "odometerReadingAfter": 65000,
-      "serviceCenter": "ABC Auto Service",
-      "technician": "John Smith"
-    },
-    {
-      "id": "maint_002",
-      "vehicleId": "d9g3",
-      "serviceDate": "2025-02-20",
-      "serviceType": "Brake Service",
-      "description": "Brake pad replacement and brake fluid check",
-      "cost": 3500,
-      "status": "Completed",
-      "odometerReadingBefore": 30000,
-      "odometerReadingAfter": 30000,
-      "serviceCenter": "XYZ Garage",
-      "technician": "Mike Johnson"
-    },
-    {
-      "id": "maint_003",
-      "vehicleId": "e0h4",
-      "serviceDate": "2025-03-10",
-      "serviceType": "Engine Tune-up",
-      "description": "Spark plug replacement, air filter change, fuel system cleaning",
-      "cost": 4200,
-      "status": "Completed",
-      "odometerReadingBefore": 52000,
-      "odometerReadingAfter": 52000,
-      "serviceCenter": "Premium Auto Care",
-      "technician": "David Wilson"
-    },
-    {
-      "id": "ddeb",
-      "vehicleId": "01e4",
-      "serviceDate": "2025-07-18",
-      "serviceType": "Oil Change",
-      "description": "done",
-      "cost": 3500,
-      "status": "Completed",
-      "odometerReadingBefore": 1250,
-      "odometerReadingAfter": 1255,
-      "serviceCenter": "Auto Service Center",
-      "technician": "Technician"
-    },
-    {
-      "id": "523f",
-      "vehicleId": "2898",
+      "id": "816c",
+      "vehicleId": "j5m9",
       "serviceDate": "2025-07-01",
-      "serviceType": "Other",
-      "description": "service completed\noil change done",
-      "cost": 1656,
-      "status": "Completed",
-      "odometerReadingBefore": 1548,
-      "odometerReadingAfter": 1555,
-      "serviceCenter": "Auto Service Center",
-      "technician": "Technician"
-    },
-    {
-      "id": "f611",
-      "vehicleId": "w8z2",
-      "serviceDate": "2025-07-08",
       "serviceType": "Engine Tune-up",
-      "description": "iiiiiii",
-      "cost": 13250.23,
+      "descriptionBefore": "1231",
+      "descriptionAfter": "wa",
+      "cost": 1233,
       "status": "Completed",
-      "odometerReadingBefore": 2350,
-      "odometerReadingAfter": 2352,
+      "odometerReadingBefore": 1231,
+      "odometerReadingAfter": 12334,
       "serviceCenter": "Auto Service Center",
-      "technician": "Technician"
+      "technician": "Technician",
+      "deleted": false
     },
     {
-      "id": "39de",
-      "vehicleId": "c44b",
-      "serviceDate": "2025-07-31",
-      "serviceType": "Battery Replacement",
-      "description": "deomtonads",
-      "cost": 15000,
+      "id": "52c0",
+      "vehicleId": "i4l8",
+      "serviceDate": "2025-07-03",
+      "serviceType": "Tire Replacement",
+      "descriptionBefore": "sdfs",
+      "descriptionAfter": "sdgag",
+      "cost": 1244,
       "status": "Completed",
-      "odometerReadingBefore": 35698.2,
-      "odometerReadingAfter": 35700.9,
+      "odometerReadingBefore": 1442,
+      "odometerReadingAfter": 2311,
       "serviceCenter": "Auto Service Center",
-      "technician": "Technician"
+      "technician": "Technician",
+      "deleted": true
+    },
+    {
+      "id": "dd7b",
+      "vehicleId": "bd58",
+      "serviceDate": "2025-07-07",
+      "serviceType": "Oil Change",
+      "descriptionBefore": "dsfsg",
+      "descriptionAfter": "gsag",
+      "cost": 12312,
+      "status": "Completed",
+      "odometerReadingBefore": 1241,
+      "odometerReadingAfter": 1241,
+      "serviceCenter": "Auto Service Center",
+      "technician": "Technician",
+      "deleted": true
+    },
+    {
+      "id": "5e53",
+      "vehicleId": "f1i5",
+      "serviceDate": "2025-07-13",
+      "serviceType": "Brake Service",
+      "descriptionBefore": "ibj",
+      "descriptionAfter": "ihbh",
+      "cost": 5400,
+      "status": "Completed",
+      "odometerReadingBefore": 16895.22,
+      "odometerReadingAfter": 16900.3,
+      "serviceCenter": "Auto Service Center",
+      "technician": "Technician",
+      "deleted": false
+    },
+    {
+      "id": "61b6",
+      "vehicleId": "k6n0",
+      "serviceDate": "2025-07-20",
+      "serviceType": "Engine Tune-up",
+      "descriptionBefore": "qweert",
+      "descriptionAfter": "asdfdsafa",
+      "cost": 2568,
+      "status": "Completed",
+      "odometerReadingBefore": 12548,
+      "odometerReadingAfter": 12559,
+      "serviceCenter": "Auto Service Center",
+      "technician": "Technician",
+      "deleted": false
     }
   ],
   "drivers": [
@@ -1416,11 +1447,20 @@
       "assignedVehicleIds": [
         "i4l8",
         "p1s5",
-        "w8z2",
-        "d9g3"
+        "w8z2"
       ],
-      "id": "0d72",
-      "deletedAt": null
+      "id": "0d72"
+    },
+    {
+      "name": "aswin",
+      "licenseNumber": "123344",
+      "phone": "43333333333",
+      "address": "qwerrty",
+      "isActive": false,
+      "assignedVehicleIds": [
+        "6b1e"
+      ],
+      "id": "eceb"
     }
   ]
 }

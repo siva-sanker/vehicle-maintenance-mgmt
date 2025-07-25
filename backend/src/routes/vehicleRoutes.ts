@@ -1,18 +1,69 @@
 import { Router } from 'express';
-// import Vehicle from '../models/Vehicle';
-import fs from "fs";
-import path from 'path';
+import {
+    getVehicles,
+    getVehicleById,
+    createVehicle,
+    updateVehicle,
+    patchVehicle,
+    deleteVehicle,
+    searchVehicles,
+    softDeleteVehicle,
+    restoreVehicle
+} from '../controllers/vehicleController';
+import {
+    getDrivers,
+    getDriverById,
+    createDriver,
+    updateDriver,
+    patchDriver,
+    deleteDriver,
+    softDeleteDriver,
+    restoreDriver
+} from '../controllers/driverController';
+import {
+    getMaintenance,
+    getMaintenanceById,
+    getMaintenanceByVehicle,
+    createMaintenance,
+    updateMaintenance,
+    patchMaintenance,
+    deleteMaintenance,
+    getCompletedMaintenance,
+    getScheduledMaintenance
+} from '../controllers/maintenanceController';
 
 const router = Router();
 
-router.get("/data", (req, res) => {
-  const dbPath = path.join(__dirname, "../data/db.json");
-  fs.readFile(dbPath, "utf8", (err, data) => {
-    if (err) {
-      return res.status(500).json({ error: "Failed to read data" });
-    }
-    res.json(JSON.parse(data));
-  });
-});
+// Vehicle routes
+router.get('/vehicles', getVehicles);
+router.get('/vehicles/:id', getVehicleById);
+router.post('/vehicles', createVehicle);
+router.put('/vehicles/:id', updateVehicle);
+router.patch('/vehicles/:id', patchVehicle);
+router.delete('/vehicles/:id', deleteVehicle);
+router.get('/vehicles/search', searchVehicles);
+router.patch('/vehicles/:id/soft-delete', softDeleteVehicle);
+router.patch('/vehicles/:id/restore', restoreVehicle);
 
-export default router;
+// Driver routes
+router.get('/drivers', getDrivers);
+router.get('/drivers/:id', getDriverById);
+router.post('/drivers', createDriver);
+router.put('/drivers/:id', updateDriver);
+router.patch('/drivers/:id', patchDriver);
+router.delete('/drivers/:id', deleteDriver);
+router.patch('/drivers/:id/soft-delete', softDeleteDriver);
+router.patch('/drivers/:id/restore', restoreDriver);
+
+// Maintenance routes
+router.get('/maintenance', getMaintenance);
+router.get('/maintenance/:id', getMaintenanceById);
+router.get('/maintenance/vehicle/:vehicleId', getMaintenanceByVehicle);
+router.post('/maintenance', createMaintenance);
+router.put('/maintenance/:id', updateMaintenance);
+router.patch('/maintenance/:id', patchMaintenance);
+router.delete('/maintenance/:id', deleteMaintenance);
+router.get('/maintenance/completed', getCompletedMaintenance);
+router.get('/maintenance/scheduled', getScheduledMaintenance);
+
+export default router; 
