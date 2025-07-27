@@ -1,4 +1,4 @@
-import { vehicleAPI, Vehicle } from '../services/api.ts';
+import { Vehicle, vehicleAPI } from '../services/api.ts';
 
 export interface InsuranceData {
     policyNumber: string;

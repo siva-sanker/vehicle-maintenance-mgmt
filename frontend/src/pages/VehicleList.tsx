@@ -1,33 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import {
   Car,
 } from 'lucide-react';
-import { Vehicle } from '../services/api.ts';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import infoLogo from '../assets/info.png';
+import ButtonWithGradient from '../components/ButtonWithGradient.tsx';
+import ClaimsModal from '../components/ClaimsModal.tsx';
+import DeleteButton from '../components/DeleteButton.tsx';
+import InsuranceModal from '../components/InsuranceModal.tsx';
+import PageContainer from '../components/PageContainer.tsx';
+import RestoreButton from '../components/RestoreButton.tsx';
+import ReusableModal from '../components/ReusableModal.tsx';
+import Searchbar from '../components/Searchbar.tsx';
+import SectionHeading from '../components/SectionHeading.tsx';
+import Table from '../components/Table.tsx';
+import UpdateVehicleModal from '../components/UpdateVehicleModal.tsx';
+import VehicleRestoreModal from '../components/VehicleRestoreModal.tsx';
+import { Vehicle, vehicleAPI } from '../services/api.ts';
+import '../styles/Vehiclelist.css';
+import { processExpiredInsurance } from '../utils/insuranceUtils.ts';
 import {
   Claim,
   calculateVehicleAge,
-  filterVehicles,
   fetchVehiclesData,
+  filterVehicles,
 } from '../utils/vehicleUtils.ts';
-import { processExpiredInsurance } from '../utils/insuranceUtils.ts';
-import '../styles/Vehiclelist.css';
-import Searchbar from '../components/Searchbar.tsx';
-import DeleteButton from '../components/DeleteButton.tsx';
-import SectionHeading from '../components/SectionHeading.tsx';
-import ButtonWithGradient from '../components/ButtonWithGradient.tsx';
-import RestoreButton from '../components/RestoreButton.tsx';
-import Table from '../components/Table.tsx';
-import PageContainer from '../components/PageContainer.tsx';
-import { vehicleAPI } from '../services/api.ts';
-import VehicleRestoreModal from '../components/VehicleRestoreModal.tsx';
-import ReusableModal from '../components/ReusableModal.tsx';
-import InsuranceModal from '../components/InsuranceModal.tsx';
-import ClaimsModal from '../components/ClaimsModal.tsx';
-import UpdateVehicleModal from '../components/UpdateVehicleModal.tsx';
-import infoLogo from '../assets/info.png'
 // import { faL } from '@fortawesome/free-solid-svg-icons';
 // import { Shield } from 'lucide-react';
 
@@ -254,15 +253,15 @@ const VehicleList: React.FC = () => {
         } else {
           toast.error("Vehicle has no insurance");
         }
-      }} text='View Claims'/>
-      <ButtonWithGradient text={vehicle.insurance ? 'Update Insurance':'Add Insurance'} onClick={() => {
+      }} text='View Claims' />
+      <ButtonWithGradient text={vehicle.insurance ? 'Update Insurance' : 'Add Insurance'} onClick={() => {
         setShowDetailsModal(false);
         openInsuranceModal(vehicle);
-      }}/>
+      }} />
       <ButtonWithGradient onClick={() => {
         setShowDetailsModal(false);
         openUpdateModal(vehicle);
-      }} text='Update Vehicle Details'/>
+      }} text='Update Vehicle Details' />
     </div>
   );
 
@@ -271,17 +270,17 @@ const VehicleList: React.FC = () => {
       {/* <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator /> */}
       {/* <div className="vehicle-list-container"> */}
       <PageContainer>
-      <div className="dashboard-content">
-        <SectionHeading title='Vehicle List' subtitle='Manage and view all your registered vehicles'/>
+        <div className="dashboard-content">
+          <SectionHeading title='Vehicle List' subtitle='Manage and view all your registered vehicles' />
           <div className="header-actions2 d-flex justify-content-between align-items-center">
             <div>
-              <RestoreButton onClick={() => setShowRestoreModal(true)} 
-                text='Restore Deleted'/>
+              <RestoreButton onClick={() => setShowRestoreModal(true)}
+                text='Restore Deleted' />
             </div>
             <div className="search-wrapper">
               <Searchbar
-              type='search'
-              placeholder='Search registration number'
+                type='search'
+                placeholder='Search registration number'
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -289,130 +288,130 @@ const VehicleList: React.FC = () => {
           </div>
 
 
-        {vehicles.length === 0 ? (
-          <div className="empty-state">
-            <Car size={64} className="empty-icon" />
-            <h3>No vehicles registered yet</h3>
-            <p>Start by adding your first vehicle to the system</p>
-            <ButtonWithGradient text='Click here to register' onClick={()=>navigate('/register-vehicle')} />
-          </div>
-        ) : (
-          <div className="table-container">
-            <Table
-              columns={[
-                { key: 'number', header: '#' },
-                { key: 'make', header: 'Make' },
-                { key: 'model', header: 'Model' },
-                { key: 'registrationNumber', header: 'Reg. Number' },
-                { key: 'purchaseDate', header: 'Purchase Date' },
-                { key: 'color', header: 'Color' },
-                { key: 'age', header: 'Age' },
-                { key: 'fuelType', header: 'Fuel Type' },
-                { key: 'purchasePrice', header: 'Price' },
-                { key: 'actions', header: 'Actions' },
-                { key: 'status', header: 'Status' },
-              ]}
-              data={filteredVehicles.map((vehicle, index) => ({
-                number: index + 1,
-                ...vehicle,
-                registrationNumber:vehicle.registrationNumber.toUpperCase(),
-                age: `${calculateVehicleAge(vehicle.purchaseDate)} years`,
-                fuelType: (
-                  <span className={`fuel-badge ${vehicle.fuelType.toLowerCase()}`}>
-                    {vehicle.fuelType}
-                  </span>
-                ),
-                purchasePrice: `${vehicle.purchasePrice} /-`,
-                actions: (
-                  <div className="d-flex gap-3">
-                    <div className='d-flex align-items-center justify-content-center'>
-                      <a onClick={()=>showVehicleDetails(vehicle)}><img src={infoLogo} alt="infoLogo"/></a>
+          {vehicles.length === 0 ? (
+            <div className="empty-state">
+              <Car size={64} className="empty-icon" />
+              <h3>No vehicles registered yet</h3>
+              <p>Start by adding your first vehicle to the system</p>
+              <ButtonWithGradient text='Click here to register' onClick={() => navigate('/register-vehicle')} />
+            </div>
+          ) : (
+            <div className="table-container">
+              <Table
+                columns={[
+                  { key: 'number', header: '#' },
+                  { key: 'make', header: 'Make' },
+                  { key: 'model', header: 'Model' },
+                  { key: 'registrationNumber', header: 'Reg. Number' },
+                  { key: 'purchaseDate', header: 'Purchase Date' },
+                  { key: 'color', header: 'Color' },
+                  { key: 'age', header: 'Age' },
+                  { key: 'fuelType', header: 'Fuel Type' },
+                  { key: 'purchasePrice', header: 'Price' },
+                  { key: 'actions', header: 'Actions' },
+                  { key: 'status', header: 'Status' },
+                ]}
+                data={filteredVehicles.map((vehicle, index) => ({
+                  number: index + 1,
+                  ...vehicle,
+                  registrationNumber: (vehicle.registrationNumber || '').toUpperCase(),
+                  age: `${calculateVehicleAge(vehicle.purchaseDate)} years`,
+                  fuelType: (
+                    <span className={`fuel-badge ${vehicle.fuelType.toLowerCase()}`}>
+                      {vehicle.fuelType}
+                    </span>
+                  ),
+                  purchasePrice: `${vehicle.purchasePrice} /-`,
+                  actions: (
+                    <div className="d-flex gap-3">
+                      <div className='d-flex align-items-center justify-content-center'>
+                        <a onClick={() => showVehicleDetails(vehicle)}><img src={infoLogo} alt="infoLogo" /></a>
+                      </div>
+                      <DeleteButton
+                        onClick={async () => {
+                          if (!window.confirm('Are you sure you want to delete this vehicle? This action can be undone by an administrator.')) return;
+                          try {
+                            await vehicleAPI.softDeleteVehicle(vehicle.id);
+                            setVehicles(vehicles.filter(v => v.id !== vehicle.id));
+                            toast.success('Vehicle has been deleted successfully');
+                          } catch (error) {
+                            toast.error('Failed to delete vehicle.');
+                          }
+                        }}
+                      />
                     </div>
-                  <DeleteButton
-                    onClick={async () => {
-                      if (!window.confirm('Are you sure you want to delete this vehicle? This action can be undone by an administrator.')) return;
-                      try {
-                        await vehicleAPI.softDeleteVehicle(vehicle.id);
-                        setVehicles(vehicles.filter(v => v.id !== vehicle.id));
-                        toast.success('Vehicle has been deleted successfully');
-                      } catch (error) {
-                        toast.error('Failed to delete vehicle.');
-                      }
-                    }}
-                  />
-                  </div>
-                ),
-                status: (
-                  <select name="status" id="" className="status-selector">
-                    <option value="" selected disabled>Set status</option>
-                    <option value="">Active</option>
-                    <option value="">Inactive</option>
-                    <option value="">Maintenance</option>
-                  </select>
-                ),
-              }))}
-            />
-          </div>
-        )}
-
-        {/* Vehicle Details Modal (now using ReusableModal) */}
-        <ReusableModal
-          isOpen={showDetailsModal}
-          onClose={() => setShowDetailsModal(false)}
-          title={selectedVehicle ? `Vehicle Details - ${selectedVehicle.make} ${selectedVehicle.model}` : ''}
-          onSubmit={() => setShowDetailsModal(false)}
-          submitButtonText="Close"
-          showCancelButton={false}
-          maxWidth="600px"
-          maxHeight="80vh"
-          width="95%"
-        >
-          {selectedVehicle && (
-            <>
-              {renderVehicleDetails(selectedVehicle)}
-              <div className="modal-footer">
-                {renderVehicleDetailsFooter(selectedVehicle)}
-              </div>
-            </>
+                  ),
+                  status: (
+                    <select name="status" id="" className="status-selector">
+                      <option value="" selected disabled>Set status</option>
+                      <option value="">Active</option>
+                      <option value="">Inactive</option>
+                      <option value="">Maintenance</option>
+                    </select>
+                  ),
+                }))}
+              />
+            </div>
           )}
-        </ReusableModal>
 
-        {/* Insurance Modal */}
-        <InsuranceModal
-          isOpen={showInsuranceModal}
-          onClose={() => setShowInsuranceModal(false)}
-          vehicle={selectedVehicle}
-          onInsuranceUpdated={handleInsuranceUpdated}
-        />
+          {/* Vehicle Details Modal (now using ReusableModal) */}
+          <ReusableModal
+            isOpen={showDetailsModal}
+            onClose={() => setShowDetailsModal(false)}
+            title={selectedVehicle ? `Vehicle Details - ${selectedVehicle.make} ${selectedVehicle.model}` : ''}
+            onSubmit={() => setShowDetailsModal(false)}
+            submitButtonText="Close"
+            showCancelButton={false}
+            maxWidth="600px"
+            maxHeight="80vh"
+            width="95%"
+          >
+            {selectedVehicle && (
+              <>
+                {renderVehicleDetails(selectedVehicle)}
+                <div className="modal-footer">
+                  {renderVehicleDetailsFooter(selectedVehicle)}
+                </div>
+              </>
+            )}
+          </ReusableModal>
 
-        {/* Claims Modal */}
-        <ClaimsModal
-          isOpen={claimsModalOpen}
-          onClose={() => setClaimsModalOpen(false)}
-          vehicle={selectedVehicle}
-          claims={claims}
-          loading={loadingClaims}
-          error={claimsError}
-        />
+          {/* Insurance Modal */}
+          <InsuranceModal
+            isOpen={showInsuranceModal}
+            onClose={() => setShowInsuranceModal(false)}
+            vehicle={selectedVehicle}
+            onInsuranceUpdated={handleInsuranceUpdated}
+          />
 
-        {/* Update Vehicle Details Modal */}
-        <UpdateVehicleModal
-          isOpen={showUpdateModal}
-          onClose={() => setShowUpdateModal(false)}
-          vehicle={selectedVehicle}
-          onVehicleUpdated={handleVehicleUpdated}
-        />
+          {/* Claims Modal */}
+          <ClaimsModal
+            isOpen={claimsModalOpen}
+            onClose={() => setClaimsModalOpen(false)}
+            vehicle={selectedVehicle}
+            claims={claims}
+            loading={loadingClaims}
+            error={claimsError}
+          />
 
-        {/* Restore Deleted Vehicles Modal */}
-        <VehicleRestoreModal
-          isOpen={showRestoreModal}
-          onClose={() => setShowRestoreModal(false)}
-          onVehicleRestored={handleVehicleRestored}
-        />
+          {/* Update Vehicle Details Modal */}
+          <UpdateVehicleModal
+            isOpen={showUpdateModal}
+            onClose={() => setShowUpdateModal(false)}
+            vehicle={selectedVehicle}
+            onVehicleUpdated={handleVehicleUpdated}
+          />
 
-        <ToastContainer />
-      {/* </div> */}
-      </div>
+          {/* Restore Deleted Vehicles Modal */}
+          <VehicleRestoreModal
+            isOpen={showRestoreModal}
+            onClose={() => setShowRestoreModal(false)}
+            onVehicleRestored={handleVehicleRestored}
+          />
+
+          <ToastContainer />
+          {/* </div> */}
+        </div>
       </PageContainer>
       {/* <Footer /> */}
     </>

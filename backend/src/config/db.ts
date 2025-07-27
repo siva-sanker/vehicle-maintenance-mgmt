@@ -1,22 +1,27 @@
-// backend/src/data/db.ts
+// backend/src/config/database.ts
 import 'dotenv/config';
-import sql from 'mssql';
+import mysql from 'mysql2/promise';
 
-const config = {
+const dbConfig = {
+    host: process.env.DB_HOST || 'localhost',
+    port: parseInt(process.env.DB_PORT || '3306'),
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    server: process.env.DB_SERVER,
     database: process.env.DB_NAME,
-    options: {
-        encrypt: process.env.DB_ENCRYPT === 'true',
-        trustServerCertificate: process.env.DB_TRUST_SERVER_CERTIFICATE === 'true',
-    },
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 };
 
-export const poolPromise = new sql.ConnectionPool(config)
-    .connect()
-    .then(pool => {
-        console.log('Connected to MSSQL');
-        return pool;
-    })
-    .catch(err => console.log('Database Connection Failed! Bad Config: ', err));
+export const pool = mysql.createPool(dbConfig);
+
+export const testConnection = async () => {
+    try {
+        const connection = await pool.getConnection();
+        console.log('Connected to MySQL database');
+        connection.release();
+    } catch (error) {
+        console.error('Database connection failed:', error);
+        process.exit(1);
+    }
+};
