@@ -15,8 +15,9 @@ const InsuranceManagement: React.FC = () => {
   const [fromDate, setFromDate] = useState<string>('');
   const [toDate, setToDate] = useState<string>('');
   // Filter vehicles based on search term and date range
+  
   const filteredVehicles = vehicles.filter(vehicle => {
-    const matchesSearch = vehicle.registrationNumber.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = vehicle.registrationNumber && vehicle.registrationNumber.toLowerCase().includes(searchTerm.toLowerCase());
     let matchesFrom = true;
     let matchesTo = true;
     const startDate = vehicle.insurance?.startDate || '';

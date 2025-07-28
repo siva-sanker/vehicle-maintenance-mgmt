@@ -58,7 +58,7 @@ export const calculateVehicleAge = (purchaseDateString: string): number => {
 // Filter vehicles based on search term
 export const filterVehicles = (vehicles: Vehicle[], searchTerm: string): Vehicle[] => {
     return vehicles.filter(vehicle =>
-        vehicle.registrationNumber.toLowerCase().includes(searchTerm.toLowerCase())
+        vehicle.registrationNumber && vehicle.registrationNumber.toLowerCase().includes(searchTerm.toLowerCase())
     );
 };
 
