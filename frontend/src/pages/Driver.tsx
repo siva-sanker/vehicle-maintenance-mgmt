@@ -21,20 +21,18 @@ const DriverPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editDriver, setEditDriver] = useState<Driver | null>(null);
-  const [form, setForm] = useState<Omit<Driver, 'id'>>({
+  const [form, setForm] = useState({
     name: '',
     license_number: '',
     phone: '',
     address: '',
     status: 'active',
-    last_updated: '',
-    created_at: '',
   });
   const [error, setError] = useState('');
 
   // Search state
   const [searchTerm, setSearchTerm] = useState<string>('');
-  
+
   // Restore modal state
   const [showRestoreModal, setShowRestoreModal] = useState(false);
 
@@ -69,10 +67,7 @@ const DriverPage: React.FC = () => {
   const tableData = filteredDrivers.map((driver, index) => ({
     ...driver,
     globalIndex: index + 1,
-    assignedVehicles: driver.assignedVehicleIds.map((vid) => {
-      const v = vehicles.find((veh) => veh.id === vid);
-      return v ? v.registration_number : null;
-    }).filter(Boolean).join(', '),
+    assignedVehicles: 'N/A', // Vehicle assignment feature not implemented in API
     status: driver.status === 'active' ? 'Active' : 'Inactive',
     actions: driver.id // We'll use this for the renderCell function
   }));
@@ -88,14 +83,10 @@ const DriverPage: React.FC = () => {
     }
   };
 
-  // Handle vehicle assignment
+  // Handle vehicle assignment (placeholder - not implemented in API)
   const handleVehicleSelect = (vehicleId: string) => {
-    setForm((prev) => {
-      const assigned = prev.assigned_vehicle_ids.includes(vehicleId)
-        ? prev.assigned_vehicle_ids.filter((id) => id !== vehicleId)
-        : [...prev.assigned_vehicle_ids, vehicleId];
-      return { ...prev, assigned_vehicle_ids: assigned };
-    });
+    // Vehicle assignment feature not implemented in current API
+    console.log('Vehicle assignment not implemented:', vehicleId);
   };
 
   // Open modal for add/edit
@@ -108,11 +99,10 @@ const DriverPage: React.FC = () => {
         phone: driver.phone,
         address: driver.address,
         status: driver.status,
-        assigned_vehicle_ids: driver.assigned_vehicle_ids,
       });
     } else {
       setEditDriver(null);
-      setForm({ name: '', license_number: '', phone: '', address: '', status: 'active', assigned_vehicle_ids: [] });
+      setForm({ name: '', license_number: '', phone: '', address: '', status: 'active' });
     }
     setShowModal(true);
     setError('');
@@ -139,10 +129,16 @@ const DriverPage: React.FC = () => {
     e.preventDefault();
     if (!validate()) return;
     try {
+      const driverData = {
+        ...form,
+        last_updated: new Date().toISOString(),
+        created_at: editDriver ? editDriver.created_at : new Date().toISOString()
+      };
+      
       if (editDriver) {
-        await driverAPI.updateDriver(editDriver.id, form);
+        await driverAPI.updateDriver(editDriver.id, driverData);
       } else {
-        await driverAPI.createDriver(form);
+        await driverAPI.createDriver(driverData);
       }
       // Refresh list
       const driversData = await driverAPI.getAllDrivers();
@@ -300,7 +296,7 @@ const DriverPage: React.FC = () => {
                   </label>
                 </div>
                 <div style={{ marginBottom: 12 }}>
-                  <label>Assign Vehicles</label>
+                  <label>Assign Vehicles (Feature Coming Soon)</label>
                   <div className="vehicle-list">
                     {vehicles.map((v) => (
                       <div key={v.id} className='driver-checkbox'>
@@ -308,13 +304,15 @@ const DriverPage: React.FC = () => {
                           {v.make} {v.model} <span className='text-uppercase'>({v.registration_number})</span>
                             <input
                               type="checkbox"
-                              checked={form.assigned_vehicle_ids.includes(v.id)}
+                              disabled
+                              checked={false}
                               onChange={() => handleVehicleSelect(v.id)} 
                             />
                         </label>
                       </div>
                     ))}
                   </div>
+                  <small style={{ color: '#666', fontStyle: 'italic' }}>Vehicle assignment feature will be available in a future update.</small>
                 </div>
                 {error && <div className="error">{error}</div>}
                 <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>

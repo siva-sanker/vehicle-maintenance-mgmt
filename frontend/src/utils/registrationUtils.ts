@@ -99,7 +99,28 @@ export const getInitialFormData = (): FormData => ({
 // Create a new vehicle
 export const createVehicle = async (formData: FormData): Promise<any> => {
     try {
-        const response = await vehicleAPI.createVehicle(formData);
+        // Transform camelCase form data to snake_case API format
+        const vehicleData = {
+            make: formData.make,
+            model: formData.model,
+            purchase_date: formData.purchaseDate,
+            registration_number: formData.registrationNumber,
+            purchase_price: parseFloat(formData.purchasePrice) || 0,
+            fuel_type: formData.fuelType,
+            engine_number: formData.engineNumber,
+            chassis_number: formData.chassisNumber,
+            kilometers: parseFloat(formData.kilometers) || 0,
+            color: formData.color,
+            owner: formData.owner,
+            phone: formData.phone,
+            address: formData.address,
+            status: 'active',
+            last_updated: new Date().toISOString(),
+            created_at: new Date().toISOString()
+        };
+
+        console.log('Sending vehicle data to API:', vehicleData);
+        const response = await vehicleAPI.createVehicle(vehicleData);
         return response;
     } catch (error) {
         console.error('Error creating vehicle:', error);
