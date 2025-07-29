@@ -28,7 +28,7 @@ const VehicleRestoreModal: React.FC<VehicleRestoreModalProps> = ({
     setLoading(true);
     try {
       const allVehicles = await vehicleAPI.getAllVehiclesIncludingDeleted();
-      const deleted = allVehicles.filter(vehicle => vehicle.deletedAt);
+      const deleted = allVehicles.filter(vehicle => vehicle.deleted_at);
       setDeletedVehicles(deleted);
     } catch (error) {
       console.error('Failed to load deleted vehicles:', error);
@@ -53,13 +53,13 @@ const VehicleRestoreModal: React.FC<VehicleRestoreModalProps> = ({
   const tableData = deletedVehicles.map((vehicle, index) => ({
     ...vehicle,
     globalIndex: index + 1,
-    deletedDate: new Date(vehicle.deletedAt!).toLocaleDateString(),
+    deletedDate: new Date(vehicle.deleted_at!).toLocaleDateString(),
     fuelType: (
-      <span className={`fuel-badge ${vehicle.fuelType.toLowerCase()}`}>
-        {vehicle.fuelType}
+      <span className={`fuel-badge ${vehicle.fuel_type.toLowerCase()}`}>
+        {vehicle.fuel_type}
       </span>
     ),
-    purchasePrice: `₹${vehicle.purchasePrice}`,
+    purchasePrice: `₹${vehicle.purchase_price}`,
     actions: vehicle.id
   }));
 
@@ -105,7 +105,7 @@ const VehicleRestoreModal: React.FC<VehicleRestoreModalProps> = ({
                   )
                 },
                 {
-                  key: 'registrationNumber',
+                  key: 'registration_number',
                   header: 'Registration',
                   renderCell: (value: string) => (
                     <span className='text-uppercase'>{value}</span>

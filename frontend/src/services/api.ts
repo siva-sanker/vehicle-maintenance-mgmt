@@ -7,61 +7,68 @@ interface Vehicle {
     id: string;
     make: string;
     model: string;
-    registrationNumber: string;
-    purchaseDate: string;
-    purchasePrice: string;
-    fuelType: string;
-    engineNumber: string;
-    chassisNumber: string;
-    kilometers: string;
+    purchase_date: string;
+    registration_number: string;
+    purchase_price: number;
+    fuel_type: string;
+    engine_number: string;
+    chassis_number: string;
+    kilometers: number;
     color: string;
     owner: string;
     phone: string;
     address: string;
-    status?: string; // 'active', 'maintenance', etc.
-    insurance?: {
-        policyNumber: string;
-        insurer: string;
-        policytype: string;
-        startDate: string;
-        endDate: string;
-        payment: string;
-        issueDate: string;
-        premiumAmount: string;
-        hasInsurance: boolean;
-    };
-    claims?: Array<{
-        claimDate: string;
-        claimAmount: string;
-        reason: string;
-        status: string;
-    }>;
-    deletedAt?: string; // For soft delete functionality
+    status: string; // 'active', 'maintenance', etc.
+    last_updated: string;
+    deleted_at?: string; // For soft delete functionality
+    created_at: string;
 }
 
 interface Driver {
     id: string;
     name: string;
-    licenseNumber: string;
     phone: string;
     address: string;
-    isActive: boolean;
-    assignedVehicleIds: string[];
-    deletedAt?: string; // For soft delete functionality
+    license_number: string;
+    status: string;
+    last_updated: string;
+    deleted_at?: string; // For soft delete functionality
+    created_at: string;
 }
 
 interface Maintenance {
     id: string;
-    vehicleId: string;
-    serviceDate: string;
-    serviceType: string;
-    descriptionBefore: string;
-    descriptionAfter: string;
+    vehicle_id: string;
+    description: string;
+    date: string;
     cost: number;
     status: string;
-    odometerReadingBefore: number;
-    odometerReadingAfter: number;
-    deleted:boolean;
+    last_updated: string;
+    created_at: string;
+    deleted?: boolean; // For soft delete functionality
+}
+
+interface Insurance {
+    id: string;
+    vehicle_id: string;
+    policy_number: string;
+    insurer: string;
+    policy_type: string;
+    start_date: string;
+    end_date: string;
+    payment: number;
+    issue_date: string;
+    premium_amount: number;
+    has_insurance: boolean;
+    created_at: string;
+}
+
+interface Claim {
+    id: string;
+    vehicle_id: string;
+    claim_date: string;
+    claim_amount: number;
+    reason: string;
 }
 
 // interface FuelLog {
@@ -231,7 +238,7 @@ export const vehicleAPI = {
     getAllVehicles: async (): Promise<Vehicle[]> => {
         const allVehicles = await api.get<Vehicle[]>('/vehicles');
         // Filter out soft deleted vehicles
-        return allVehicles.filter(vehicle => !vehicle.deletedAt);
+        return allVehicles.filter(vehicle => !vehicle.deleted_at);
     },
 
     // Get vehicle by ID
@@ -247,10 +254,10 @@ export const vehicleAPI = {
     patchVehicle: (id: string, vehicleData: Partial<Vehicle>): Promise<Vehicle> => api.patch<Vehicle>(`/vehicles/${id}`, vehicleData),
 
     // Soft delete vehicle
-    softDeleteVehicle: (id: string): Promise<Vehicle> => api.patch<Vehicle>(`/vehicles/${id}`, { deletedAt: new Date().toISOString() }),
+    softDeleteVehicle: (id: string): Promise<Vehicle> => api.patch<Vehicle>(`/vehicles/${id}/soft-delete`, {}),
 
     // Restore soft deleted vehicle
-    restoreVehicle: (id: string): Promise<Vehicle> => api.patch<Vehicle>(`/vehicles/${id}`, { deletedAt: null }),
+    restoreVehicle: (id: string): Promise<Vehicle> => api.patch<Vehicle>(`/vehicles/${id}/restore`, {}),
 
     // Hard delete vehicle (for admin purposes)
     deleteVehicle: (id: string): Promise<void> => api.delete<void>(`/vehicles/${id}`),
@@ -258,31 +265,24 @@ export const vehicleAPI = {
     // Get vehicles by search term
     searchVehicles: (searchTerm: string): Promise<Vehicle[]> => api.get<Vehicle[]>(`/vehicles?q=${searchTerm}`),
 
-    // Get vehicles with insurance
+    // Get vehicles with insurance (placeholder - insurance is separate table)
     getVehiclesWithInsurance: async (): Promise<Vehicle[]> => {
         try {
             const allVehicles = await api.get<Vehicle[]>('/vehicles');
-            // Filter vehicles that have an insurance object and are not deleted
-            return allVehicles.filter(vehicle =>
-                vehicle.insurance &&
-                typeof vehicle.insurance === 'object' &&
-                !vehicle.deletedAt
-            );
+            // For now, return all vehicles since insurance is in separate table
+            return allVehicles.filter(vehicle => !vehicle.deleted_at);
         } catch (error) {
             console.error('Error getting vehicles with insurance:', error);
             throw error;
         }
     },
 
-    // Get vehicles without insurance
+    // Get vehicles without insurance (placeholder - insurance is separate table)
     getVehiclesWithoutInsurance: async (): Promise<Vehicle[]> => {
         try {
             const allVehicles = await api.get<Vehicle[]>('/vehicles');
-            // Filter vehicles that don't have an insurance object and are not deleted
-            return allVehicles.filter(vehicle =>
-                (!vehicle.insurance || typeof vehicle.insurance !== 'object') &&
-                !vehicle.deletedAt
-            );
+            // For now, return empty array since insurance is in separate table
+            return [];
         } catch (error) {
             console.error('Error getting vehicles without insurance:', error);
             throw error;
@@ -290,7 +290,7 @@ export const vehicleAPI = {
     },
 
     // Get all vehicles including soft deleted (for admin purposes)
-    getAllVehiclesIncludingDeleted: (): Promise<Vehicle[]> => api.get<Vehicle[]>('/vehicles'),
+    getAllVehiclesIncludingDeleted: (): Promise<Vehicle[]> => api.get<Vehicle[]>('/vehicles/all'),
 };
 
 // Maintenance API methods
@@ -305,10 +305,10 @@ export const maintenanceAPI = {
     getMaintenanceByVehicle: (vehicleId: string): Promise<Maintenance[]> => api.get<Maintenance[]>(`/maintenance?vehicleId=${vehicleId}`),
 
     // Create new maintenance record
-    createMaintenance: (maintenanceData: Omit<Maintenance, 'id'>): Promise<Maintenance> => api.post<Maintenance>('/maintenance', maintenanceData),
+    createMaintenance: (maintenanceData: { vehicle_id: string; description: string; date: string; cost: number; status: string }): Promise<Maintenance> => api.post<Maintenance>('/maintenance', maintenanceData),
 
     // Update maintenance record
-    updateMaintenance: (id: string, maintenanceData: Partial<Maintenance>): Promise<Maintenance> => api.patch<Maintenance>(`/maintenance/${id}`, maintenanceData),
+    updateMaintenance: (id: string, maintenanceData: Partial<Maintenance> | { deleted: boolean }): Promise<Maintenance> => api.patch<Maintenance>(`/maintenance/${id}`, maintenanceData),
 
     // Delete maintenance record
     deleteMaintenance: (id: string): Promise<void> => api.delete<void>(`/maintenance/${id}`),
@@ -318,6 +318,30 @@ export const maintenanceAPI = {
 
     // Get scheduled maintenance
     getScheduledMaintenance: (): Promise<Maintenance[]> => api.get<Maintenance[]>('/maintenance?status=Scheduled'),
+};
+
+// Insurance API methods
+export const insuranceAPI = {
+    // Get all insurance records
+    getAllInsurance: (): Promise<Insurance[]> => api.get<Insurance[]>('/insurance'),
+
+    // Get insurance by ID
+    getInsuranceById: (id: string): Promise<Insurance> => api.get<Insurance>(`/insurance/${id}`),
+
+    // Get insurance by vehicle ID
+    getInsuranceByVehicle: (vehicleId: string): Promise<Insurance[]> => api.get<Insurance[]>(`/insurance/vehicle/${vehicleId}`),
+
+    // Create new insurance record
+    createInsurance: (insuranceData: Omit<Insurance, 'id' | 'created_at'>): Promise<Insurance> => api.post<Insurance>('/insurance', insuranceData),
+
+    // Update insurance record
+    updateInsurance: (id: string, insuranceData: Partial<Insurance>): Promise<Insurance> => api.put<Insurance>(`/insurance/${id}`, insuranceData),
+
+    // Partially update insurance record
+    patchInsurance: (id: string, insuranceData: Partial<Insurance>): Promise<Insurance> => api.patch<Insurance>(`/insurance/${id}`, insuranceData),
+
+    // Delete insurance record
+    deleteInsurance: (id: string): Promise<void> => api.delete<void>(`/insurance/${id}`),
 };
 
 // Fuel Logs API methods
@@ -380,7 +404,7 @@ export const driverAPI = {
     getAllDrivers: async (): Promise<Driver[]> => {
         const allDrivers = await api.get<Driver[]>('/drivers');
         // Filter out soft deleted drivers
-        return allDrivers.filter(driver => !driver.deletedAt);
+        return allDrivers.filter(driver => !driver.deleted_at);
     },
 
     // Get driver by ID
@@ -406,4 +430,4 @@ export const driverAPI = {
 };
 
 // Export types for use in other files
-export type { Vehicle, Expense, DashboardStats, Driver, Maintenance };
+export type { Vehicle, Expense, DashboardStats, Driver, Maintenance, Insurance };

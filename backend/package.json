@@ -4,7 +4,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node dist/server.js",
-    "dev": "ts-node src/server.ts"
+    "dev": "ts-node src/server.ts",
+    "test-db": "ts-node test-db.ts",
+    "insert-data": "ts-node insert-sample-data.ts"
   },
   "keywords": [],
   "author": "",

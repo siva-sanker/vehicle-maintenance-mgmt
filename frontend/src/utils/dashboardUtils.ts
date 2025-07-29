@@ -1,4 +1,4 @@
-import { vehicleAPI, Vehicle } from '../services/api';
+import { vehicleAPI, driverAPI, maintenanceAPI, insuranceAPI, Vehicle, Driver, Maintenance } from '../services/api';
 
 export interface DashboardProps {
     sidebarCollapsed: boolean;
@@ -28,6 +28,9 @@ export interface DashboardStats {
     fuelTypeData: FuelTypeData;
     monthlyData: MonthlyData;
     claimStatusData: ClaimStatusData;
+    totalDrivers: number;
+    totalMaintenanceCost: number;
+    upcomingMaintenance: number;
 }
 
 // Fetch all vehicles data
@@ -41,56 +44,78 @@ export const fetchVehiclesData = async (): Promise<Vehicle[]> => {
     }
 };
 
-// Calculate insurance policies count
-export const calculateInsurancePolicies = (vehicles: Vehicle[]): number => {
-    return vehicles.filter((v: Vehicle) => v.insurance && typeof v.insurance === 'object').length;
+// Fetch all drivers data
+export const fetchDriversData = async (): Promise<Driver[]> => {
+    try {
+        const data = await driverAPI.getAllDrivers();
+        return data;
+    } catch (error) {
+        console.error('Error fetching drivers data:', error);
+        throw error;
+    }
 };
 
-// Calculate claims data
+// Fetch all maintenance data
+export const fetchMaintenanceData = async (): Promise<Maintenance[]> => {
+    try {
+        const data = await maintenanceAPI.getAllMaintenance();
+        return data;
+    } catch (error) {
+        console.error('Error fetching maintenance data:', error);
+        throw error;
+    }
+};
+
+// Calculate insurance policies count from vehicles
+export const calculateInsurancePolicies = async (vehicles: Vehicle[]): Promise<number> => {
+    try {
+        const data = await insuranceAPI.getAllInsurance();
+        return data.length;
+    } catch (error) {
+        console.error('Error fetching vehicles data:', error);
+        throw error;
+    }
+};
+
+// Calculate claims data (placeholder - claims are in separate table)
 export const calculateClaimsData = (vehicles: Vehicle[]): {
     claimsCount: number;
     totalClaims: number;
     claimStatusData: ClaimStatusData;
 } => {
-    let claimsCount = 0;
-    let totalClaims = 0;
-    let pendingClaims = 0;
-    let approvedClaims = 0;
-    let rejectedClaims = 0;
+    // Since claims are in a separate table, we'll return placeholder data
+    // In a real implementation, you'd fetch claims data separately
+    return {
+        claimsCount: 0,
+        totalClaims: 0,
+        claimStatusData: {
+            pending: 0,
+            approved: 0,
+            rejected: 0
+        }
+    };
+};
 
-    vehicles.forEach((vehicle: Vehicle) => {
-        if (vehicle.claims && Array.isArray(vehicle.claims)) {
-            claimsCount += vehicle.claims.length;
-            vehicle.claims.forEach((claim: any) => {
-                totalClaims += parseFloat(claim.claimAmount) || 0;
+// Calculate maintenance data
+export const calculateMaintenanceData = (maintenance: Maintenance[]): {
+    totalMaintenanceCost: number;
+    upcomingMaintenance: number;
+} => {
+    let totalCost = 0;
+    let upcomingCount = 0;
 
-                // Count claims by status
-                switch (claim.status?.toLowerCase()) {
-                    case 'pending':
-                        pendingClaims++;
-                        break;
-                    case 'approved':
-                        approvedClaims++;
-                        break;
-                    case 'rejected':
-                        rejectedClaims++;
-                        break;
-                    default:
-                        pendingClaims++;
-                        break;
-                }
-            });
+    maintenance.forEach((record: Maintenance) => {
+        totalCost += record.cost || 0;
+
+        // Count upcoming maintenance (scheduled status)
+        if (record.status?.toLowerCase() === 'scheduled') {
+            upcomingCount++;
         }
     });
 
     return {
-        claimsCount,
-        totalClaims,
-        claimStatusData: {
-            pending: pendingClaims,
-            approved: approvedClaims,
-            rejected: rejectedClaims
-        }
+        totalMaintenanceCost: totalCost,
+        upcomingMaintenance: upcomingCount
     };
 };
 
@@ -98,7 +123,7 @@ export const calculateClaimsData = (vehicles: Vehicle[]): {
 export const calculateFuelTypeData = (vehicles: Vehicle[]): FuelTypeData => {
     const fuelTypes: FuelTypeData = {};
     vehicles.forEach((vehicle: Vehicle) => {
-        const fuelType = vehicle.fuelType || 'Unknown';
+        const fuelType = vehicle.fuel_type || 'Unknown';
         fuelTypes[fuelType] = (fuelTypes[fuelType] || 0) + 1;
     });
     return fuelTypes;
@@ -109,15 +134,15 @@ export const calculateMonthlyData = (vehicles: Vehicle[]): MonthlyData => {
     const monthlyPurchases: MonthlyData = {};
 
     vehicles.forEach((vehicle: Vehicle) => {
-        if (vehicle.purchaseDate) {
+        if (vehicle.purchase_date) {
             try {
-                const date = new Date(vehicle.purchaseDate);
+                const date = new Date(vehicle.purchase_date);
                 if (!isNaN(date.getTime())) { // Check if date is valid
                     const month = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
                     monthlyPurchases[month] = (monthlyPurchases[month] || 0) + 1;
                 }
             } catch (error) {
-                console.warn('Invalid purchase date for vehicle:', vehicle.id, vehicle.purchaseDate);
+                console.warn('Invalid purchase date for vehicle:', vehicle.id, vehicle.purchase_date);
             }
         }
     });
@@ -146,20 +171,31 @@ export const calculateInsuranceCoverage = (insurancePolicies: number, totalVehic
 // Fetch all dashboard data
 export const fetchDashboardData = async (): Promise<DashboardStats> => {
     try {
-        const vehicles = await fetchVehiclesData();
+        // Fetch data from all endpoints
+        const [vehicles, drivers, maintenance] = await Promise.all([
+            fetchVehiclesData(),
+            fetchDriversData(),
+            fetchMaintenanceData()
+        ]);
+
         const totalVehicles = vehicles.length;
-        const insurancePolicies = calculateInsurancePolicies(vehicles);
+        const totalDrivers = drivers.length;
+        const insurancePolicies = await calculateInsurancePolicies(vehicles);
         const { claimsCount, totalClaims, claimStatusData } = calculateClaimsData(vehicles);
+        const { totalMaintenanceCost, upcomingMaintenance } = calculateMaintenanceData(maintenance);
         const fuelTypeData = calculateFuelTypeData(vehicles);
         const monthlyData = calculateMonthlyData(vehicles);
-        const documentCount = 10; // Mock data
+        const documentCount = 10; // Mock data for now
 
         return {
             totalVehicles,
+            totalDrivers,
             activeClaims: claimsCount,
             insurancePolicies,
             documentCount,
             totalClaimAmount: totalClaims,
+            totalMaintenanceCost,
+            upcomingMaintenance,
             fuelTypeData,
             monthlyData,
             claimStatusData
@@ -255,9 +291,12 @@ export const getLineChartOptions = () => ({
 // Get stats cards data
 export const getStatsCardsData = (stats: DashboardStats) => [
     { title: 'Total Vehicles', subtitle: stats.totalVehicles },
+    { title: 'Total Drivers', subtitle: stats.totalDrivers },
     { title: 'Total Insurances', subtitle: stats.insurancePolicies },
     { title: 'Total Claims', subtitle: stats.activeClaims },
-    { title: 'Total Claim Amount', subtitle: stats.totalClaimAmount.toLocaleString() },
+    // { title: 'Total Claim Amount', subtitle: `$${stats.totalClaimAmount.toLocaleString()}` },
+    { title: 'Total Maintenance Cost', subtitle: `$${stats.totalMaintenanceCost.toLocaleString()}` },
+    // { title: 'Upcoming Maintenance', subtitle: stats.upcomingMaintenance },
     { title: 'Document Count', subtitle: stats.documentCount },
     { title: 'Insurance Coverage', subtitle: calculateInsuranceCoverage(stats.insurancePolicies, stats.totalVehicles) }
 ]; 

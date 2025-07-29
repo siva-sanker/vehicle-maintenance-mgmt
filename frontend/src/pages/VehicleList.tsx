@@ -11,6 +11,7 @@ import {
   calculateVehicleAge,
   filterVehicles,
   fetchVehiclesData,
+  formatDateDDMMYYYY,
 } from '../utils/vehicleUtils.ts';
 import { processExpiredInsurance } from '../utils/insuranceUtils.ts';
 import '../styles/Vehiclelist.css';
@@ -92,20 +93,17 @@ const VehicleList: React.FC = () => {
     const vehicle = vehicles.find(v => v.id === vehicleId);
     console.log('Found vehicle:', vehicle);
 
-    // Check if vehicle has insurance
-    if (!vehicle?.insurance) {
-      toast.error("Vehicle does not have insurance");
-      return;
-    }
+    // For now, allow viewing claims for any vehicle
+    // Insurance check can be implemented later when insurance API is available
 
     setLoadingClaims(true);
     setClaimsError('');
     try {
       // Set the vehicle as selectedVehicle
-      setSelectedVehicle(vehicle);
+      setSelectedVehicle(vehicle!);
 
-      // Get claims from the vehicle object since they're stored there
-      const vehicleClaims = vehicle?.claims || [];
+      // For now, use empty claims array since claims are not stored in vehicle object
+      const vehicleClaims: Claim[] = [];
       console.log('Vehicle claims:', vehicleClaims);
       setClaims(vehicleClaims);
     } catch (err) {
@@ -160,9 +158,9 @@ const VehicleList: React.FC = () => {
       <div className="vehicle-details-top">
         <div>
           <h3 className="vehicle-name text-capitalize">{vehicle.make} {vehicle.model}</h3>
-          <div className="vehicle-reg text-uppercase">{vehicle.registrationNumber}</div>
+          <div className="vehicle-reg text-uppercase">{vehicle.registration_number}</div>
         </div>
-        <span className="year-badge">{new Date(vehicle.purchaseDate).getFullYear()}</span>
+                  <span className="year-badge">{new Date(vehicle.purchase_date).getFullYear()}</span>
       </div>
       <div className="info-section">
         <h5 className='info-title'>Basic Details</h5>
@@ -173,11 +171,11 @@ const VehicleList: React.FC = () => {
           </div>
           <div>
             <span className="info-label">Age:</span>
-            <span>{calculateVehicleAge(vehicle.purchaseDate)} years</span>
+            <span>{calculateVehicleAge(vehicle.purchase_date)} years</span>
           </div>
           <div>
             <span className="info-label">Fuel Type:</span>
-            <span className={`fuel-badge ${vehicle.fuelType.toLowerCase()}`}>{vehicle.fuelType}</span>
+            <span className={`fuel-badge ${vehicle.fuel_type.toLowerCase()}`}>{vehicle.fuel_type}</span>
           </div>
         </div>
       </div>
@@ -186,15 +184,15 @@ const VehicleList: React.FC = () => {
         <div className="info-grid">
           <div>
             <span className="info-label">Engine No.:</span>
-            <span>{vehicle.engineNumber.toUpperCase()}</span>
+            <span>{vehicle.engine_number.toUpperCase()}</span>
           </div>
           <div>
             <span className="info-label">Chassis No.:</span>
-            <span>{vehicle.chassisNumber.toUpperCase()}</span>
+            <span>{vehicle.chassis_number.toUpperCase()}</span>
           </div>
           <div>
             <span className="info-label">Price:</span>
-            <span>₹{vehicle.purchasePrice}</span>
+            <span>₹{vehicle.purchase_price}</span>
           </div>
         </div>
       </div>
@@ -218,28 +216,7 @@ const VehicleList: React.FC = () => {
       <div className="info-section">
         <h5 className='info-title'>Insurance Details</h5>
         <div className="info-grid">
-          {vehicle.insurance ? (
-            <>
-              <div>
-                <span className="info-label">Policy #:</span>
-                <span>{vehicle.insurance.policyNumber}</span>
-              </div>
-              <div>
-                <span className="info-label">Insurer:</span>
-                <span>{vehicle.insurance.insurer}</span>
-              </div>
-              <div>
-                <span className="info-label">Type:</span>
-                <span>{vehicle.insurance.policytype}</span>
-              </div>
-              <div>
-                <span className="info-label">Premium:</span>
-                <span>₹{vehicle.insurance.premiumAmount}</span>
-              </div>
-            </>
-          ) : (
-            <div className="no-insurance">No insurance information available</div>
-          )}
+          <div className="no-insurance">Insurance information not available in current API</div>
         </div>
       </div>
     </div>
@@ -248,14 +225,10 @@ const VehicleList: React.FC = () => {
   const renderVehicleDetailsFooter = (vehicle: Vehicle) => (
     <div className="vehicle-details-actions">
       <ButtonWithGradient onClick={() => {
-        if (vehicle.insurance) {
-          viewClaims(vehicle.id);
-          setShowDetailsModal(false);
-        } else {
-          toast.error("Vehicle has no insurance");
-        }
+        viewClaims(vehicle.id);
+        setShowDetailsModal(false);
       }} text='View Claims'/>
-      <ButtonWithGradient text={vehicle.insurance ? 'Update Insurance':'Add Insurance'} onClick={() => {
+      <ButtonWithGradient text='Add Insurance' onClick={() => {
         setShowDetailsModal(false);
         openInsuranceModal(vehicle);
       }}/>
@@ -315,14 +288,15 @@ const VehicleList: React.FC = () => {
               data={filteredVehicles.map((vehicle, index) => ({
                 number: index + 1,
                 ...vehicle,
-                registrationNumber:vehicle.registrationNumber.toUpperCase(),
-                age: `${calculateVehicleAge(vehicle.purchaseDate)} years`,
+                registrationNumber:vehicle.registration_number.toUpperCase(),
+                purchaseDate: formatDateDDMMYYYY(vehicle.purchase_date),
+                age: `${calculateVehicleAge(vehicle.purchase_date)} years`,
                 fuelType: (
-                  <span className={`fuel-badge ${vehicle.fuelType.toLowerCase()}`}>
-                    {vehicle.fuelType}
+                  <span className={`fuel-badge ${vehicle.fuel_type.toLowerCase()}`}>
+                    {vehicle.fuel_type}
                   </span>
                 ),
-                purchasePrice: `${vehicle.purchasePrice} /-`,
+                purchasePrice: `${vehicle.purchase_price} /-`,
                 actions: (
                   <div className="d-flex gap-3">
                     <div className='d-flex align-items-center justify-content-center'>

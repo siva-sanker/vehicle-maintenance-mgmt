@@ -35,11 +35,17 @@ const InsuranceModal: React.FC<InsuranceModalProps> = ({
 
   useEffect(() => {
     if (isOpen && vehicle) {
-      if (vehicle.insurance) {
-        setInsuranceData(populateFormWithExistingInsurance(vehicle));
-      } else {
-        setInsuranceData(getResetInsuranceData());
-      }
+      const loadInsuranceData = async () => {
+        try {
+          const insuranceData = await populateFormWithExistingInsurance(vehicle);
+          setInsuranceData(insuranceData);
+        } catch (error) {
+          console.error('Error loading insurance data:', error);
+          setInsuranceData(getResetInsuranceData());
+        }
+      };
+      
+      loadInsuranceData();
       setValidationErrors({});
     }
   }, [isOpen, vehicle]);
@@ -106,7 +112,7 @@ const InsuranceModal: React.FC<InsuranceModalProps> = ({
         overflowY: 'auto'
       }} onClick={e => e.stopPropagation()}>
         <div className="modal-header">
-          <h3>{vehicle?.insurance ? 'Update' : 'Add'} Insurance for {vehicle?.make} {vehicle?.model}</h3>
+          <h3>{insuranceData.hasInsurance ? 'Update' : 'Add'} Insurance for {vehicle?.make} {vehicle?.model}</h3>
           <button className="modal-close" onClick={handleClose}>×</button>
         </div>
         <div className="modal-body">
@@ -241,7 +247,7 @@ const InsuranceModal: React.FC<InsuranceModalProps> = ({
         <div className="modal-footer3">
           <CancelButton onClick={handleClose} text='Cancel'/>
           <ButtonWithGradient
-           onClick={handleAddInsurance}>{isSubmitting ? 'Saving...' : (vehicle?.insurance ? 'Update Insurance' : 'Add Insurance')}
+           onClick={handleAddInsurance}>{isSubmitting ? 'Saving...' : (insuranceData.hasInsurance ? 'Update Insurance' : 'Add Insurance')}
           </ButtonWithGradient>
         </div>
       </div>

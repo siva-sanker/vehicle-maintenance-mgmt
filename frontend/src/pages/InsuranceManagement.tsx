@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchVehicles, filterVehicles, getTableData, getDateStatusClass, InsuranceData, processExpiredInsurance } from '../utils/insuranceUtils';
-import { Vehicle } from '../services/api';
+import { Vehicle, Insurance, vehicleAPI, insuranceAPI } from '../services/api';
 import Searchbar from '../components/Searchbar';
 import SectionHeading from '../components/SectionHeading';
 import PageContainer from '../components/PageContainer';
@@ -9,28 +8,83 @@ import '../styles/Insurance.css';
 import FormDateInput from '../components/Date';
 import { formatDateDDMMYYYY } from '../utils/vehicleUtils';
 
+interface InsuranceWithVehicle extends Insurance {
+  vehicle?: Vehicle;
+}
+
 const InsuranceManagement: React.FC = () => {
-  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [insuranceRecords, setInsuranceRecords] = useState<InsuranceWithVehicle[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [fromDate, setFromDate] = useState<string>('');
   const [toDate, setToDate] = useState<string>('');
-  // Filter vehicles based on search term and date range
-  
-  const filteredVehicles = vehicles.filter(vehicle => {
-    const matchesSearch = vehicle.registrationNumber && vehicle.registrationNumber.toLowerCase().includes(searchTerm.toLowerCase());
+  const [loading, setLoading] = useState<boolean>(true);
+
+  // Filter insurance records based on search term and date range
+  const filteredInsuranceRecords = insuranceRecords.filter(insurance => {
+    const vehicle = insurance.vehicle;
+    const matchesSearch = vehicle?.registration_number && 
+      vehicle.registration_number.toLowerCase().includes(searchTerm.toLowerCase());
+    
     let matchesFrom = true;
     let matchesTo = true;
-    const startDate = vehicle.insurance?.startDate || '';
-    const endDate = vehicle.insurance?.endDate || '';
+    
     if (fromDate) {
-      matchesFrom = startDate >= fromDate;
+      matchesFrom = insurance.start_date >= fromDate;
     }
     if (toDate) {
-      matchesTo = endDate <= toDate;
+      matchesTo = insurance.end_date <= toDate;
     }
+    
     return matchesSearch && matchesFrom && matchesTo;
   });
-  const tableData = getTableData(filteredVehicles);
+
+  // Get date status class for styling
+  const getDateStatusClass = (endDate: string): string => {
+    const today = new Date();
+    const end = new Date(endDate);
+    const daysUntilExpiry = Math.ceil((end.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    
+    if (daysUntilExpiry < 0) return 'expired';
+    if (daysUntilExpiry <= 30) return 'expiring-soon';
+    return 'active';
+  };
+
+  const handleFromDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFromDate(e.target.value);
+  };
+
+  const handleToDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setToDate(e.target.value);
+  };
+
+  useEffect(() => {
+    const fetchData = async (): Promise<void> => {
+      setLoading(true);
+      try {
+        // Fetch all insurance records
+        const insuranceData = await insuranceAPI.getAllInsurance();
+        
+        // Fetch all vehicles to match with insurance
+        const vehiclesData = await vehicleAPI.getAllVehicles();
+        
+        // Combine insurance with vehicle data
+        const insuranceWithVehicles = insuranceData.map(insurance => {
+          const vehicle = vehiclesData.find(v => v.id === insurance.vehicle_id);
+          return {
+            ...insurance,
+            vehicle
+          };
+        });
+        
+        setInsuranceRecords(insuranceWithVehicles);
+      } catch (err) {
+        console.error('Error fetching insurance data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   // Define table columns
   const columns = [
@@ -40,7 +94,7 @@ const InsuranceManagement: React.FC = () => {
     { 
       key: 'registrationNumber', 
       header: 'Reg. Number',
-      renderCell: (value: string) => value.toUpperCase()
+      renderCell: (value: string) => value?.toUpperCase() || 'N/A'
     },
     { key: 'policyNumber', header: 'Policy #' },
     { key: 'insurer', header: 'Insurer' },
@@ -55,90 +109,68 @@ const InsuranceManagement: React.FC = () => {
     },
     { key: 'premiumAmount', header: 'Premium' },
     { key: 'chassisNumber', header: 'Chassis',
-      renderCell:(value:string)=>value.toUpperCase()
+      renderCell:(value:string)=>value?.toUpperCase() || 'N/A'
      },
     { key: 'engineNumber', header: 'Engine',
-      renderCell:(value:string)=>value.toUpperCase()
+      renderCell:(value:string)=>value?.toUpperCase() || 'N/A'
      },
     { key: 'issueDate', header: 'Issue Date', renderCell: (value: string) => formatDateDDMMYYYY(value) },
     { key: 'payment', header: 'Payment' }
   ];
 
-  const handleFromDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFromDate(e.target.value);
-  };
-  const handleToDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setToDate(e.target.value);
-  };
-
-  useEffect(() => {
-    const fetchData = async (): Promise<void> => {
-      try {
-        // Process expired insurance first
-        const { updatedVehicles } = await processExpiredInsurance();
-        setVehicles(updatedVehicles);
-      } catch (err) {
-        console.error(err);
-        // Fallback to original fetch if processing fails
-        try {
-          const data = await fetchVehicles();
-          setVehicles(data);
-        } catch (fallbackErr) {
-          console.error('Fallback fetch also failed:', fallbackErr);
-        }
-      }
-    };
-    fetchData();
-  }, []);
-
   return (
-    <>
-      {/* <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator /> */}
-      {/* <div className="insurance-container"> */}
-      <PageContainer>
+    <PageContainer>
       <div className="dashboard-content">
         <SectionHeading title='Insurance Management' subtitle='Manage vehicle insurance policies and details'/>
-            <div className="header-actions2 d-flex justify-content-between">
-              <div style={{display:'flex',gap:'15px'}}>
-                <FormDateInput name='fromDate' label='From Date' value={fromDate} onChange={handleFromDateChange}/>
-                <FormDateInput name='toDate' label='To Date' value={toDate} onChange={handleToDateChange}/>
-              </div>
-              <div className="search-wrapper">
-                <Searchbar
-                placeholder='Search registration number'
-                  type='search'
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-            </div>
-          <div className="table-container">
-            <Table columns={columns} data={tableData} />
+        <div className="header-actions2 d-flex justify-content-between">
+          <div style={{display:'flex',gap:'15px'}}>
+            <FormDateInput name='fromDate' label='From Date' value={fromDate} onChange={handleFromDateChange}/>
+            <FormDateInput name='toDate' label='To Date' value={toDate} onChange={handleToDateChange}/>
           </div>
+          <div className="search-wrapper">
+            <Searchbar
+            placeholder='Search registration number'
+              type='search'
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+        </div>
 
-          {/* Date Status Legend */}
-          <div className="date-legend">
-            <span className="legend-title">End Date Status:</span>
-            <div className="legend-items">
-              <div className="legend-item">
-                <span className="legend-color date-valid">Valid</span>
-                {/* <span className="legend-text">More than 5 days remaining</span> */}
-              </div>
-              <div className="legend-item">
-                <span className="legend-color date-expiring-soon">Expiring Soon</span>
-                {/* <span className="legend-text">Within 5 days</span> */}
-              </div>
-              <div className="legend-item">
-                <span className="legend-color date-expired">Expired</span>
-                {/* <span className="legend-text">Past due date</span> */}
-              </div>
-            </div>
+        {loading ? (
+          <div className="loading-state">
+            <p>Loading insurance data...</p>
           </div>
+        ) : filteredInsuranceRecords.length === 0 ? (
+          <div className="empty-state">
+            <h3>No insurance records found</h3>
+            <p>No insurance policies match your search criteria</p>
+          </div>
+        ) : (
+          <div className="table-container">
+            <Table
+              columns={columns}
+              data={filteredInsuranceRecords.map((insurance, index) => ({
+                number: index + 1,
+                make: insurance.vehicle?.make || 'N/A',
+                model: insurance.vehicle?.model || 'N/A',
+                registrationNumber: insurance.vehicle?.registration_number || 'N/A',
+                policyNumber: insurance.policy_number,
+                insurer: insurance.insurer,
+                policyType: insurance.policy_type,
+                startDate: insurance.start_date,
+                endDate: insurance.end_date,
+                premiumAmount: `₹${insurance.premium_amount}`,
+                chassisNumber: insurance.vehicle?.chassis_number || 'N/A',
+                engineNumber: insurance.vehicle?.engine_number || 'N/A',
+                issueDate: insurance.issue_date,
+                payment: insurance.payment?.toString() || 'N/A',
+              }))}
+            />
+          </div>
+        )}
       </div>
-      {/* </div> */}
-      </PageContainer>
-      {/* <Footer /> */}
-    </>
+    </PageContainer>
   );
 };
 

@@ -398,7 +398,7 @@ const ApiExample: React.FC = () => {
                                 <strong>{vehicle.make} {vehicle.model}</strong><br />
                                 Reg: {vehicle.registrationNumber}<br />
                                 Owner: {vehicle.owner}<br />
-                                Insurance: {vehicle.insurance?.hasInsurance ? 'Yes' : 'No'}
+                                Insurance: Insurance data available separately
                             </div>
                         ))}
                     </div>
@@ -418,8 +418,8 @@ const ApiExample: React.FC = () => {
                                         <strong>{vehicle.make} {vehicle.model}</strong><br />
                                         Reg: {vehicle.registrationNumber}<br />
                                         Owner: {vehicle.owner}<br />
-                                        Insurance: {vehicle.insurance?.policyNumber || 'N/A'}<br />
-                                        Insurer: {vehicle.insurance?.insurer || 'N/A'}
+                                        Insurance: Insurance data available separately<br />
+                                        Insurer: Insurance data available separately
                                     </div>
                                 ))}
                             </div>

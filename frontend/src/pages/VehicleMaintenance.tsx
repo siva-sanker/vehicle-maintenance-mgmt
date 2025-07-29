@@ -22,18 +22,11 @@ const VehicleMaintenance: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form, setForm] = useState({
-    vehicleId: "",
-    serviceDate: "",
-    serviceType: "",
-    descriptionBefore: "",
-    descriptionAfter: "",
+    vehicle_id: "",
+    date: "",
+    description: "",
     cost: "",
-    nextServiceDate: "",
-    serviceCenter: "",
-    technician: "",
-    status: "Scheduled",
-    odometerReadingBefore: "",
-    odometerReadingAfter: ""
+    status: "Scheduled"
   });
   const [maintenanceRecords, setMaintenanceRecords] = useState<Maintenance[]>([]);
   const [maintenanceLoading, setMaintenanceLoading] = useState(true);
@@ -96,33 +89,20 @@ const VehicleMaintenance: React.FC = () => {
     const errors: string[] = [];
 
     // Check for null/empty required fields
-    if (!form.vehicleId || form.vehicleId.trim() === '') {
+    if (!form.vehicle_id || form.vehicle_id.trim() === '') {
       errors.push('Vehicle is required');
     }
 
-    if (!form.serviceDate || form.serviceDate.trim() === '') {
+    if (!form.date || form.date.trim() === '') {
       errors.push('Service date is required');
     }
 
-    if (!form.serviceType || form.serviceType.trim() === '') {
-      errors.push('Service type is required');
-    }
-
-    if (!form.descriptionBefore || form.descriptionBefore.trim() === '') {
-      errors.push('Description Before Maintenance is required');
-    }
-    if (!form.descriptionAfter || form.descriptionAfter.trim() === '') {
-      errors.push('Description Afetr Maintenance is required');
+    if (!form.description || form.description.trim() === '') {
+      errors.push('Description is required');
     }
 
     if (!form.cost || form.cost.trim() === '') {
       errors.push('Cost is required');
-    }
-    if (!form.odometerReadingBefore || form.odometerReadingBefore.trim() === '') {
-      errors.push('Odometer reading Before is required');
-    }
-    if (!form.odometerReadingAfter || form.odometerReadingAfter.trim() === '') {
-      errors.push('Odometer reading After is required');
     }
 
     return {
@@ -134,18 +114,11 @@ const VehicleMaintenance: React.FC = () => {
   const openAddModal = () => {
     setEditingRecord(null);
     setForm({
-      vehicleId: "",
-      serviceDate: "",
-      serviceType: "",
-      descriptionBefore: "",
-      descriptionAfter: "",
+      vehicle_id: "",
+      date: "",
+      description: "",
       cost: "",
-      nextServiceDate: "",
-      serviceCenter: "",
-      technician: "",
-      status: "Scheduled",
-      odometerReadingBefore: "",
-      odometerReadingAfter: ""
+      status: "Scheduled"
     });
     setIsModalOpen(true);
   };
@@ -153,18 +126,11 @@ const VehicleMaintenance: React.FC = () => {
   const openEditModal = (record: Maintenance) => {
     setEditingRecord(record);
     setForm({
-      vehicleId: record.vehicleId,
-      serviceDate: record.serviceDate,
-      serviceType: record.serviceType,
-      descriptionBefore: record.descriptionBefore, // Only one description field exists
-      descriptionAfter: record.descriptionAfter, // Use same for both
+      vehicle_id: record.vehicle_id,
+      date: record.date,
+      description: record.description,
       cost: record.cost.toString(),
-      nextServiceDate: "",
-      serviceCenter: "",
-      technician: "",
-      status: record.status || "Scheduled",
-      odometerReadingBefore: record.odometerReadingBefore?.toString() || "",
-      odometerReadingAfter: record.odometerReadingAfter?.toString() || ""
+      status: record.status || "Scheduled"
     });
     setIsModalOpen(true);
   };
@@ -182,18 +148,11 @@ const VehicleMaintenance: React.FC = () => {
 
     try {
       const maintenanceData = {
-        vehicleId: form.vehicleId,
-        serviceDate: form.serviceDate,
-        serviceType: form.serviceType,
-        descriptionBefore: form.descriptionBefore,
-        descriptionAfter: form.descriptionAfter,
+        vehicle_id: form.vehicle_id,
+        date: form.date,
+        description: form.description,
         cost: parseFloat(form.cost),
-        status: "Completed",
-        odometerReadingBefore: parseFloat(form.odometerReadingBefore) || 0,
-        odometerReadingAfter: parseFloat(form.odometerReadingAfter) || 0,
-        serviceCenter: "Auto Service Center",
-        technician: "Technician",
-        deleted: false
+        status: "Completed"
       };
 
       if (editingRecord) {
@@ -208,18 +167,11 @@ const VehicleMaintenance: React.FC = () => {
       setMaintenanceRecords(updatedRecords);
       // Reset form
       setForm({
-        vehicleId: "",
-        serviceDate: "",
-        serviceType: "",
-        descriptionBefore: "",
-        descriptionAfter: "",
+        vehicle_id: "",
+        date: "",
+        description: "",
         cost: "",
-        nextServiceDate: "",
-        serviceCenter: "",
-        technician: "",
-        status: "Scheduled",
-        odometerReadingBefore: "",
-        odometerReadingAfter: ""
+        status: "Scheduled"
       });
       setEditingRecord(null);
       setIsModalOpen(false);
@@ -307,13 +259,13 @@ const VehicleMaintenance: React.FC = () => {
               <div className="form-group" style={{ flex: 1 }}>
                 <SelectInput
                   label="Vehicle *"
-                  name="vehicleId"
-                  value={form.vehicleId}
+                  name="vehicle_id"
+                  value={form.vehicle_id}
                   onChange={handleFormChange}
                   options={[
                     { label: 'Select vehicle', value: '', disabled: true },
                     ...vehicles.map(v => ({
-                      label: `${v.registrationNumber.toUpperCase()} (${v.make} ${v.model})`,
+                      label: `${v.registration_number.toUpperCase()} (${v.make} ${v.model})`,
                       value: v.id
                     }))
                   ]}
@@ -323,31 +275,10 @@ const VehicleMaintenance: React.FC = () => {
               <div style={{ flex: 1 }}>
                 <FormDateInput
                     label="Service Date *"
-                    name="serviceDate"
-                    value={form.serviceDate}
+                    name="date"
+                    value={form.date}
                     onChange={handleFormChange}
                     />
-              </div>
-            </div>
-            <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
-              <div style={{ flex: 1 }}>
-                <SelectInput
-                  label="Service Type *"
-                  name="serviceType"
-                  value={form.serviceType}
-                  onChange={handleFormChange}
-                  options={[
-                    { value: '', label: 'Select service type', disabled: true },
-                    { label: "Regular Service", value: "Regular Service" },
-                    { label: "Brake Service", value: "Brake Service" },
-                    { label: "Engine Tune-up", value: "Engine Tune-up" },
-                    { label: "Oil Change", value: "Oil Change" },
-                    { label: "Tire Replacement", value: "Tire Replacement" },
-                    { label: "Battery Replacement", value: "Battery Replacement" },
-                    { label: "Other", value: "Other" }
-                  ]}
-                  required
-                />
               </div>
             </div>
             <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
@@ -363,66 +294,28 @@ const VehicleMaintenance: React.FC = () => {
                 />
               </div>
               <div style={{ flex: 1 }}>
-                <InputText
-                  label="Odometer Reading Before *"
-                  name="odometerReadingBefore"
-                  placeholder="Odometer reading before service"
-                  type="number"
-                  value={form.odometerReadingBefore}
-                  onChange={handleFormChange}
-                />
-              </div>
-            </div>
-            <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
-              <div style={{ flex: 1 }}>
-              <InputText
-                  label="Odometer Reading After *"
-                  name="odometerReadingAfter"
-                  placeholder="Odometer reading after service"
-                  type="number"
-                  value={form.odometerReadingAfter}
-                  onChange={handleFormChange}
-                />
-              </div>
-              <div style={{ flex: 1 }}>
-                <label htmlFor="">Upload image</label>
-                <input type="file" name="" id="" accept="jpg/png" className="form-control" multiple />
-              </div>
-              {/* <div className="form-group" style={{ flex: 1 }}>
                 <SelectInput
                   label="Status"
                   name="status"
                   value={form.status}
                   onChange={handleFormChange}
                   options={[
-                    { label: 'Set status',value: '', disabled: true},
+                    { label: 'Set status', value: '', disabled: true },
                     { label: "Scheduled", value: "Scheduled" },
                     { label: "Completed", value: "Completed" },
                     { label: "In Progress", value: "In Progress" }
-                    ]}
-                    required
-                    />
-              </div> */}
+                  ]}
+                  required
+                />
+              </div>
             </div>
-            <div className="form-group" style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
-                    <div className="form-group" style={{flex:1}}>
-                      <TextAreaInput
-                        label="Description Before Maintenance *"
-                        name="descriptionBefore"
-                        value={form.descriptionBefore}
-                        onChange={handleFormChange}
-                        placeholder="Service description before maintenance"
-                        required
-                      />
-                    </div>
-            </div>
-            <div style={{ marginBottom: 0 }}>
+            <div style={{ marginBottom: 16 }}>
               <TextAreaInput
-                label="Description After Maintenance *"
-                name="descriptionAfter"
-                value={form.descriptionAfter}
+                label="Description *"
+                name="description"
+                value={form.description}
                 onChange={handleFormChange}
-                placeholder="Service description after maintenance"
+                placeholder="Service description"
                 required
               />
             </div>
@@ -451,21 +344,20 @@ const VehicleMaintenance: React.FC = () => {
               <Table
                 columns={[
                   { key: 'vehicleInfo', header: 'Vehicle', renderCell: (_: any, row: any) => {
-                      const vehicle = vehicles.find(v => v.id === row.vehicleId);
-                      return vehicle ? `${vehicle.registrationNumber.toUpperCase()}` : 'Unknown Vehicle';
+                      const vehicle = vehicles.find(v => v.id === row.vehicle_id);
+                      return vehicle ? `${vehicle.registration_number.toUpperCase()}` : 'Unknown Vehicle';
                   }},
-                  { key: 'serviceDate', header: 'Service Date' },
-                  // { key: 'serviceType', header: 'Service Type' },
+                  { key: 'date', header: 'Service Date' },
+                  { key: 'description', header: 'Description' },
                   { key: 'cost', header: 'Cost', renderCell: (cost: number) => `₹${cost.toLocaleString()}` },
-                  { key: 'odometerReadingBefore', header: 'Odometer Before', renderCell: (v: number) => `${v.toLocaleString()} km` },
-                  { key: 'odometerReadingAfter', header: 'Odometer After', renderCell: (v: number) => `${v.toLocaleString()} km` },
+                  { key: 'status', header: 'Status' },
                   { key: 'actions', header: 'Actions', renderCell: (id: string) => (
                     <ButtonWithGradient onClick={() => handleRestoreMaintenance(id)} text="Restore" className="btn-success" />
                   ) }
                 ]}
                 data={deletedMaintenance.map(m => ({
                   ...m,
-                  vehicleInfo: m.vehicleId, // needed for Table to pass row to renderCell
+                  vehicleInfo: m.vehicle_id, // needed for Table to pass row to renderCell
                   actions: m.id
                 }))}
               />
@@ -476,19 +368,12 @@ const VehicleMaintenance: React.FC = () => {
           columns={[
             { key: "number", header: "#" },
             { key: "vehicleInfo", header: "Vehicle" },
-            { key: "serviceDate", header: "Service Date", renderCell: (value) => formatDateDDMMYYYY(value) },
-            { key: "serviceType", header: "Service Type" },
+            { key: "date", header: "Service Date", renderCell: (value) => formatDateDDMMYYYY(value) },
+            { key: "description", header: "Description" },
             { key: "cost", header: "Cost" ,
               renderCell: (cost) => `₹${cost.toLocaleString()}`
             },
-            { key: "odometerReadingBefore", header: "Odometer Before",
-              renderCell: (odometerReadingBefore) => `${odometerReadingBefore.toLocaleString()} km`
-             },
-            { key: "odometerReadingAfter", header: "Odometer After",
-              renderCell: (odometerReadingAfter) => `${odometerReadingAfter.toLocaleString()} km`
-             },
-            { key: "descriptionBefore", header: "Description Before" },
-            { key: "descriptionAfter", header: "Description After" },
+            { key: "status", header: "Status" },
             { key: "actions", header: "Actions",
               renderCell: (_: any, row: any) => (
                 <div style={{display:"flex",gap:'10px'}}>
@@ -504,21 +389,19 @@ const VehicleMaintenance: React.FC = () => {
               let matchesFrom = true;
               let matchesTo = true;
               if (fromDate) {
-                matchesFrom = record.serviceDate >= fromDate;
+                matchesFrom = record.date >= fromDate;
               }
               if (toDate) {
-                matchesTo = record.serviceDate <= toDate;
+                matchesTo = record.date <= toDate;
               }
               return matchesFrom && matchesTo;
             })
             .map((record, index) => {
-              const vehicle = vehicles.find(v => v.id === record.vehicleId);
+              const vehicle = vehicles.find(v => v.id === record.vehicle_id);
               return {
                 ...record,
                 number: index + 1,
-                vehicleInfo: vehicle ? `${vehicle.registrationNumber.toUpperCase()} (${vehicle.make} ${vehicle.model})` : 'Unknown Vehicle',
-                descriptionBefore: record.descriptionBefore,
-                descriptionAfter: record.descriptionAfter
+                vehicleInfo: vehicle ? `${vehicle.registration_number.toUpperCase()} (${vehicle.make} ${vehicle.model})` : 'Unknown Vehicle'
               };
             })}
         />

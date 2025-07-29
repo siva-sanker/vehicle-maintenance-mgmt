@@ -1,4 +1,4 @@
-import { vehicleAPI, Vehicle } from '../services/api.ts';
+import { vehicleAPI, insuranceAPI, Vehicle, Insurance } from '../services/api.ts';
 
 export interface InsuranceData {
     policyNumber: string;
@@ -58,7 +58,7 @@ export const calculateVehicleAge = (purchaseDateString: string): number => {
 // Filter vehicles based on search term
 export const filterVehicles = (vehicles: Vehicle[], searchTerm: string): Vehicle[] => {
     return vehicles.filter(vehicle =>
-        vehicle.registrationNumber && vehicle.registrationNumber.toLowerCase().includes(searchTerm.toLowerCase())
+        vehicle.registration_number && vehicle.registration_number.toLowerCase().includes(searchTerm.toLowerCase())
     );
 };
 
@@ -178,13 +178,43 @@ export const addOrUpdateInsurance = async (
     insuranceData: InsuranceData
 ): Promise<Vehicle | null> => {
     try {
-        const updatedVehicle = await vehicleAPI.patchVehicle(vehicleId, {
-            insurance: {
-                ...insuranceData,
-                hasInsurance: true
-            }
-        });
-        return updatedVehicle;
+        // Check if insurance already exists for this vehicle
+        const existingInsurance = await insuranceAPI.getInsuranceByVehicle(vehicleId);
+
+        if (existingInsurance.length > 0) {
+            // Update existing insurance
+            const insuranceToUpdate = existingInsurance[0];
+            await insuranceAPI.updateInsurance(insuranceToUpdate.id, {
+                vehicle_id: vehicleId,
+                policy_number: insuranceData.policyNumber,
+                insurer: insuranceData.insurer,
+                policy_type: insuranceData.policytype,
+                start_date: insuranceData.startDate,
+                end_date: insuranceData.endDate,
+                payment: parseFloat(insuranceData.payment) || 0,
+                issue_date: insuranceData.issueDate,
+                premium_amount: parseFloat(insuranceData.premiumAmount) || 0,
+                has_insurance: true
+            });
+        } else {
+            // Create new insurance
+            await insuranceAPI.createInsurance({
+                vehicle_id: vehicleId,
+                policy_number: insuranceData.policyNumber,
+                insurer: insuranceData.insurer,
+                policy_type: insuranceData.policytype,
+                start_date: insuranceData.startDate,
+                end_date: insuranceData.endDate,
+                payment: parseFloat(insuranceData.payment) || 0,
+                issue_date: insuranceData.issueDate,
+                premium_amount: parseFloat(insuranceData.premiumAmount) || 0,
+                has_insurance: true
+            });
+        }
+
+        // Return the vehicle (insurance is stored separately)
+        const vehicle = await vehicleAPI.getVehicleById(vehicleId);
+        return vehicle;
     } catch (error) {
         console.error("Error updating insurance:", error);
         throw error;
@@ -205,21 +235,30 @@ export const getResetInsuranceData = (): InsuranceData => ({
 });
 
 // Populate form with existing insurance data
-export const populateFormWithExistingInsurance = (vehicle: Vehicle): InsuranceData => {
-    if (vehicle.insurance) {
-        return {
-            policyNumber: vehicle.insurance.policyNumber || '',
-            insurer: vehicle.insurance.insurer || '',
-            policytype: vehicle.insurance.policytype || '',
-            startDate: vehicle.insurance.startDate || '',
-            endDate: vehicle.insurance.endDate || '',
-            payment: vehicle.insurance.payment || '',
-            issueDate: vehicle.insurance.issueDate || '',
-            premiumAmount: vehicle.insurance.premiumAmount || '',
-            hasInsurance: true,
-        };
+export const populateFormWithExistingInsurance = async (vehicle: Vehicle): Promise<InsuranceData> => {
+    try {
+        // Fetch insurance data from the separate insurance API
+        const existingInsurance = await insuranceAPI.getInsuranceByVehicle(vehicle.id);
+
+        if (existingInsurance.length > 0) {
+            const insurance = existingInsurance[0];
+            return {
+                policyNumber: insurance.policy_number || '',
+                insurer: insurance.insurer || '',
+                policytype: insurance.policy_type || '',
+                startDate: insurance.start_date || '',
+                endDate: insurance.end_date || '',
+                payment: insurance.payment?.toString() || '',
+                issueDate: insurance.issue_date || '',
+                premiumAmount: insurance.premium_amount?.toString() || '',
+                hasInsurance: true,
+            };
+        }
+        return getResetInsuranceData();
+    } catch (error) {
+        console.error("Error fetching insurance data:", error);
+        return getResetInsuranceData();
     }
-    return getResetInsuranceData();
 };
 
 // Validation functions for update form
@@ -283,7 +322,24 @@ export const updateVehicleDetails = async (
     updateFormData: UpdateFormData
 ): Promise<Vehicle | null> => {
     try {
-        const updatedVehicle = await vehicleAPI.patchVehicle(vehicleId, updateFormData);
+        // Convert string values to appropriate types for the API
+        const vehicleUpdateData = {
+            make: updateFormData.make,
+            model: updateFormData.model,
+            purchase_date: updateFormData.purchaseDate,
+            registration_number: updateFormData.registrationNumber,
+            purchase_price: parseFloat(updateFormData.purchasePrice) || 0,
+            fuel_type: updateFormData.fuelType,
+            engine_number: updateFormData.engineNumber,
+            chassis_number: updateFormData.chassisNumber,
+            kilometers: parseInt(updateFormData.kilometers) || 0,
+            color: updateFormData.color,
+            owner: updateFormData.owner,
+            phone: updateFormData.phone,
+            address: updateFormData.address
+        };
+
+        const updatedVehicle = await vehicleAPI.patchVehicle(vehicleId, vehicleUpdateData);
         return updatedVehicle;
     } catch (error) {
         console.error("Error updating vehicle:", error);
@@ -295,13 +351,13 @@ export const updateVehicleDetails = async (
 export const getUpdateFormDataFromVehicle = (vehicle: Vehicle): UpdateFormData => ({
     make: vehicle.make || '',
     model: vehicle.model || '',
-    purchaseDate: vehicle.purchaseDate || '',
-    registrationNumber: vehicle.registrationNumber || '',
-    purchasePrice: vehicle.purchasePrice || '',
-    fuelType: vehicle.fuelType || '',
-    engineNumber: vehicle.engineNumber || '',
-    chassisNumber: vehicle.chassisNumber || '',
-    kilometers: vehicle.kilometers || '',
+    purchaseDate: vehicle.purchase_date || '',
+    registrationNumber: vehicle.registration_number || '',
+    purchasePrice: vehicle.purchase_price?.toString() || '',
+    fuelType: vehicle.fuel_type || '',
+    engineNumber: vehicle.engine_number || '',
+    chassisNumber: vehicle.chassis_number || '',
+    kilometers: vehicle.kilometers?.toString() || '',
     color: vehicle.color || '',
     owner: vehicle.owner || '',
     phone: vehicle.phone || '',

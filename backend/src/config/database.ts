@@ -3,31 +3,39 @@
 import 'dotenv/config';
 import path from 'path';
 import sql, { ConnectionPool, config as SqlConfig } from 'mssql';
+import { config } from './env';
 
 let pool: ConnectionPool | undefined = undefined;
 
-// MSSQL connection config (use your .env or hardcode for testing)
+// MSSQL connection config
 const dbConfig: SqlConfig = {
-  user: process.env.DB_USER || 'sa',
-  password: process.env.DB_PASSWORD || 'yourStrong(!)Password',
-  server: process.env.DB_SERVER || 'localhost',
-  database: process.env.DB_NAME || 'vehicle_management',
-  options: {
-    encrypt: false, // Set to true if using Azure
-    trustServerCertificate: true,
-  },
-  port: parseInt(process.env.DB_PORT || '1433', 10),
+  user: config.database.user,
+  password: config.database.password,
+  server: config.database.server,
+  database: config.database.database,
+  options: config.database.options,
+  port: config.database.port,
 };
 
 // Initialize and create tables if not already present
 export const initDatabase = async () => {
   try {
+    console.log('Attempting to connect to database...');
+    console.log('Database config:', {
+      server: dbConfig.server,
+      database: dbConfig.database,
+      port: dbConfig.port,
+      user: dbConfig.user
+    });
+
     pool = await sql.connect(dbConfig);
-    console.log('Connected to MSSQL database');
+    console.log('Connected to MSSQL database successfully');
     await createTables();
     return pool;
   } catch (error) {
     console.error('Database connection failed:', error);
+    console.error('Please check your database configuration in src/config/env.ts');
+    console.error('Make sure your SQL Server is running and accessible');
     process.exit(1);
   }
 };
@@ -147,12 +155,17 @@ const createTables = async () => {
       CREATE INDEX idx_maintenance_status ON maintenance(status);
   `;
 
-  // Split and run each statement (MSSQL doesn't support multiple CREATEs in one batch)
-  for (const statement of tableSql.split(';')) {
-    const trimmed = statement.trim();
-    if (trimmed) {
-      await pool!.request().query(trimmed);
+  try {
+    // Split and run each statement (MSSQL doesn't support multiple CREATEs in one batch)
+    for (const statement of tableSql.split(';')) {
+      const trimmed = statement.trim();
+      if (trimmed) {
+        await pool!.request().query(trimmed);
+      }
     }
+    console.log('Database tables created/verified successfully');
+  } catch (error) {
+    console.error('Error creating tables:', error);
+    throw error;
   }
-  console.log('Database tables created/verified');
 };

@@ -1,4 +1,4 @@
-import { vehicleAPI, Vehicle } from '../services/api';
+import { Vehicle, Insurance, vehicleAPI, insuranceAPI } from '../services/api';
 
 export interface InsuranceData {
     policyNumber: string;
@@ -44,54 +44,47 @@ export const fetchVehicles = async (): Promise<Vehicle[]> => {
 };
 
 export const filterVehicles = (vehicles: Vehicle[], searchTerm: string): Vehicle[] => {
-    return vehicles.filter((v) =>
-        v.registrationNumber.toLowerCase().includes(searchTerm.toLowerCase())
+    return vehicles.filter(vehicle =>
+        vehicle.registration_number && vehicle.registration_number.toLowerCase().includes(searchTerm.toLowerCase())
     );
 };
 
 export const getTableData = (vehicles: Vehicle[]): any[] => {
-    return vehicles.map((v, idx) => ({
-        id: v.id || idx.toString(),
-        number: idx + 1,
-        make: v.make,
-        model: v.model,
-        registrationNumber: v.registrationNumber,
-        policyNumber: v.insurance?.policyNumber || '-',
-        insurer: v.insurance?.insurer || '-',
-        policyType: v.insurance?.policytype || '-',
-        startDate: v.insurance?.startDate || '-',
-        endDate: v.insurance?.endDate || '-',
-        premiumAmount: v.insurance?.premiumAmount ? `₹${v.insurance.premiumAmount}` : '-',
-        chassisNumber: v.chassisNumber || '-',
-        engineNumber: v.engineNumber || '-',
-        issueDate: v.insurance?.issueDate || '-',
-        payment: v.insurance?.payment || '-'
+    return vehicles.map((vehicle, index) => ({
+        number: index + 1,
+        make: vehicle.make,
+        model: vehicle.model,
+        registrationNumber: vehicle.registration_number,
+        policyNumber: 'Insurance data available separately',
+        insurer: 'Insurance data available separately',
+        policyType: 'Insurance data available separately',
+        startDate: 'Insurance data available separately',
+        endDate: 'Insurance data available separately',
+        premiumAmount: 'Insurance data available separately',
+        chassisNumber: vehicle.chassis_number,
+        engineNumber: vehicle.engine_number,
+        issueDate: 'Insurance data available separately',
+        payment: 'Insurance data available separately'
     }));
 };
 
 export const getDateStatusClass = (endDate: string): string => {
-    if (!endDate || endDate === '-') return 'date-cell';
     const today = new Date();
     const end = new Date(endDate);
-    today.setHours(0, 0, 0, 0);
-    end.setHours(0, 0, 0, 0);
-    const diffTime = end.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    if (diffDays < 0) {
-        return 'date-cell date-expired';
-    } else if (diffDays <= 5) {
-        return 'date-cell date-expiring-soon';
-    } else {
-        return 'date-cell date-valid';
-    }
+    const daysUntilExpiry = Math.ceil((end.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+    if (daysUntilExpiry < 0) return 'expired';
+    if (daysUntilExpiry <= 30) return 'expiring-soon';
+    return 'active';
 };
 
-// Check if insurance is expired
 export const isInsuranceExpired = (endDate: string): boolean => {
-    if (!endDate || endDate === '-') return false;
+    if (!endDate) return false;
+
     const today = new Date();
-    const end = new Date(endDate);
     today.setHours(0, 0, 0, 0);
+
+    const end = new Date(endDate);
     end.setHours(0, 0, 0, 0);
     return end.getTime() < today.getTime();
 };
@@ -103,12 +96,16 @@ export const processExpiredInsurance = async (): Promise<{
 }> => {
     try {
         const vehicles = await vehicleAPI.getAllVehicles();
+        const insuranceData = await insuranceAPI.getAllInsurance();
         const insuranceHistory: InsuranceHistory[] = [];
         const updatedVehicles: Vehicle[] = [];
 
         for (const vehicle of vehicles) {
-            if (vehicle.insurance) {
-                const isExpired = isInsuranceExpired(vehicle.insurance.endDate || '');
+            // Find insurance for this vehicle
+            const vehicleInsurance = insuranceData.find(ins => ins.vehicle_id === vehicle.id);
+
+            if (vehicleInsurance) {
+                const isExpired = isInsuranceExpired(vehicleInsurance.end_date);
 
                 if (isExpired) {
                     // Move expired insurance to history
@@ -117,31 +114,25 @@ export const processExpiredInsurance = async (): Promise<{
                         vehicleId: vehicle.id,
                         vehicleMake: vehicle.make,
                         vehicleModel: vehicle.model,
-                        registrationNumber: vehicle.registrationNumber,
-                        policyNumber: vehicle.insurance.policyNumber || '-',
-                        insurer: vehicle.insurance.insurer || '-',
-                        policyType: vehicle.insurance.policytype || '-',
-                        startDate: vehicle.insurance.startDate || '-',
-                        endDate: vehicle.insurance.endDate || '-',
-                        premiumAmount: vehicle.insurance.premiumAmount ? `₹${vehicle.insurance.premiumAmount}` : '-',
-                        issueDate: vehicle.insurance.issueDate || '-',
-                        payment: vehicle.insurance.payment || '-',
-                        status: vehicle.insurance.endDate || '-',
-                        createdAt: vehicle.insurance.issueDate || new Date().toISOString()
+                        registrationNumber: vehicle.registration_number,
+                        policyNumber: vehicleInsurance.policy_number || '-',
+                        insurer: vehicleInsurance.insurer || '-',
+                        policyType: vehicleInsurance.policy_type || '-',
+                        startDate: vehicleInsurance.start_date || '-',
+                        endDate: vehicleInsurance.end_date || '-',
+                        premiumAmount: vehicleInsurance.premium_amount ? `₹${vehicleInsurance.premium_amount}` : '-',
+                        issueDate: vehicleInsurance.issue_date || '-',
+                        payment: vehicleInsurance.payment?.toString() || '-',
+                        status: vehicleInsurance.end_date || '-',
+                        createdAt: vehicleInsurance.issue_date || new Date().toISOString()
                     });
 
-                    // Remove insurance from vehicle (set to undefined)
-                    const updatedVehicle = { ...vehicle, insurance: undefined };
-                    updatedVehicles.push(updatedVehicle);
-
-                    // Update vehicle in database using PATCH to preserve existing data
-                    await vehicleAPI.patchVehicle(vehicle.id, { insurance: undefined });
-                } else {
-                    updatedVehicles.push(vehicle);
+                    // Delete expired insurance from database
+                    await insuranceAPI.deleteInsurance(vehicleInsurance.id);
                 }
-            } else {
-                updatedVehicles.push(vehicle);
             }
+
+            updatedVehicles.push(vehicle);
         }
 
         return { updatedVehicles, insuranceHistory };
@@ -151,64 +142,41 @@ export const processExpiredInsurance = async (): Promise<{
     }
 };
 
-// Transform vehicles data to insurance history format
-export const transformToInsuranceHistory = (vehicles: Vehicle[]): InsuranceHistory[] => {
-    const history: InsuranceHistory[] = [];
+// Transform insurance data to insurance history format
+export const transformToInsuranceHistory = async (): Promise<InsuranceHistory[]> => {
+    try {
+        const insuranceData = await insuranceAPI.getAllInsurance();
+        const vehicles = await vehicleAPI.getAllVehicles();
+        const history: InsuranceHistory[] = [];
 
-    vehicles.forEach(vehicle => {
-        if (vehicle.insurance) {
-            const isExpired = isInsuranceExpired(vehicle.insurance.endDate || '');
+        for (const insurance of insuranceData) {
+            const vehicle = vehicles.find(v => v.id === insurance.vehicle_id);
+            if (vehicle) {
+                const isExpired = isInsuranceExpired(insurance.end_date);
 
-            // Add current/expired insurance to history
-            history.push({
-                id: `${vehicle.id}-${isExpired ? 'expired' : 'current'}`,
-                vehicleId: vehicle.id,
-                vehicleMake: vehicle.make,
-                vehicleModel: vehicle.model,
-                registrationNumber: vehicle.registrationNumber,
-                policyNumber: vehicle.insurance.policyNumber || '-',
-                insurer: vehicle.insurance.insurer || '-',
-                policyType: vehicle.insurance.policytype || '-',
-                startDate: vehicle.insurance.startDate || '-',
-                endDate: vehicle.insurance.endDate || '-',
-                premiumAmount: vehicle.insurance.premiumAmount ? `₹${vehicle.insurance.premiumAmount}` : '-',
-                issueDate: vehicle.insurance.issueDate || '-',
-                payment: vehicle.insurance.payment || '-',
-                status: vehicle.insurance.endDate || '-',
-                createdAt: vehicle.insurance.issueDate || new Date().toISOString()
-            });
+                history.push({
+                    id: `${insurance.id}-${isExpired ? 'expired' : 'current'}`,
+                    vehicleId: insurance.vehicle_id,
+                    vehicleMake: vehicle.make,
+                    vehicleModel: vehicle.model,
+                    registrationNumber: vehicle.registration_number,
+                    policyNumber: insurance.policy_number || '-',
+                    insurer: insurance.insurer || '-',
+                    policyType: insurance.policy_type || '-',
+                    startDate: insurance.start_date || '-',
+                    endDate: insurance.end_date || '-',
+                    premiumAmount: insurance.premium_amount ? `₹${insurance.premium_amount}` : '-',
+                    issueDate: insurance.issue_date || '-',
+                    payment: insurance.payment?.toString() || '-',
+                    status: insurance.end_date || '-',
+                    createdAt: insurance.issue_date || new Date().toISOString()
+                });
+            }
         }
 
-        // Mock historical data for demonstration
-        // In a real application, this would come from a separate insurance history API
-        const mockHistoryCount = Math.floor(Math.random() * 3) + 1; // 1-3 historical records
-
-        for (let i = 1; i <= mockHistoryCount; i++) {
-            const startDate = new Date();
-            startDate.setFullYear(startDate.getFullYear() - i);
-            const endDate = new Date(startDate);
-            endDate.setFullYear(endDate.getFullYear() + 1);
-
-            history.push({
-                id: `${vehicle.id}-history-${i}`,
-                vehicleId: vehicle.id,
-                vehicleMake: vehicle.make,
-                vehicleModel: vehicle.model,
-                registrationNumber: vehicle.registrationNumber,
-                policyNumber: `POL-${vehicle.registrationNumber.slice(-4)}-${new Date().getFullYear() - i}`,
-                insurer: ['ICICI Lombard', 'Bajaj Allianz', 'HDFC ERGO', 'Tata AIG', 'Reliance General'][Math.floor(Math.random() * 5)],
-                policyType: ['Comprehensive', 'Third Party', 'Third Party Fire & Theft'][Math.floor(Math.random() * 3)],
-                startDate: startDate.toISOString(),
-                endDate: endDate.toISOString(),
-                premiumAmount: `₹${Math.floor(Math.random() * 50000) + 10000}`,
-                issueDate: startDate.toISOString(),
-                payment: ['Annual', 'Semi-Annual', 'Quarterly'][Math.floor(Math.random() * 3)],
-                status: endDate.toISOString(),
-                createdAt: startDate.toISOString()
-            });
-        }
-    });
-
-    // Sort by creation date (newest first)
-    return history.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        return history;
+    } catch (error) {
+        console.error('Error transforming insurance data:', error);
+        return [];
+    }
 }; 

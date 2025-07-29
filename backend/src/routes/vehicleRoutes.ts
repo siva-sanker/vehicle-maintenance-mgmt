@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
     getVehicles,
+    getAllVehicles,
     getVehicleById,
     createVehicle,
     updateVehicle,
@@ -36,6 +37,7 @@ const router = Router();
 
 // Vehicle routes
 router.get('/vehicles', getVehicles);
+router.get('/vehicles/all', getAllVehicles);
 router.get('/vehicles/:id', getVehicleById);
 router.post('/vehicles', createVehicle);
 router.put('/vehicles/:id', updateVehicle);

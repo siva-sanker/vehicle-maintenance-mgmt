@@ -148,12 +148,12 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
 
-          <div className="chart-card">
+          {/* <div className="chart-card">
             <h3>Claim Status Distribution</h3>
             <div className="chart-container">
               <Bar data={claimStatusChartData} options={chartOptions} />
             </div>
-          </div>
+          </div> */}
           
         </div>
 
