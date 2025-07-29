@@ -155,17 +155,23 @@ export const deleteMaintenance = async (req: Request, res: Response) => {
 
         const result = await pool.request()
             .input('id', id)
-            .query('DELETE FROM maintenance WHERE id = @id');
+            .query(`
+                UPDATE maintenance
+                SET deleted_at = GETDATE()
+                WHERE id = @id
+            `);
 
         if (result.rowsAffected[0] === 0) {
             return res.status(404).json({ message: 'Maintenance record not found' });
         }
-        res.status(204).send();
+
+        res.status(200).json({ message: 'Maintenance record soft-deleted' });
     } catch (error) {
-        console.error('Error deleting maintenance record:', error);
+        console.error('Error soft-deleting maintenance record:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
 
 export const getCompletedMaintenance = async (req: Request, res: Response) => {
     try {

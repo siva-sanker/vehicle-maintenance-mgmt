@@ -152,7 +152,7 @@ const VehicleMaintenance: React.FC = () => {
         date: form.date,
         description: form.description,
         cost: parseFloat(form.cost),
-        status: "Completed"
+        status: form.status || "Scheduled"
       };
 
       if (editingRecord) {
@@ -184,7 +184,7 @@ const VehicleMaintenance: React.FC = () => {
   const handleDelete = async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this record? This action can be undone by an administrator.')) return;
     try {
-      await maintenanceAPI.updateMaintenance(id, { deleted: true });
+      await maintenanceAPI.deleteMaintenance(id);
       toast.success('Record deleted');
       const updatedRecords = await maintenanceAPI.getAllMaintenance();
       setMaintenanceRecords(updatedRecords);
@@ -197,7 +197,7 @@ const VehicleMaintenance: React.FC = () => {
     setRestoreMaintenanceLoading(true);
     try {
       const all = await maintenanceAPI.getAllMaintenance();
-      setDeletedMaintenance(all.filter(m => m.deleted));
+      setDeletedMaintenance(all.filter(m => m.deleted_at));
     } catch {
       setDeletedMaintenance([]);
     } finally {
@@ -215,7 +215,7 @@ const VehicleMaintenance: React.FC = () => {
     setRestoreMaintenanceLoading(true);
     try {
       toast.success('Maintenance record restored successfully');
-      await maintenanceAPI.updateMaintenance(id, { deleted: false });
+      await maintenanceAPI.updateMaintenance(id, { deleted_at: null });
       await fetchDeletedMaintenance();
       const updatedRecords = await maintenanceAPI.getAllMaintenance();
       setMaintenanceRecords(updatedRecords);
@@ -385,7 +385,7 @@ const VehicleMaintenance: React.FC = () => {
           ]}
           data={maintenanceRecords
             .filter(record => {
-              if (record.deleted) return false;
+              if (record.deleted_at) return false;
               let matchesFrom = true;
               let matchesTo = true;
               if (fromDate) {
