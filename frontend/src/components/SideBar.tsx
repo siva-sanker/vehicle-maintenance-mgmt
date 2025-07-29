@@ -168,7 +168,7 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
               </NavLink>
             </li>
 
-            <li>
+            {/* <li>
               <NavLink
                 to="/location" style={{fontWeight:400,color:"#cccccc"}}
                 className={({ isActive }) =>
@@ -181,7 +181,7 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
                 </span>
                 {!collapsed && "Vehicle Location"}
               </NavLink>
-            </li>
+            </li> */}
 
             <li>
               <NavLink

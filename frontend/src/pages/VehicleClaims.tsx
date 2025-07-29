@@ -212,7 +212,7 @@ const VehicleClaims: React.FC = () => {
                       { value: '', label: 'Select Vehicle', disabled: true },
                       ...vehicles.map(vehicle => ({
                         value: vehicle.id,
-                        label: `${vehicle.registrationNumber} - ${vehicle.make} ${vehicle.model}`
+                        label: `${vehicle.registration_number} - ${vehicle.make} ${vehicle.model}`
                       }))
                     ]}
                   />

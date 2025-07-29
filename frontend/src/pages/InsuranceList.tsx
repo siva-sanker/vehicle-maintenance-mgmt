@@ -122,7 +122,7 @@ const InsuranceList: React.FC = () => {
   const vehicleOptions = [
     { label: 'Select a vehicle to view insurance history', value: '',disabled:true },
     ...vehicles.map(vehicle => ({
-      label: `${vehicle.registrationNumber.toUpperCase()} - ${capitalizeFirstLetter(vehicle.make)} ${capitalizeFirstLetter(vehicle.model)}`,
+      label: `${vehicle.registration_number.toUpperCase()} - ${capitalizeFirstLetter(vehicle.make)} ${capitalizeFirstLetter(vehicle.model)}`,
       value: vehicle.id
     }))
   ];
@@ -143,7 +143,7 @@ const InsuranceList: React.FC = () => {
         setVehicles(updatedVehicles);
         
         // Transform to insurance history format
-        const historyData = transformToInsuranceHistory(updatedVehicles);
+        const historyData = await transformToInsuranceHistory();
         
         // Combine current history with expired insurance history
         const combinedHistory = [...expiredHistory, ...historyData];

@@ -96,7 +96,7 @@ const DocumentRepository: React.FC = () => {
                     { value: '', label: 'Choose Vehicle...', disabled: true },
                     ...vehicles.map(v => ({
                       value: v.id,
-                      label: `${v.registrationNumber.toUpperCase()} - ${v.make} ${v.model}`
+                      label: `${v.registration_number.toUpperCase()} - ${v.make} ${v.model}`
                     }))
                   ]}
                 />

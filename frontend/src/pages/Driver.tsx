@@ -23,11 +23,12 @@ const DriverPage: React.FC = () => {
   const [editDriver, setEditDriver] = useState<Driver | null>(null);
   const [form, setForm] = useState<Omit<Driver, 'id'>>({
     name: '',
-    licenseNumber: '',
+    license_number: '',
     phone: '',
     address: '',
-    isActive: true,
-    assignedVehicleIds: [],
+    status: 'active',
+    last_updated: '',
+    created_at: '',
   });
   const [error, setError] = useState('');
 
@@ -60,7 +61,7 @@ const DriverPage: React.FC = () => {
   // Filter drivers based on search term
   const filteredDrivers = drivers.filter(driver =>
     driver.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    driver.licenseNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    driver.license_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
     driver.phone.includes(searchTerm)
   );
 
@@ -70,9 +71,9 @@ const DriverPage: React.FC = () => {
     globalIndex: index + 1,
     assignedVehicles: driver.assignedVehicleIds.map((vid) => {
       const v = vehicles.find((veh) => veh.id === vid);
-      return v ? v.registrationNumber : null;
+      return v ? v.registration_number : null;
     }).filter(Boolean).join(', '),
-    status: driver.isActive ? 'Active' : 'Inactive',
+    status: driver.status === 'active' ? 'Active' : 'Inactive',
     actions: driver.id // We'll use this for the renderCell function
   }));
 
@@ -90,10 +91,10 @@ const DriverPage: React.FC = () => {
   // Handle vehicle assignment
   const handleVehicleSelect = (vehicleId: string) => {
     setForm((prev) => {
-      const assigned = prev.assignedVehicleIds.includes(vehicleId)
-        ? prev.assignedVehicleIds.filter((id) => id !== vehicleId)
-        : [...prev.assignedVehicleIds, vehicleId];
-      return { ...prev, assignedVehicleIds: assigned };
+      const assigned = prev.assigned_vehicle_ids.includes(vehicleId)
+        ? prev.assigned_vehicle_ids.filter((id) => id !== vehicleId)
+        : [...prev.assigned_vehicle_ids, vehicleId];
+      return { ...prev, assigned_vehicle_ids: assigned };
     });
   };
 
@@ -103,15 +104,15 @@ const DriverPage: React.FC = () => {
       setEditDriver(driver);
       setForm({
         name: driver.name,
-        licenseNumber: driver.licenseNumber,
+        license_number: driver.license_number,
         phone: driver.phone,
         address: driver.address,
-        isActive: driver.isActive,
-        assignedVehicleIds: driver.assignedVehicleIds,
+        status: driver.status,
+        assigned_vehicle_ids: driver.assigned_vehicle_ids,
       });
     } else {
       setEditDriver(null);
-      setForm({ name: '', licenseNumber: '', phone: '', address: '', isActive: true, assignedVehicleIds: [] });
+      setForm({ name: '', license_number: '', phone: '', address: '', status: 'active', assigned_vehicle_ids: [] });
     }
     setShowModal(true);
     setError('');
@@ -126,7 +127,7 @@ const DriverPage: React.FC = () => {
 
   // Validate form
   const validate = () => {
-    if (!form.name.trim() || !form.licenseNumber.trim() || !form.phone.trim()) {
+    if (!form.name.trim() || !form.license_number.trim() || !form.phone.trim()) {
       setError('Name, License Number, and Phone are required');
       return false;
     }
@@ -277,7 +278,7 @@ const DriverPage: React.FC = () => {
                   <InputText label='Name *' name="name" value={form.name} onChange={handleChange} placeholder='Name of Driver' required/>
                 </div>
                 <div style={{ marginBottom: 12 }}>
-                  <InputText label='License Number' name="licenseNumber" value={form.licenseNumber} placeholder='License Number' onChange={handleChange} required />
+                  <InputText label='License Number' name="license_number" value={form.license_number} placeholder='License Number' onChange={handleChange} required />
                 </div>
                 <div style={{ marginBottom: 12 }}>
                   <InputText label='Phone *' type='number' name="phone" value={form.phone} onChange={handleChange} placeholder='Phone Number' required />
@@ -291,8 +292,8 @@ const DriverPage: React.FC = () => {
                     <div style={{display:'inline-flex'}}> 
                       <input
                         type="checkbox"
-                        name="isActive"
-                        checked={form.isActive}
+                        name="status"
+                        checked={form.status === 'active'}
                         onChange={handleChange}
                       />
                     </div> 
@@ -304,10 +305,10 @@ const DriverPage: React.FC = () => {
                     {vehicles.map((v) => (
                       <div key={v.id} className='driver-checkbox'>
                         <label className='driver-label text-capitalize'>
-                          {v.make} {v.model} <span className='text-uppercase'>({v.registrationNumber})</span>
+                          {v.make} {v.model} <span className='text-uppercase'>({v.registration_number})</span>
                             <input
                               type="checkbox"
-                              checked={form.assignedVehicleIds.includes(v.id)}
+                              checked={form.assigned_vehicle_ids.includes(v.id)}
                               onChange={() => handleVehicleSelect(v.id)} 
                             />
                         </label>
