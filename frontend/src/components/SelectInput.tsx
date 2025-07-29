@@ -4,6 +4,7 @@ interface Option {
   label: string;
   value: string | number;
   disabled?: boolean;
+  selected?: boolean;
 }
 
 interface SelectInputProps {
@@ -17,6 +18,7 @@ interface SelectInputProps {
   error?: string;
   className?: string;
   disabled?: boolean;
+  selected?: boolean;
 }
 
 const SelectInput: React.FC<SelectInputProps> = ({
@@ -28,7 +30,8 @@ const SelectInput: React.FC<SelectInputProps> = ({
   required = false,
   error = '',
   className = '',
-  disabled = false
+  disabled = false,
+  selected = false
 }) => {
   return (
     <div className="mb-3">
@@ -44,7 +47,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
       >
         {/* <option value="">{placeholder}</option> */}
         {options.map((opt) => (
-          <option key={opt.value} value={opt.value} disabled={opt.disabled}>
+          <option key={opt.value} value={opt.value} disabled={opt.disabled} selected={selected}>
             {opt.label}
           </option>
         ))}

@@ -38,6 +38,7 @@ const VehicleClaims: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [successMessage, setSuccessMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
+   const [filteredClaims, setFilteredClaims] = useState<Claim[]>([])
   
   const [formData, setFormData] = useState<FormData>({
     vehicleId: '',
@@ -90,21 +91,34 @@ const VehicleClaims: React.FC = () => {
   };
 
   // Get all claims from all vehicles
-  const allClaims = getAllClaims(vehicles);
+  useEffect(() => {
+    const fetchClaims = async () => {
+      try {
+        const allClaims = await getAllClaims(); // ✅ await the data
+        const filtered = allClaims.filter((claim,index) => {
+          const matchesSearch =
+            claim.vehicle_id &&
+            claim.vehicle_id.toLowerCase().includes(searchTerm.toLowerCase());
 
-  // Filter claims based on search term and date range
-  const filteredClaims = allClaims.filter(claim => {
-    const matchesSearch = claim.registrationNumber.toLowerCase().includes(searchTerm.toLowerCase());
-    let matchesFrom = true;
-    let matchesTo = true;
-    if (fromDate) {
-      matchesFrom = claim.claimDate >= fromDate;
-    }
-    if (toDate) {
-      matchesTo = claim.claimDate <= toDate;
-    }
-    return matchesSearch && matchesFrom && matchesTo;
-  });
+          const claimDate = new Date(claim.claim_date); // assume `claim_date` is string
+
+          const matchesFrom = fromDate ? claimDate >= new Date(fromDate) : true;
+          const matchesTo = toDate ? claimDate <= new Date(toDate) : true;
+          globalIndex:index + 1; // Add global index for display
+          return matchesSearch && matchesFrom && matchesTo;
+        });
+        const filteredWithIndex = filtered.map((claim, index) => ({
+          ...claim,
+          globalIndex: index + 1,
+        }));
+        setFilteredClaims(filteredWithIndex);
+      } catch (err) {
+        console.error('Error fetching claims:', err);
+      }
+    };
+
+    fetchClaims();
+  }, [searchTerm, fromDate, toDate]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -203,13 +217,13 @@ const VehicleClaims: React.FC = () => {
                   <SelectInput 
                     label='Vehicle' 
                     name="vehicleId"
-                    value={formData.vehicleId}
+                    value={formData.vehicle_id}
                     onChange={handleChange}
                     required
                     disabled={!!vehicleIdFromURL}
                     className='text-uppercase'
                     options={[
-                      { value: '', label: 'Select Vehicle', disabled: true },
+                      { label: 'Select Vehicle', value: '', disabled: true },
                       ...vehicles.map(vehicle => ({
                         value: vehicle.id,
                         label: `${vehicle.registration_number} - ${vehicle.make} ${vehicle.model}`
@@ -221,14 +235,14 @@ const VehicleClaims: React.FC = () => {
                 <div className="form-group">
                   <FormDateInput label='Claim Date'
                     name="claimDate"
-                    value={formData.claimDate}
+                    value={formData.claim_date}
                     onChange={handleChange}/>
                   {/* <DatePicker onChange={handleChange} value={formData.claimDate}/> */}
                 </div>
 
                 <div className="form-group">
                   <InputText type='number' label='Claim Amount' name="claimAmount"
-                    value={formData.claimAmount}
+                    value={formData.claim_amount}
                     onChange={handleChange}
                     placeholder="Enter claim amount"
                     required/>
@@ -305,17 +319,17 @@ const VehicleClaims: React.FC = () => {
                         )
                       },
                       {
-                        key: 'registrationNumber',
+                        key: 'vehicle_id',
                         header: 'Vehicle',
                         renderCell: (value: string) => (
                           <span className="vehicle-cell text-uppercase">{value}</span>
                         )
                       },
-                      { key: 'claimDate', header: 'Date', renderCell: (value) => formatDateDDMMYYYY(value) },
+                      { key: 'claim_date', header: 'Date', renderCell: (value) => formatDateDDMMYYYY(value) },
                       {
-                        key: 'claimAmount',
+                        key: 'claim_amount',
                         header: 'Amount',
-                        renderCell: (value: string) => (
+                        renderCell: (value: number) => (
                           <span className="amount-cell">₹{value}</span>
                         )
                       },

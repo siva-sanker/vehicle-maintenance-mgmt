@@ -33,6 +33,10 @@ import {
     getScheduledMaintenance
 } from '../controllers/maintenanceController';
 
+import {
+    getClaims
+} from '../controllers/claimsController';
+
 const router = Router();
 
 // Vehicle routes
@@ -67,5 +71,7 @@ router.patch('/maintenance/:id', patchMaintenance);
 router.delete('/maintenance/:id', deleteMaintenance);
 router.get('/maintenance/completed', getCompletedMaintenance);
 router.get('/maintenance/scheduled', getScheduledMaintenance);
+
+router.get('/claims', getClaims);
 
 export default router; 

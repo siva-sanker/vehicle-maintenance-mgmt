@@ -213,7 +213,7 @@ const DriverPage: React.FC = () => {
                   )
                 },
                 {
-                  key: 'licenseNumber',
+                  key: 'license_number',
                   header: 'License Number',
                   renderCell: (value: string) => (
                     <span className='text-uppercase'>{value}</span>

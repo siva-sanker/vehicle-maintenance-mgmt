@@ -429,5 +429,29 @@ export const driverAPI = {
     getAllDriversIncludingDeleted: (): Promise<Driver[]> => api.get<Driver[]>('/drivers'),
 };
 
+export const claimsAPI = {
+    // Get all claim records
+    getAllClaims: (): Promise<Claim[]> => api.get<Claim[]>('/claims'),
+
+    // Get claim by ID
+    getClaimById: (id: string): Promise<Claim> => api.get<Claim>(`/claims/${id}`),
+
+    // Get claims by insurance ID
+    getClaimsByInsurance: (insuranceId: string): Promise<Claim[]> => api.get<Claim[]>(`/claims/insurance/${insuranceId}`),
+
+    // Create new claim record
+    createClaim: (claimData: Omit<Claim, 'id' | 'created_at'>): Promise<Claim> => api.post<Claim>('/claims', claimData),
+
+    // Update claim record
+    updateClaim: (id: string, claimData: Partial<Claim>): Promise<Claim> => api.put<Claim>(`/claims/${id}`, claimData),
+
+    // Partially update claim record
+    patchClaim: (id: string, claimData: Partial<Claim>): Promise<Claim> => api.patch<Claim>(`/claims/${id}`, claimData),
+
+    // Delete claim record
+    deleteClaim: (id: string): Promise<void> => api.delete<void>(`/claims/${id}`),
+};
+
+
 // Export types for use in other files
-export type { Vehicle, Expense, DashboardStats, Driver, Maintenance, Insurance };
+export type { Vehicle, Expense, DashboardStats, Driver, Maintenance, Insurance,Claim };

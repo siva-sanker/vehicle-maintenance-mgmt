@@ -1,31 +1,33 @@
-import { vehicleAPI, insuranceAPI, Vehicle, Insurance } from '../services/api';
-
-// Get all claims from vehicles (placeholder since claims are stored separately)
-export const getAllClaims = (vehicles: Vehicle[]): Claim[] => {
-    // Since claims are stored separately, we'll return an empty array for now
-    // In a real implementation, you would fetch claims from a separate claims API
-    return [];
-};
+import { vehicleAPI, insuranceAPI, Vehicle, Insurance,claimsAPI } from '../services/api';
 
 export interface Claim {
-    claimDate: string;
-    claimAmount: string;
+    id: string;
+    vehicle_id: string;
+    claim_date: string; // or Date if already parsed
+    claim_amount: number;
     reason: string;
-    status: string;
-    vehicleId: string;
-    registrationNumber: string;
-    claimIndex: number;
-    globalIndex?: number;
+    created_at: string;
+    deleted_at: string;
 }
 
 export interface FormData {
-    vehicleId: string;
-    claimDate: string;
-    claimAmount: string;
-    reason: string;
-    status: string;
+  id: string;
+  vehicle_id: string;
+  claim_date: string; // or Date if already parsed
+  claim_amount: number;
+  reason: string;
+  created_at: string;
 }
 
+export const getAllClaims = async (): Promise<Claim[]> => {
+    try {
+        const data = await claimsAPI.getAllClaims();
+        return data;
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
 
 
 // Filter claims based on search term
@@ -59,8 +61,8 @@ export const submitClaim = async (
         // For now, we'll just return success since claims are stored separately
         console.log('Claim would be created:', {
             vehicleId,
-            claimDate: formData.claimDate,
-            claimAmount: formData.claimAmount,
+            claimDate: formData.claim_date,
+            claimAmount: formData.claim_amount,
             reason: formData.reason,
             status: formData.status
         });
