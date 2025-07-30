@@ -77,7 +77,12 @@ const DriverPage: React.FC = () => {
     const { name, value, type } = e.target;
     if (type === 'checkbox') {
       const checked = (e.target as HTMLInputElement).checked;
-      setForm({ ...form, [name]: checked });
+      // For status checkbox, set 'active' or 'inactive' string values
+      if (name === 'status') {
+        setForm({ ...form, [name]: checked ? 'active' : 'inactive' });
+      } else {
+        setForm({ ...form, [name]: checked });
+      }
     } else {
       setForm({ ...form, [name]: value });
     }
@@ -117,12 +122,23 @@ const DriverPage: React.FC = () => {
 
   // Validate form
   const validate = () => {
-    if (!form.name.trim() || !form.license_number.trim() || !form.phone.trim()) {
-      setError('Name, License Number, and Phone are required');
-      return false;
-    }
-    return true;
-  };
+  if (!form.name.trim() || !form.license_number.trim() || !form.phone.trim()) {
+    setError('Name, License Number, and Phone are required');
+    return false;
+  }
+
+  if (form.phone.trim().length < 10) {
+    setError('Phone number must be at least 10 digits');
+    return false;
+  }
+  if (form.phone.trim().length > 10) {
+    setError('Phone number must be 10 digits');
+    return false;
+  }
+
+  return true;
+};
+
 
   // Submit form
   const handleSubmit = async (e: React.FormEvent) => {
@@ -144,6 +160,7 @@ const DriverPage: React.FC = () => {
       const driversData = await driverAPI.getAllDrivers();
       setDrivers(driversData);
       closeModal();
+      alert(`Driver ${editDriver ? 'updated' : 'added'} successfully`);
     } catch (err) {
       setError('Failed to save driver');
     }
@@ -270,6 +287,7 @@ const DriverPage: React.FC = () => {
             <div className="modal">
               <h2>{editDriver ? 'Edit Driver' : 'Add Driver'}</h2>
               <form onSubmit={handleSubmit}>
+                {error && <div className="error">{error}</div>}
                 <div style={{ marginBottom: 12 }}>
                   <InputText label='Name *' name="name" value={form.name} onChange={handleChange} placeholder='Name of Driver' required/>
                 </div>
@@ -314,7 +332,6 @@ const DriverPage: React.FC = () => {
                   </div>
                   <small style={{ color: '#666', fontStyle: 'italic' }}>Vehicle assignment feature will be available in a future update.</small>
                 </div>
-                {error && <div className="error">{error}</div>}
                 <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
                   <CancelButton onClick={closeModal} text='Cancel'/>
                   <ButtonWithGradient type='submit' className='btn'>{editDriver ? 'Update' : 'Add'}</ButtonWithGradient>

@@ -13,6 +13,17 @@ export const getDrivers = async (req: Request, res: Response) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+export const getAllDrivers = async (req: Request, res: Response) => {
+    try {
+        const pool = getDatabase();
+        const result = await pool.request()
+            .query('SELECT * FROM drivers');
+        res.json(result.recordset);
+    } catch (error) {
+        console.error('Error fetching drivers:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
 
 export const getDriverById = async (req: Request, res: Response) => {
     try {
@@ -111,7 +122,7 @@ export const patchDriver = async (req: Request, res: Response) => {
 
         const query = `
             UPDATE drivers 
-            SET ${updateFields.join(', ')}, last_updated = GETDATE()
+            SET ${updateFields.join(', ')}, last_updated = GETDATE(), status='inactive'
             WHERE id = @id;
             SELECT * FROM drivers WHERE id = @id;
         `;
@@ -133,48 +144,48 @@ export const patchDriver = async (req: Request, res: Response) => {
     }
 };
 
-export const deleteDriver = async (req: Request, res: Response) => {
-    try {
-        const { id } = req.params;
-        const pool = getDatabase();
+// export const deleteDriver = async (req: Request, res: Response) => {
+//     try {
+//         const { id } = req.params;
+//         const pool = getDatabase();
 
-        const result = await pool.request()
-            .input('id', id)
-            .query('DELETE FROM drivers WHERE id = @id');
+//         const result = await pool.request()
+//             .input('id', id)
+//             .query('DELETE FROM drivers WHERE id = @id');
 
-        if (result.rowsAffected[0] === 0) {
-            return res.status(404).json({ message: 'Driver not found' });
-        }
-        res.status(204).send();
-    } catch (error) {
-        console.error('Error deleting driver:', error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-};
+//         if (result.rowsAffected[0] === 0) {
+//             return res.status(404).json({ message: 'Driver not found' });
+//         }
+//         res.status(204).send();
+//     } catch (error) {
+//         console.error('Error deleting driver:', error);
+//         res.status(500).json({ message: 'Internal server error' });
+//     }
+// };
 
-export const softDeleteDriver = async (req: Request, res: Response) => {
-    try {
-        const { id } = req.params;
-        const pool = getDatabase();
+// export const softDeleteDriver = async (req: Request, res: Response) => {
+//     try {
+//         const { id } = req.params;
+//         const pool = getDatabase();
 
-        const result = await pool.request()
-            .input('id', id)
-            .query(`
-                UPDATE drivers 
-                SET deleted_at = GETDATE(), last_updated = GETDATE()
-                WHERE id = @id;
-                SELECT * FROM drivers WHERE id = @id;
-            `);
+//         const result = await pool.request()
+//             .input('id', id)
+//             .query(`
+//                 UPDATE drivers 
+//                 SET deleted_at = GETDATE(), last_updated = GETDATE() 
+//                 WHERE id = @id;
+//                 SELECT * FROM drivers WHERE id = @id;
+//             `);
 
-        if (result.recordset.length === 0) {
-            return res.status(404).json({ message: 'Driver not found' });
-        }
-        res.json({ message: 'Driver soft-deleted', driver: result.recordset[0] });
-    } catch (error) {
-        console.error('Error soft-deleting driver:', error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-};
+//         if (result.recordset.length === 0) {
+//             return res.status(404).json({ message: 'Driver not found' });
+//         }
+//         res.json({ message: 'Driver soft-deleted', driver: result.recordset[0] });
+//     } catch (error) {
+//         console.error('Error soft-deleting driver:', error);
+//         res.status(500).json({ message: 'Internal server error' });
+//     }
+// };
 
 export const restoreDriver = async (req: Request, res: Response) => {
     try {
@@ -185,7 +196,7 @@ export const restoreDriver = async (req: Request, res: Response) => {
             .input('id', id)
             .query(`
                 UPDATE drivers 
-                SET deleted_at = NULL, last_updated = GETDATE()
+                SET deleted_at = NULL, last_updated = GETDATE(), status='active'
                 WHERE id = @id;
                 SELECT * FROM drivers WHERE id = @id;
             `);
@@ -198,4 +209,164 @@ export const restoreDriver = async (req: Request, res: Response) => {
         console.error('Error restoring driver:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
-}; 
+};
+
+export const assignVehicleToDriver = async (req: Request, res: Response) => {
+    try {
+        const { driverId } = req.params;
+        const { vehicleId } = req.body;
+        const pool = getDatabase();
+
+        // First check if driver exists
+        const driverCheck = await pool.request()
+            .input('driverId', driverId)
+            .query('SELECT assignedVehicleIds FROM drivers WHERE id = @driverId AND deleted_at IS NULL');
+
+        if (driverCheck.recordset.length === 0) {
+            return res.status(404).json({ message: 'Driver not found' });
+        }
+
+        // Check if vehicle exists
+        const vehicleCheck = await pool.request()
+            .input('vehicleId', vehicleId)
+            .query('SELECT id FROM vehicles WHERE id = @vehicleId AND deleted_at IS NULL');
+
+        if (vehicleCheck.recordset.length === 0) {
+            return res.status(404).json({ message: 'Vehicle not found' });
+        }
+
+        // Get current assigned vehicles
+        let currentAssignedVehicles: string[] = [];
+        try {
+            const assignedVehiclesStr = driverCheck.recordset[0].assignedVehicleIds;
+            if (assignedVehiclesStr) {
+                currentAssignedVehicles = JSON.parse(assignedVehiclesStr);
+            }
+        } catch {
+            currentAssignedVehicles = [];
+        }
+
+        // Check if vehicle is already assigned
+        if (currentAssignedVehicles.includes(vehicleId)) {
+            return res.status(400).json({ message: 'Vehicle already assigned to this driver' });
+        }
+
+        // Add vehicle to assigned list
+        currentAssignedVehicles.push(vehicleId);
+
+        // Update driver with new assigned vehicles
+        const result = await pool.request()
+            .input('driverId', driverId)
+            .input('assignedVehicleIds', JSON.stringify(currentAssignedVehicles))
+            .query(`
+                UPDATE drivers 
+                SET assignedVehicleIds = @assignedVehicleIds, last_updated = GETDATE()
+                WHERE id = @driverId;
+                SELECT * FROM drivers WHERE id = @driverId;
+            `);
+
+        res.json({ message: 'Vehicle assigned successfully', driver: result.recordset[0] });
+    } catch (error) {
+        console.error('Error assigning vehicle to driver:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+export const unassignVehicleFromDriver = async (req: Request, res: Response) => {
+    try {
+        const { driverId, vehicleId } = req.params;
+        const pool = getDatabase();
+
+        // First check if driver exists
+        const driverCheck = await pool.request()
+            .input('driverId', driverId)
+            .query('SELECT assignedVehicleIds FROM drivers WHERE id = @driverId AND deleted_at IS NULL');
+
+        if (driverCheck.recordset.length === 0) {
+            return res.status(404).json({ message: 'Driver not found' });
+        }
+
+        // Get current assigned vehicles
+        let currentAssignedVehicles: string[] = [];
+        try {
+            const assignedVehiclesStr = driverCheck.recordset[0].assignedVehicleIds;
+            if (assignedVehiclesStr) {
+                currentAssignedVehicles = JSON.parse(assignedVehiclesStr);
+            }
+        } catch {
+            currentAssignedVehicles = [];
+        }
+
+        // Check if vehicle is assigned
+        if (!currentAssignedVehicles.includes(vehicleId)) {
+            return res.status(400).json({ message: 'Vehicle not assigned to this driver' });
+        }
+
+        // Remove vehicle from assigned list
+        currentAssignedVehicles = currentAssignedVehicles.filter(id => id !== vehicleId);
+
+        // Update driver with new assigned vehicles
+        const result = await pool.request()
+            .input('driverId', driverId)
+            .input('assignedVehicleIds', JSON.stringify(currentAssignedVehicles))
+            .query(`
+                UPDATE drivers 
+                SET assignedVehicleIds = @assignedVehicleIds, last_updated = GETDATE()
+                WHERE id = @driverId;
+                SELECT * FROM drivers WHERE id = @driverId;
+            `);
+
+        res.json({ message: 'Vehicle unassigned successfully', driver: result.recordset[0] });
+    } catch (error) {
+        console.error('Error unassigning vehicle from driver:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+export const getDriverAssignedVehicles = async (req: Request, res: Response) => {
+    try {
+        const { driverId } = req.params;
+        const pool = getDatabase();
+
+        // Get driver with assigned vehicles
+        const driverResult = await pool.request()
+            .input('driverId', driverId)
+            .query('SELECT assignedVehicleIds FROM drivers WHERE id = @driverId AND deleted_at IS NULL');
+
+        if (driverResult.recordset.length === 0) {
+            return res.status(404).json({ message: 'Driver not found' });
+        }
+
+        // Parse assigned vehicle IDs
+        let assignedVehicleIds: string[] = [];
+        try {
+            const assignedVehiclesStr = driverResult.recordset[0].assignedVehicleIds;
+            if (assignedVehiclesStr) {
+                assignedVehicleIds = JSON.parse(assignedVehiclesStr);
+            }
+        } catch {
+            assignedVehicleIds = [];
+        }
+
+        if (assignedVehicleIds.length === 0) {
+            return res.json([]);
+        }
+
+        // Get vehicle details for assigned vehicles
+        const placeholders = assignedVehicleIds.map((_, index) => `@vehicleId${index}`).join(',');
+        const request = pool.request();
+        assignedVehicleIds.forEach((id, index) => {
+            request.input(`vehicleId${index}`, id);
+        });
+
+        const vehiclesResult = await request.query(`
+            SELECT * FROM vehicles 
+            WHERE id IN (${placeholders}) AND deleted_at IS NULL
+        `);
+
+        res.json(vehiclesResult.recordset);
+    } catch (error) {
+        console.error('Error getting driver assigned vehicles:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};

@@ -340,7 +340,7 @@ const VehicleMaintenance: React.FC = () => {
               <h3>No deleted maintenance records found</h3>
             </div>
           ) : (
-            <div className="table-container" style={{width:'100%'}}>
+            <div className="table-container">
               <Table
                 columns={[
                   { key: 'vehicleInfo', header: 'Vehicle', renderCell: (_: any, row: any) => {
@@ -350,7 +350,7 @@ const VehicleMaintenance: React.FC = () => {
                   { key: 'date', header: 'Service Date' },
                   { key: 'description', header: 'Description' },
                   { key: 'cost', header: 'Cost', renderCell: (cost: number) => `₹${cost.toLocaleString()}` },
-                  { key: 'status', header: 'Status' },
+                  // { key: 'status', header: 'Status' },
                   { key: 'actions', header: 'Actions', renderCell: (id: string) => (
                     <ButtonWithGradient onClick={() => handleRestoreMaintenance(id)} text="Restore" className="btn-success" />
                   ) }

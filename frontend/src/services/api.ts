@@ -417,16 +417,16 @@ export const driverAPI = {
     updateDriver: (id: string, driverData: Partial<Driver>): Promise<Driver> => api.put<Driver>(`/drivers/${id}`, driverData),
 
     // Soft delete driver
-    softDeleteDriver: (id: string): Promise<Driver> => api.patch<Driver>(`/drivers/${id}`, { deletedAt: new Date().toISOString() }),
+    softDeleteDriver: (id: string): Promise<Driver> => api.patch<Driver>(`/drivers/${id}`, { deleted_at: new Date().toISOString() }),
 
     // Restore soft deleted driver
-    restoreDriver: (id: string): Promise<Driver> => api.patch<Driver>(`/drivers/${id}`, { deletedAt: null }),
+    restoreDriver: (id: string): Promise<Driver> => api.patch<Driver>(`/drivers/${id}/restore`, { deleted_at: null }),
 
     // Hard delete driver (for admin purposes)
     deleteDriver: (id: string): Promise<void> => api.delete<void>(`/drivers/${id}`),
 
     // Get all drivers including soft deleted (for admin purposes)
-    getAllDriversIncludingDeleted: (): Promise<Driver[]> => api.get<Driver[]>('/drivers'),
+    getAllDriversIncludingDeleted: (): Promise<Driver[]> => api.get<Driver[]>('/alldrivers'),
 };
 
 export const claimsAPI = {

@@ -28,7 +28,7 @@ const DriverRestoreModal: React.FC<DriverRestoreModalProps> = ({
     setLoading(true);
     try {
       const allDrivers = await driverAPI.getAllDriversIncludingDeleted();
-      const deleted = allDrivers.filter(driver => driver.deletedAt);
+      const deleted = allDrivers.filter(driver => driver.deleted_at);
       setDeletedDrivers(deleted);
     } catch (error) {
       console.error('Failed to load deleted drivers:', error);
@@ -53,7 +53,7 @@ const DriverRestoreModal: React.FC<DriverRestoreModalProps> = ({
   const tableData = deletedDrivers.map((driver, index) => ({
     ...driver,
     globalIndex: index + 1,
-    deletedDate: new Date(driver.deletedAt!).toLocaleDateString(),
+    deletedDate: new Date(driver.deleted_at!).toLocaleDateString(),
     actions: driver.id
   }));
 
@@ -94,8 +94,8 @@ const DriverRestoreModal: React.FC<DriverRestoreModalProps> = ({
                   )
                 },
                 {
-                  key: 'licenseNumber',
-                  header: 'License Number',
+                  key: 'status',
+                  header: 'Status',
                   renderCell: (value: string) => (
                     <span className='text-uppercase'>{value}</span>
                   )
