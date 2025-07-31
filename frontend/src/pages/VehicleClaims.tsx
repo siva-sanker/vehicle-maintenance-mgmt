@@ -10,40 +10,28 @@ import FormDateInput from '../components/Date';
 import TextAreaInput from '../components/TextAreaInput';
 import Table from '../components/Table';
 import { formatDateDDMMYYYY } from '../utils/vehicleUtils';
+import { FileText, CheckCircle } from 'lucide-react';
 import {
-  FileText,
-  CheckCircle,
-  // Car,
-  // Search,
-  // Plus,
-  // AlertTriangle,
-  // ChevronLeft,
-  // ChevronRight
-} from 'lucide-react';
-import { 
-  Vehicle, 
-  // Claim, 
-  FormData, 
-  getAllClaims, 
-  filterClaims, 
-  submitClaim, 
-  // updateClaimStatus, 
-  fetchVehiclesData 
+  Claim,
+  FormData,
+  getAllClaims,
+  submitClaim,
+  fetchVehiclesData,
 } from '../utils/claimsUtils';
+import { Vehicle } from '../services/api';
 import '../styles/claims.css';
 
 const VehicleClaims: React.FC = () => {
-  // const [claims, setClaims] = useState<Claim[]>([]);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [successMessage, setSuccessMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
-   const [filteredClaims, setFilteredClaims] = useState<Claim[]>([])
-  
+  const [filteredClaims, setFilteredClaims] = useState<Claim[]>([]);
+
   const [formData, setFormData] = useState<FormData>({
-    vehicleId: '',
-    claimDate: '',
-    claimAmount: '',
+    vehicle_id: '',
+    claim_date: '',
+    claim_amount: '',
     reason: '',
     status: 'Pending',
   });
@@ -51,11 +39,14 @@ const VehicleClaims: React.FC = () => {
   const [fromDate, setFromDate] = useState<string>('');
   const [toDate, setToDate] = useState<string>('');
 
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const vehicleIdFromURL = queryParams.get('vehicleId');
+
   const fetchData = async (): Promise<void> => {
     try {
       const vehiclesData = await fetchVehiclesData();
       setVehicles(vehiclesData);
-      // Note: Claims are stored within vehicles, so we don't need a separate claims fetch
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -65,17 +56,15 @@ const VehicleClaims: React.FC = () => {
     fetchData();
   }, []);
 
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const vehicleIdFromURL = queryParams.get('vehicleId');
-
   useEffect(() => {
     if (vehicleIdFromURL) {
-      setFormData((prev) => ({ ...prev, vehicleId: vehicleIdFromURL }));
+      setFormData((prev) => ({ ...prev, vehicle_id: vehicleIdFromURL }));
     }
   }, [vehicleIdFromURL]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>): void => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ): void => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -86,99 +75,74 @@ const VehicleClaims: React.FC = () => {
   const handleFromDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFromDate(e.target.value);
   };
+
   const handleToDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setToDate(e.target.value);
   };
 
-  // Get all claims from all vehicles
-  useEffect(() => {
-    const fetchClaims = async () => {
-      try {
-        const allClaims = await getAllClaims(); // ✅ await the data
-        const filtered = allClaims.filter((claim,index) => {
+  const fetchClaims = async () => {
+    try {
+        const allClaims = await getAllClaims();
+
+        const filtered = allClaims.filter((claim) => {
           const matchesSearch =
             claim.vehicle_id &&
             claim.vehicle_id.toLowerCase().includes(searchTerm.toLowerCase());
-
-          const claimDate = new Date(claim.claim_date); // assume `claim_date` is string
-
-          const matchesFrom = fromDate ? claimDate >= new Date(fromDate) : true;
+            
+            const claimDate = new Date(claim.claim_date);
+            const matchesFrom = fromDate ? claimDate >= new Date(fromDate) : true;
           const matchesTo = toDate ? claimDate <= new Date(toDate) : true;
-          globalIndex:index + 1; // Add global index for display
+          
           return matchesSearch && matchesFrom && matchesTo;
         });
+        
         const filteredWithIndex = filtered.map((claim, index) => ({
           ...claim,
           globalIndex: index + 1,
         }));
+        
         setFilteredClaims(filteredWithIndex);
       } catch (err) {
         console.error('Error fetching claims:', err);
       }
     };
-
+    
+  useEffect(() => {
     fetchClaims();
   }, [searchTerm, fromDate, toDate]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
+    if (!formData.vehicle_id) {
+      setErrorMessage('Please select a vehicle.');
+      setTimeout(() => setErrorMessage(''), 4000);
+      return;
+    }
+
     try {
-      const result = await submitClaim(formData, vehicleIdFromURL);
+      const result = await submitClaim(formData);
 
       if (result.success) {
-        // Show success message
         setSuccessMessage(result.message);
+        setTimeout(() => setSuccessMessage(''), 3000);
 
-        // Clear success message after 3 seconds
-        setTimeout(() => {
-          setSuccessMessage('');
-        }, 3000);
-
-        // Reset form
         if (result.updatedFormData) {
           setFormData(result.updatedFormData);
         }
 
-        // Refresh data to show updated claims in the table
-        fetchData();
+        fetchData(); // Optional: refresh vehicle data
+        fetchClaims(); // Refresh claims after submission
       } else {
         setErrorMessage(result.message);
-        // Clear error message after 5 seconds
-        setTimeout(() => {
-          setErrorMessage('');
-        }, 5000);
+        setTimeout(() => setErrorMessage(''), 5000);
       }
-
     } catch (error) {
       console.error('Error adding claim:', error);
       setErrorMessage('Error submitting claim. Please try again.');
-      // Clear error message after 5 seconds
-      setTimeout(() => {
-        setErrorMessage('');
-      }, 5000);
+      setTimeout(() => setErrorMessage(''), 5000);
     }
   };
-
-  // const handleStatusChange = async (vehicleId: string, claimIndex: number, newStatus: string): Promise<void> => {
-  //   try {
-  //     const result = await updateClaimStatus(vehicleId, claimIndex, newStatus);
-
-  //     if (result.success && result.updatedClaims) {
-  //       // Update local state
-  //       setVehicles(prevVehicles =>
-  //         prevVehicles.map(v =>
-  //           v.id === vehicleId
-  //             ? { ...v, claims: result.updatedClaims }
-  //             : v
-  //         )
-  //       );
-  //     }
-
-  //   } catch (error) {
-  //     console.error('Error updating claim status:', error);
-  //   }
-  // };
 
   return (
     <>
@@ -216,7 +180,7 @@ const VehicleClaims: React.FC = () => {
                 <div className="form-group">
                   <SelectInput 
                     label='Vehicle' 
-                    name="vehicleId"
+                    name="vehicle_id"
                     value={formData.vehicle_id}
                     onChange={handleChange}
                     required
@@ -234,14 +198,14 @@ const VehicleClaims: React.FC = () => {
 
                 <div className="form-group">
                   <FormDateInput label='Claim Date'
-                    name="claimDate"
+                    name="claim_date"
                     value={formData.claim_date}
                     onChange={handleChange}/>
                   {/* <DatePicker onChange={handleChange} value={formData.claimDate}/> */}
                 </div>
 
                 <div className="form-group">
-                  <InputText type='number' label='Claim Amount' name="claimAmount"
+                  <InputText type='number' label='Claim Amount' name="claim_amount"
                     value={formData.claim_amount}
                     onChange={handleChange}
                     placeholder="Enter claim amount"
@@ -286,7 +250,7 @@ const VehicleClaims: React.FC = () => {
               </div>
 
             <div className="search-container2" style={{ justifyContent: 'space-between'}}>
-              <div style={{ display: 'flex', gap: '15px' }}>
+              <div style={{ display: 'flex', gap: '15px',width:'25%' }}>
                 <Searchbar
                   type='search'
                   placeholder='Search registration number'

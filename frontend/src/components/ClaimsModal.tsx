@@ -2,13 +2,7 @@ import React from 'react';
 import { FileText } from 'lucide-react';
 import { Vehicle } from '../services/api';
 import CancelButton from './CancelButton';
-
-interface Claim {
-  claimDate: string;
-  claimAmount: string;
-  reason: string;
-  status: string;
-}
+import { Claim } from '../utils/claimsUtils';
 
 interface ClaimsModalProps {
   isOpen: boolean;
@@ -67,11 +61,11 @@ const ClaimsModal: React.FC<ClaimsModalProps> = ({
                   <div className="claim-details">
                     <div className="claim-info">
                       <span className="info-label">Date:</span>
-                      <span className="info-value">{claim.claimDate}</span>
+                      <span className="info-value">{claim.claim_date}</span>
                     </div>
                     <div className="claim-info">
                       <span className="info-label">Amount:</span>
-                      <span className="info-value">₹{claim.claimAmount}</span>
+                      <span className="info-value">₹{claim.claim_amount}</span>
                     </div>
                     <div className="claim-info">
                       <span className="info-label">Reason:</span>

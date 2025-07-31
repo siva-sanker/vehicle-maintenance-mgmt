@@ -35,7 +35,9 @@ import {
 } from '../controllers/maintenanceController';
 
 import {
-    getClaims
+    getClaims,
+    getClaimsByVehicleId,
+    createClaim
 } from '../controllers/claimsController';
 
 const router = Router();
@@ -75,5 +77,7 @@ router.get('/maintenance/completed', getCompletedMaintenance);
 router.get('/maintenance/scheduled', getScheduledMaintenance);
 
 router.get('/claims', getClaims);
+router.get('/claims/vehicle/:vehicleId', getClaimsByVehicleId);
+router.post('/claims', createClaim);
 
 export default router; 

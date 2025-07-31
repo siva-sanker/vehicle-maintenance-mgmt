@@ -63,13 +63,7 @@ interface Insurance {
     created_at: string;
 }
 
-interface Claim {
-    id: string;
-    vehicle_id: string;
-    claim_date: string;
-    claim_amount: number;
-    reason: string;
-}
+import { Claim } from "../utils/vehicleUtils";
 
 // interface FuelLog {
 //     id: string;
@@ -430,26 +424,22 @@ export const driverAPI = {
 };
 
 export const claimsAPI = {
-    // Get all claim records
-    getAllClaims: (): Promise<Claim[]> => api.get<Claim[]>('/claims'),
+    
+  getAllClaims: (): Promise<Claim[]> => api.get<Claim[]>('/claims'),
 
-    // Get claim by ID
-    getClaimById: (id: string): Promise<Claim> => api.get<Claim>(`/claims/${id}`),
+  getClaimById: (id: string): Promise<Claim> => api.get<Claim>(`/claims/${id}`),
 
-    // Get claims by insurance ID
-    getClaimsByInsurance: (insuranceId: string): Promise<Claim[]> => api.get<Claim[]>(`/claims/insurance/${insuranceId}`),
+  getClaimsByInsurance: (insuranceId: string): Promise<Claim[]> => api.get<Claim[]>(`/claims/insurance/${insuranceId}`),
 
-    // Create new claim record
-    createClaim: (claimData: Omit<Claim, 'id' | 'created_at'>): Promise<Claim> => api.post<Claim>('/claims', claimData),
+  getClaimsByVehicle: (vehicleId: string): Promise<Claim[]> => api.get<Claim[]>(`/claims/vehicle/${vehicleId}`),
 
-    // Update claim record
-    updateClaim: (id: string, claimData: Partial<Claim>): Promise<Claim> => api.put<Claim>(`/claims/${id}`, claimData),
+  createClaim: (claimData: Omit<Claim, 'id' | 'created_at'>): Promise<Claim> => api.post<Claim>('/claims', claimData),
 
-    // Partially update claim record
-    patchClaim: (id: string, claimData: Partial<Claim>): Promise<Claim> => api.patch<Claim>(`/claims/${id}`, claimData),
+  updateClaim: (id: string, claimData: Partial<Claim>): Promise<Claim> => api.put<Claim>(`/claims/${id}`, claimData),
 
-    // Delete claim record
-    deleteClaim: (id: string): Promise<void> => api.delete<void>(`/claims/${id}`),
+  patchClaim: (id: string, claimData: Partial<Claim>): Promise<Claim> => api.patch<Claim>(`/claims/${id}`, claimData),
+
+  deleteClaim: (id: string): Promise<void> => api.delete<void>(`/claims/${id}`),
 };
 
 

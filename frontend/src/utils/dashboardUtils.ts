@@ -1,4 +1,5 @@
 import { vehicleAPI, driverAPI, maintenanceAPI, insuranceAPI, Vehicle, Driver, Maintenance } from '../services/api';
+import { getAllClaims, Claim } from '../utils/claimsUtils';
 
 export interface DashboardProps {
     sidebarCollapsed: boolean;
@@ -78,22 +79,49 @@ export const calculateInsurancePolicies = async (vehicles: Vehicle[]): Promise<n
 };
 
 // Calculate claims data (placeholder - claims are in separate table)
-export const calculateClaimsData = (vehicles: Vehicle[]): {
-    claimsCount: number;
-    totalClaims: number;
-    claimStatusData: ClaimStatusData;
-} => {
-    // Since claims are in a separate table, we'll return placeholder data
-    // In a real implementation, you'd fetch claims data separately
-    return {
-        claimsCount: 0,
-        totalClaims: 0,
-        claimStatusData: {
-            pending: 0,
-            approved: 0,
-            rejected: 0
-        }
+export const calculateClaimsData = async (): Promise<{
+  claimsCount: number;
+  totalClaims: number;
+  claimStatusData: ClaimStatusData;
+}> => {
+  try {
+    const allClaims: Claim[] = await getAllClaims();
+
+    const claimsCount = allClaims.length;
+    const totalClaims = allClaims.reduce((sum, claim) => sum + Number(claim.claim_amount), 0);
+
+    const claimStatusData: ClaimStatusData = {
+      pending: 0,
+      approved: 0,
+      rejected: 0
     };
+
+    allClaims.forEach(claim => {
+      const status = claim.status?.toLowerCase();
+      if (status === 'pending') claimStatusData.pending++;
+      else if (status === 'approved') claimStatusData.approved++;
+      else if (status === 'rejected') claimStatusData.rejected++;
+    });
+
+    return {
+      claimsCount,
+      totalClaims,
+      claimStatusData
+    };
+  } catch (error) {
+    console.error('Error calculating claims data:', error);
+
+    // fallback in case of error
+    return {
+      claimsCount: 0,
+      totalClaims: 0,
+      claimStatusData: {
+        pending: 0,
+        approved: 0,
+        rejected: 0
+      }
+    };
+  }
 };
 
 // Calculate maintenance data
@@ -181,7 +209,7 @@ export const fetchDashboardData = async (): Promise<DashboardStats> => {
         const totalVehicles = vehicles.length;
         const totalDrivers = drivers.length;
         const insurancePolicies = await calculateInsurancePolicies(vehicles);
-        const { claimsCount, totalClaims, claimStatusData } = calculateClaimsData(vehicles);
+        const { claimsCount, totalClaims, claimStatusData } = await calculateClaimsData();
         const { totalMaintenanceCost, upcomingMaintenance } = calculateMaintenanceData(maintenance);
         const fuelTypeData = calculateFuelTypeData(vehicles);
         const monthlyData = calculateMonthlyData(vehicles);
@@ -294,8 +322,8 @@ export const getStatsCardsData = (stats: DashboardStats) => [
     { title: 'Total Drivers', subtitle: stats.totalDrivers },
     { title: 'Total Insurances', subtitle: stats.insurancePolicies },
     { title: 'Total Claims', subtitle: stats.activeClaims },
-    // { title: 'Total Claim Amount', subtitle: `$${stats.totalClaimAmount.toLocaleString()}` },
-    { title: 'Total Maintenance Cost', subtitle: `$${stats.totalMaintenanceCost.toLocaleString()}` },
+    { title: 'Total Claim Amount', subtitle: `${stats.totalClaimAmount.toLocaleString()} /-` },
+    { title: 'Total Maintenance Cost', subtitle: `${stats.totalMaintenanceCost.toLocaleString()} /-` },
     // { title: 'Upcoming Maintenance', subtitle: stats.upcomingMaintenance },
     { title: 'Document Count', subtitle: stats.documentCount },
     { title: 'Insurance Coverage', subtitle: calculateInsuranceCoverage(stats.insurancePolicies, stats.totalVehicles) }

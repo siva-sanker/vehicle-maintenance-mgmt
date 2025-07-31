@@ -61,14 +61,14 @@ const VehicleRegistration: React.FC = () => {
         <SectionHeading title='Vehicle Registration' subtitle='Register a new vehicle in your fleet'/>
 
         <div className="registration-form-container">
-          {successMessage && (
+          {/* {successMessage && (
             <div className="success-message">
               <div className="success-content">
                 <span className="success-icon">✓</span>
                 <span className="success-text">{successMessage}</span>
               </div>
             </div>
-          )}
+          )} */}
           <form onSubmit={handleSubmit} className="registration-form">
             <div className="form-section">
               <div className="section-header">

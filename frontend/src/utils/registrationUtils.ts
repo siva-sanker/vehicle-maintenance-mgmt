@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import { vehicleAPI } from '../services/api';
 
 export interface FormData {
@@ -119,7 +120,7 @@ export const createVehicle = async (formData: FormData): Promise<any> => {
             created_at: new Date().toISOString()
         };
 
-        console.log('Sending vehicle data to API:', vehicleData);
+        // console.log('Sending vehicle data to API:', vehicleData);
         const response = await vehicleAPI.createVehicle(vehicleData);
         return response;
     } catch (error) {
@@ -211,7 +212,10 @@ export const handleFormSubmit = async (
         const response = await createVehicle(formData);
 
         if (response) {
-            setSuccessMessage('Vehicle registered successfully!');
+            // setSuccessMessage('Vehicle registered successfully!');
+            toast.success('Vehicle registered successfully!');
+            console.log('registration response:', response);
+            
             setFormData(getInitialFormData());
             setErrors({});
             setTouched({});
@@ -223,12 +227,14 @@ export const handleFormSubmit = async (
 
             return true;
         } else {
-            alert('Failed to register vehicle.');
+            toast.error('Failed to register vehicle.');
+            // alert('Failed to register vehicle.');
             return false;
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('An error occurred while submitting the form.');
+        toast.error('An error occurred while submitting the form.');
+        // alert('An error occurred while submitting the form.');
         return false;
     }
 };

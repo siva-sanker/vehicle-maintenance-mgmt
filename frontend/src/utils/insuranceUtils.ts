@@ -1,21 +1,6 @@
 import { Vehicle, Insurance, vehicleAPI, insuranceAPI } from '../services/api';
 
-export interface InsuranceData {
-    policyNumber: string;
-    insurer: string;
-    expiryDate: string;
-    policyType: string;
-    startDate: string;
-    endDate: string;
-    premiumAmount: string;
-    vehicleType: string;
-    chassisNumber: string;
-    engineNumber: string;
-    policyIssueDate: string;
-    paymentMode: string;
-}
-
-export interface InsuranceHistory {
+export interface InsuranceHistory {             //in insurance list page
     id: string;
     vehicleId: string;
     vehicleMake: string;

@@ -7,12 +7,12 @@ import {
 } from 'lucide-react';
 import { Vehicle } from '../services/api.ts';
 import {
-  Claim,
   calculateVehicleAge,
   filterVehicles,
   fetchVehiclesData,
   formatDateDDMMYYYY,
 } from '../utils/vehicleUtils.ts';
+import {Claim, getClaimsByVehicleId} from '../utils/claimsUtils.ts';
 import { processExpiredInsurance } from '../utils/insuranceUtils.ts';
 import '../styles/Vehiclelist.css';
 import Searchbar from '../components/Searchbar.tsx';
@@ -89,22 +89,18 @@ const VehicleList: React.FC = () => {
 
   const viewClaims = async (vehicleId: string): Promise<void> => {
     console.log('viewClaims called with vehicleId:', vehicleId);
-    // Find the vehicle to check insurance
     const vehicle = vehicles.find(v => v.id === vehicleId);
     console.log('Found vehicle:', vehicle);
-
-    // For now, allow viewing claims for any vehicle
-    // Insurance check can be implemented later when insurance API is available
 
     setLoadingClaims(true);
     setClaimsError('');
     try {
-      // Set the vehicle as selectedVehicle
       setSelectedVehicle(vehicle!);
 
-      // For now, use empty claims array since claims are not stored in vehicle object
-      const vehicleClaims: Claim[] = [];
+      // ✅ Fixed: use correct API to fetch all claims for this vehicle
+      const vehicleClaims = await getClaimsByVehicleId(vehicleId);
       console.log('Vehicle claims:', vehicleClaims);
+
       setClaims(vehicleClaims);
     } catch (err) {
       console.error('Error loading claims:', err);
@@ -116,6 +112,7 @@ const VehicleList: React.FC = () => {
       console.log('claimsModalOpen set to true');
     }
   };
+
 
   const handleInsuranceUpdated = (updatedVehicle: Vehicle): void => {
     const updatedVehicles = vehicles.map((v) =>

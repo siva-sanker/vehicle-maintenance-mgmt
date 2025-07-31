@@ -1,17 +1,17 @@
 import React, { Children } from 'react';
 
 interface InputTextProps {
-  id?:string;
+  id?: string;
   label?: string;
   type?: string;
   name: string;
-  step?:number;
+  step?: number;
   placeholder?: string;
   required?: boolean;
   error?: string;
-  className?: string; 
+  className?: string;
   disabled?: boolean;
-  value?: string;
+  value?: string | number; // ✅ Fix: Allow string or number
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 }
@@ -19,7 +19,7 @@ interface InputTextProps {
 const InputText: React.FC<InputTextProps> = ({
   id,
   label,
-  type = 'text',
+  type = '',
   name,
   step,
   placeholder = '',

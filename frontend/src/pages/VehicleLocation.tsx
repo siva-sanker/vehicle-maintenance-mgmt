@@ -231,7 +231,7 @@ const VehicleLocation: React.FC = () => {
 
   // Filter vehicles based on search term
   const filteredVehicles = vehicles.filter(vehicle =>
-    vehicle.registrationNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+   vehicle.registration_number && vehicle.registration_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
     `${vehicle.make} ${vehicle.model}`.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -278,7 +278,7 @@ const VehicleLocation: React.FC = () => {
               >
                 <div className="vehicle-info">
                   <h3 className="vehicle-name text-capitalize">{vehicle.make} {vehicle.model}</h3>
-                  <p className="vehicle-registration text-uppercase">{vehicle.registrationNumber}</p>
+                  <p className="vehicle-registration text-uppercase">{vehicle.registration_number}</p>
                   <p className="vehicle-owner">{vehicle.owner}</p>
                 </div>
                 <div className="vehicle-location-info">
@@ -319,7 +319,7 @@ const VehicleLocation: React.FC = () => {
                   <MapPin size={20} />
                   {selectedVehicle.make} {selectedVehicle.model}
                 </h2>
-                <p className="details-subtitle text-uppercase">{selectedVehicle.registrationNumber}</p>
+                <p className="details-subtitle text-uppercase">{selectedVehicle.registration_number}</p>
               </div>
 
               {selectedVehicle.currentLocation ? (
