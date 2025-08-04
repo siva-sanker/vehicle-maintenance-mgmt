@@ -138,7 +138,7 @@ const InsuranceManagement: React.FC = () => {
         </div>
 
         {loading ? (
-          <div className="loading-state">
+          <div className="empty-state">
             <p>Loading insurance data...</p>
           </div>
         ) : filteredInsuranceRecords.length === 0 ? (

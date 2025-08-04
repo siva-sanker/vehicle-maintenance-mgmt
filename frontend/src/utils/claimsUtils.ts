@@ -22,7 +22,7 @@ export interface FormData {
 
 export const getAllClaims = async (): Promise<Claim[]> => {
   try {
-    const data = await claimsAPI.getAllClaims();
+    const data = await claimsAPI.getAllClaims();    
     return data;
   } catch (err) {
     console.error(err);

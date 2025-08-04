@@ -57,16 +57,18 @@ ChartJS.register(
   Filler
 );
 
-          const actions = [
-            { label: 'Register Vehicle', path: '/register-vehicle', icon: Car },
-            { label: 'View Vehicles', path: '/vehicle-list', icon: FileText },
-            { label: 'Manage Claims', path: '/claims', icon: AlertTriangle },
-            { label: 'Insurance', path: '/insurance', icon: Shield },
+const actions = [
+  { label: 'Register Vehicle', path: '/register-vehicle', icon: Car },
+  { label: 'View Vehicles', path: '/vehicle-list', icon: FileText },
+  { label: 'Manage Claims', path: '/claims', icon: AlertTriangle },
+  { label: 'Insurance', path: '/insurance', icon: Shield },
 
-          ];
+];
 const Dashboard: React.FC = () => {
   const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [showEmpty, setShowEmpty] = useState(false);
+
   // const navigate = useNavigate();
   const location = useLocation();
 
@@ -86,10 +88,35 @@ const Dashboard: React.FC = () => {
     loadDashboardData();
   }, [location]);
 
+  useEffect(() => {
+  const timer = setTimeout(() => {
+    if (!dashboardStats) {
+      setShowEmpty(true);
+    }
+  }, 1500); // 3 seconds
+
+  return () => clearTimeout(timer);
+}, [dashboardStats]);
+
   // Early return if no data
-  if (!dashboardStats) {
-    return null;
-  }
+if (!dashboardStats) {
+  return (
+    <PageContainer>
+      {showEmpty ? (
+        <div className="empty-state">
+          <AlertTriangle size={64} className="empty-icon" />
+          <h3 className="text-center">No dashboard data available.</h3>
+        </div>
+      ) : (
+        <div className="loading-state">
+          <Car size={64} className="loading-icon" />
+          <h3 className="text-center">Loading dashboard...</h3>
+        </div>
+      )}
+    </PageContainer>
+  );
+}
+
 
   // Chart configurations
   const fuelTypeChartData = getFuelTypeChartData(dashboardStats.fuelTypeData);
@@ -98,28 +125,8 @@ const Dashboard: React.FC = () => {
   const chartOptions = getChartOptions();
   const lineChartOptions = getLineChartOptions();
 
-  if (loading) {
-    return (
-      <>
-      {/* <div className="dashboard-container"> */}
-      {/* <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator /> */}
-      <PageContainer>
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p>Loading dashboard data...</p>
-        </div>
-
-      </PageContainer>
-        {/* <Footer /> */}
-      {/* </div> */}
-      </>
-    );
-  }
-
   return (
     <>
-      {/* <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator/> */}
-
       <PageContainer>
     {/* <div className="dashboard-container"> */}
       <div className="dashboard-content">

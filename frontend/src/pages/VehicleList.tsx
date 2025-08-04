@@ -43,6 +43,7 @@ const VehicleList: React.FC = () => {
   const [showDetailsModal, setShowDetailsModal] = useState<boolean>(false);
   const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   // Search state
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -61,19 +62,23 @@ const VehicleList: React.FC = () => {
   useEffect(() => {
     const fetchVehicles = async (): Promise<void> => {
       try {
+        setLoading(true);
+        const data = await fetchVehiclesData();
+        setVehicles(data);
+      } catch (fallbackErr) {
+        console.error('Fallback fetch also failed:', fallbackErr);
+      }
+      try {
         // Process expired insurance first
         const { updatedVehicles } = await processExpiredInsurance();
         setVehicles(updatedVehicles);
       } catch (err) {
         console.error(err);
         // Fallback to original fetch if processing fails
-        try {
-          const data = await fetchVehiclesData();
-          setVehicles(data);
-        } catch (fallbackErr) {
-          console.error('Fallback fetch also failed:', fallbackErr);
-        }
       }
+        finally{
+          setLoading(false);
+        }
     };
     fetchVehicles();
   }, []);
@@ -258,8 +263,12 @@ const VehicleList: React.FC = () => {
             </div>
           </div>
 
-
-        {vehicles.length === 0 ? (
+        {loading ? (
+          <div className="empty-state">
+            <p>Loading vehicles...</p>
+          </div>
+        ):
+        vehicles.length === 0 ? (
           <div className="empty-state">
             <Car size={64} className="empty-icon" />
             <h3>No vehicles registered yet</h3>

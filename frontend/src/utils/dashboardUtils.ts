@@ -322,8 +322,8 @@ export const getStatsCardsData = (stats: DashboardStats) => [
     { title: 'Total Drivers', subtitle: stats.totalDrivers },
     { title: 'Total Insurances', subtitle: stats.insurancePolicies },
     { title: 'Total Claims', subtitle: stats.activeClaims },
-    { title: 'Total Claim Amount', subtitle: `${stats.totalClaimAmount.toLocaleString()} /-` },
-    { title: 'Total Maintenance Cost', subtitle: `${stats.totalMaintenanceCost.toLocaleString()} /-` },
+    { title: 'Total Claim Amount', subtitle: `${stats.totalClaimAmount.toLocaleString()} rs` },
+    { title: 'Total Maintenance Cost', subtitle: `${stats.totalMaintenanceCost.toLocaleString()} rs` },
     // { title: 'Upcoming Maintenance', subtitle: stats.upcomingMaintenance },
     { title: 'Document Count', subtitle: stats.documentCount },
     { title: 'Insurance Coverage', subtitle: calculateInsuranceCoverage(stats.insurancePolicies, stats.totalVehicles) }

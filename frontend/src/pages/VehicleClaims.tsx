@@ -86,8 +86,8 @@ const VehicleClaims: React.FC = () => {
 
         const filtered = allClaims.filter((claim) => {
           const matchesSearch =
-            claim.vehicle_id &&
-            claim.vehicle_id.toLowerCase().includes(searchTerm.toLowerCase());
+            claim.registration_number &&
+            claim.registration_number.toLowerCase().includes(searchTerm.toLowerCase());
             
             const claimDate = new Date(claim.claim_date);
             const matchesFrom = fromDate ? claimDate >= new Date(fromDate) : true;
@@ -283,8 +283,8 @@ const VehicleClaims: React.FC = () => {
                         )
                       },
                       {
-                        key: 'vehicle_id',
-                        header: 'Vehicle',
+                        key: 'registration_number',
+                        header: 'Vehicle Registration No.',
                         renderCell: (value: string) => (
                           <span className="vehicle-cell text-uppercase">{value}</span>
                         )

@@ -121,29 +121,41 @@ const DriverPage: React.FC = () => {
   };
 
   // Validate form
-  const validate = () => {
-  if (!form.name.trim() || !form.license_number.trim() || !form.phone.trim()) {
-    setError('Name, License Number, and Phone are required');
-    return false;
-  }
+  const validate = async () => {
+    // Check required fields
+    if (!form.name.trim() || !form.license_number.trim() || !form.phone.trim()) {
+      setError('Name, License Number, and Phone are required');
+      return false;
+    }
 
-  if (form.phone.trim().length < 10) {
-    setError('Phone number must be at least 10 digits');
-    return false;
-  }
-  if (form.phone.trim().length > 10) {
-    setError('Phone number must be 10 digits');
-    return false;
-  }
+    // Validate phone number length
+    if (form.phone.trim().length !== 10) {
+      setError('Phone number must be exactly 10 digits');
+      return false;
+    }
 
-  return true;
-};
+    // Only check for duplicate license number when adding a new driver (not when editing)
+    if (!editDriver) {
+      // Check if license number already exists (case-insensitive)
+      const licenseExists = drivers.some(
+        driver => driver.license_number.toLowerCase() === form.license_number.trim().toLowerCase()
+      );
+      
+      if (licenseExists) {
+        setError('A driver with this license number already exists');
+        return false;
+      }
+    }
+
+    return true;
+  };
 
 
   // Submit form
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validate()) return;
+    const isValid = await validate();
+    if (!isValid) return;
     try {
       const driverData = {
         ...form,
@@ -246,9 +258,9 @@ const DriverPage: React.FC = () => {
                 },
                 {
                   key: 'status',
-                  header: 'Active',
+                  header: 'Status',
                   renderCell: (value: string, row: any) => (
-                    <span className={`status-badge ${row.isActive ? 'active' : 'inactive'}`}>
+                    <span className={`status-badge ${row.status.toLowerCase() === 'active' ? 'active' : 'inactive'}`}>
                       {value}
                     </span>
                   )

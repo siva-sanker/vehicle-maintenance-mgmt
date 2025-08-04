@@ -6,7 +6,15 @@ export const getClaims = async (req: Request, res: Response) => {
     try {
         const pool = getDatabase();
         const result = await pool.request()
-            .query('SELECT * FROM claims WHERE deleted_at IS NULL ORDER BY created_at DESC');
+            .query(`
+                SELECT 
+                    claims.*, 
+                    vehicles.registration_number as 'registration_number'
+                FROM claims 
+                JOIN vehicles ON claims.vehicle_id = vehicles.id 
+                WHERE claims.deleted_at IS NULL 
+                ORDER BY claims.created_at DESC
+            `);
         res.json(result.recordset);
     } catch (error) {
         console.error('Error fetching claims:', error);
