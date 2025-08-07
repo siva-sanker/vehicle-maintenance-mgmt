@@ -45,7 +45,7 @@ interface Maintenance {
     status: string;
     last_updated: string;
     created_at: string;
-    deleted?: boolean; // For soft delete functionality
+    deleted_at?: boolean; // For soft delete functionality
 }
 
 interface Insurance {

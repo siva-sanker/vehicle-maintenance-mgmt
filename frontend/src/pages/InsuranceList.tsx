@@ -95,7 +95,7 @@ const InsuranceList: React.FC = () => {
     { key: 'policyNumber', header: 'Policy Number' },
     { key: 'insurer', header: 'Insurance Company' },
     { key: 'policyType', header: 'Policy Type' },
-    { key: 'startDate', header: 'Start Date' },
+    { key: 'startDate', header: 'Start Date',renderCell: (value: string) => formatDate(value) },
     { 
       key: 'endDate', 
       header: 'End Date',
@@ -104,7 +104,7 @@ const InsuranceList: React.FC = () => {
       )
     },
     { key: 'premiumAmount', header: 'Premium Amount' },
-    { key: 'issueDate', header: 'Issue Date' },
+    { key: 'issueDate', header: 'Issue Date',renderCell: (value: string) => formatDate(value) },
     { key: 'payment', header: 'Payment Mode' },
     { 
       key: 'status', 

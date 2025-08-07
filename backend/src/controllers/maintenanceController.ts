@@ -65,6 +65,17 @@ export const createMaintenance = async (req: Request, res: Response) => {
                 SELECT * FROM maintenance WHERE id = @id;
             `);
 
+        // If status is 'scheduled' or 'in progress', update vehicle status to 'maintenance'
+        if (status && ["scheduled", "in progress", "Scheduled", "In Progress"].includes(status.trim().toLowerCase())) {
+            await pool.request()
+                .input('vehicle_id', vehicle_id)
+                .input('status', 'maintenance')
+                .query(`
+                    UPDATE vehicles
+                    SET status = @status
+                    WHERE id = @vehicle_id;
+                `);
+        }
         res.status(201).json(result.recordset[0]);
     } catch (error) {
         console.error('Error creating maintenance record:', error);
@@ -96,6 +107,26 @@ export const updateMaintenance = async (req: Request, res: Response) => {
 
         if (result.recordset.length === 0) {
             return res.status(404).json({ message: 'Maintenance record not found' });
+        }
+        // After checking if (result.recordset.length === 0) { ... }, and before res.json(result.recordset[0]);
+        if (status && ["scheduled", "in progress", "Scheduled", "In Progress"].includes(status.trim().toLowerCase())) {
+            await pool.request()
+                .input('vehicle_id', vehicle_id)
+                .input('status', 'maintenance')
+                .query(`
+                    UPDATE vehicles
+                    SET status = @status
+                    WHERE id = @vehicle_id;
+                `);
+        } else if (status && ["completed", "Completed"].includes(status.trim().toLowerCase())) {
+            await pool.request()
+                .input('vehicle_id', vehicle_id)
+                .input('status', 'active')
+                .query(`
+                    UPDATE vehicles
+                    SET status = @status
+                    WHERE id = @vehicle_id;
+                `);
         }
         res.json(result.recordset[0]);
     } catch (error) {

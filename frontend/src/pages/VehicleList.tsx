@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {
   Car,
 } from 'lucide-react';
-import { Vehicle } from '../services/api.ts';
+import { Vehicle, Insurance, insuranceAPI } from '../services/api.ts';
 import {
   calculateVehicleAge,
   filterVehicles,
@@ -43,6 +43,8 @@ const VehicleList: React.FC = () => {
   const [showDetailsModal, setShowDetailsModal] = useState<boolean>(false);
   const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
+  const [selectedVehicleInsurance, setSelectedVehicleInsurance] = useState<Insurance[]>([]);
+  const [loadingInsurance, setLoadingInsurance] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
   // Search state
@@ -119,11 +121,21 @@ const VehicleList: React.FC = () => {
   };
 
 
-  const handleInsuranceUpdated = (updatedVehicle: Vehicle): void => {
+  const handleInsuranceUpdated = async (updatedVehicle: Vehicle): Promise<void> => {
     const updatedVehicles = vehicles.map((v) =>
       v.id === updatedVehicle.id ? updatedVehicle : v
     );
     setVehicles(updatedVehicles);
+    
+    // If the updated vehicle is the currently selected one, refresh its insurance details
+    if (selectedVehicle && selectedVehicle.id === updatedVehicle.id) {
+      try {
+        const insurance = await insuranceAPI.getInsuranceByVehicle(updatedVehicle.id);
+        setSelectedVehicleInsurance(insurance);
+      } catch (error) {
+        console.error('Error refreshing insurance details:', error);
+      }
+    }
   };
 
   const handleVehicleUpdated = (updatedVehicle: Vehicle): void => {
@@ -133,8 +145,21 @@ const VehicleList: React.FC = () => {
     setVehicles(updatedVehicles);
   };
 
-  const showVehicleDetails = (vehicle: Vehicle): void => {
+  const showVehicleDetails = async (vehicle: Vehicle): Promise<void> => {
     setSelectedVehicle(vehicle);
+    setLoadingInsurance(true);
+    
+    try {
+      // Fetch insurance details for the selected vehicle
+      const insurance = await insuranceAPI.getInsuranceByVehicle(vehicle.id);
+      setSelectedVehicleInsurance(insurance);
+    } catch (error) {
+      console.error('Error fetching insurance details:', error);
+      setSelectedVehicleInsurance([]);
+    } finally {
+      setLoadingInsurance(false);
+    }
+    
     setShowDetailsModal(true);
   };
 
@@ -218,7 +243,60 @@ const VehicleList: React.FC = () => {
       <div className="info-section">
         <h5 className='info-title'>Insurance Details</h5>
         <div className="info-grid">
-          <div className="no-insurance">Insurance information not available in current API</div>
+          {loadingInsurance ? (
+            <div className="loading-text">Loading insurance details...</div>
+          ) : selectedVehicleInsurance.length > 0 ? (
+            selectedVehicleInsurance.map((insurance, index) => (
+              <React.Fragment key={insurance.id}>
+                {selectedVehicleInsurance.length > 1 && (
+                  <div className="full-width">
+                    <h6 className="insurance-title">Policy #{index + 1}</h6>
+                  </div>
+                )}
+                <div>
+                  <span className="info-label">Policy Number:</span>
+                  <span className="policy-number">{insurance.policy_number}</span>
+                </div>
+                <div>
+                  <span className="info-label">Insurer:</span>
+                  <span className="text-capitalize">{insurance.insurer}</span>
+                </div>
+                <div>
+                  <span className="info-label">Policy Type:</span>
+                  <span className="text-capitalize">{insurance.policy_type}</span>
+                </div>
+                <div>
+                  <span className="info-label">Premium Amount:</span>
+                  <span className="amount">₹{insurance.premium_amount?.toLocaleString()}</span>
+                </div>
+                <div>
+                  <span className="info-label">Start Date:</span>
+                  <span>{formatDateDDMMYYYY(insurance.start_date)}</span>
+                </div>
+                <div>
+                  <span className="info-label">End Date:</span>
+                  <span>{formatDateDDMMYYYY(insurance.end_date)}</span>
+                </div>
+                <div>
+                  <span className="info-label">Issue Date:</span>
+                  <span>{formatDateDDMMYYYY(insurance.issue_date)}</span>
+                </div>
+                <div>
+                  <span className="info-label">Payment:</span>
+                  <span className="amount">₹{insurance.payment?.toLocaleString()}</span>
+                </div>
+                {index < selectedVehicleInsurance.length - 1 && (
+                  <div className="full-width">
+                    <hr className="insurance-divider" />
+                  </div>
+                )}
+              </React.Fragment>
+            ))
+          ) : (
+            <div className="no-insurance">
+              <span className='no-insurance-span'>No insurance policy found for this vehicle</span>
+            </div>
+          )}
         </div>
       </div>
     </div>
