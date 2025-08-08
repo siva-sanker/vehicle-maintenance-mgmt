@@ -7,7 +7,25 @@ export const getDrivers = async (req: Request, res: Response) => {
         const pool = getDatabase();
         const result = await pool.request()
             .query('SELECT * FROM drivers WHERE deleted_at IS NULL ORDER BY created_at DESC');
-        res.json(result.recordset);
+        
+        // Parse assigned_vehicles from JSON string to array for each driver
+        const driversWithParsedVehicles = result.recordset.map(driver => {
+            let assignedVehicleIds: string[] = [];
+            if (driver.assigned_vehicles) {
+                try {
+                    assignedVehicleIds = JSON.parse(driver.assigned_vehicles);
+                } catch (error) {
+                    console.warn(`Failed to parse assigned_vehicles for driver ${driver.id}:`, error);
+                    assignedVehicleIds = [];
+                }
+            }
+            return {
+                ...driver,
+                assignedVehicleIds
+            };
+        });
+        
+        res.json(driversWithParsedVehicles);
     } catch (error) {
         console.error('Error fetching drivers:', error);
         res.status(500).json({ message: 'Internal server error' });
@@ -18,7 +36,25 @@ export const getAllDrivers = async (req: Request, res: Response) => {
         const pool = getDatabase();
         const result = await pool.request()
             .query('SELECT * FROM drivers');
-        res.json(result.recordset);
+        
+        // Parse assigned_vehicles from JSON string to array for each driver
+        const driversWithParsedVehicles = result.recordset.map(driver => {
+            let assignedVehicleIds: string[] = [];
+            if (driver.assigned_vehicles) {
+                try {
+                    assignedVehicleIds = JSON.parse(driver.assigned_vehicles);
+                } catch (error) {
+                    console.warn(`Failed to parse assigned_vehicles for driver ${driver.id}:`, error);
+                    assignedVehicleIds = [];
+                }
+            }
+            return {
+                ...driver,
+                assignedVehicleIds
+            };
+        });
+        
+        res.json(driversWithParsedVehicles);
     } catch (error) {
         console.error('Error fetching drivers:', error);
         res.status(500).json({ message: 'Internal server error' });
@@ -36,7 +72,22 @@ export const getDriverById = async (req: Request, res: Response) => {
         if (result.recordset.length === 0) {
             return res.status(404).json({ message: 'Driver not found' });
         }
-        res.json(result.recordset[0]);
+        
+        const driver = result.recordset[0];
+        let assignedVehicleIds: string[] = [];
+        if (driver.assigned_vehicles) {
+            try {
+                assignedVehicleIds = JSON.parse(driver.assigned_vehicles);
+            } catch (error) {
+                console.warn(`Failed to parse assigned_vehicles for driver ${driver.id}:`, error);
+                assignedVehicleIds = [];
+            }
+        }
+        
+        res.json({
+            ...driver,
+            assignedVehicleIds
+        });
     } catch (error) {
         console.error('Error fetching driver:', error);
         res.status(500).json({ message: 'Internal server error' });
@@ -47,7 +98,25 @@ export const createDriver = async (req: Request, res: Response) => {
     try {
         const pool = getDatabase();
         const id = uuidv4().slice(0, 8);
-        const { name, phone, address, license_number } = req.body;
+        const { name, phone, address, license_number, status, assignedVehicleIds } = req.body;
+        // console.log(req.body);
+        // Convert assignedVehicleIds array to JSON string if provided
+        const assignedVehicleIdsStr = assignedVehicleIds && Array.isArray(assignedVehicleIds) 
+            ? JSON.stringify(assignedVehicleIds) 
+            : null;
+
+        // Validate assigned vehicle IDs exist in vehicles table if provided
+        if (assignedVehicleIds && Array.isArray(assignedVehicleIds) && assignedVehicleIds.length > 0) {
+            const vehicleChecks = assignedVehicleIds.map(vehicleId => `'${vehicleId}'`).join(',');
+            const vehicleValidation = await pool.request()
+                .query(`SELECT COUNT(*) as count FROM vehicles WHERE id IN (${vehicleChecks}) AND deleted_at IS NULL`);
+            
+            if (vehicleValidation.recordset[0].count !== assignedVehicleIds.length) {
+                return res.status(400).json({ 
+                    message: 'One or more assigned vehicle IDs do not exist or are deleted' 
+                });
+            }
+        }
 
         const result = await pool.request()
             .input('id', id)
@@ -55,9 +124,11 @@ export const createDriver = async (req: Request, res: Response) => {
             .input('phone', phone)
             .input('address', address)
             .input('license_number', license_number)
+            .input('status', status || 'active')
+            .input('assignedVehicleIds', assignedVehicleIdsStr)
             .query(`
-                INSERT INTO drivers (id, name, phone, address, license_number)
-                VALUES (@id, @name, @phone, @address, @license_number);
+                INSERT INTO drivers (id, name, phone, address, license_number, status, assigned_vehicles)
+                VALUES (@id, @name, @phone, @address, @license_number, @status, @assignedVehicleIds);
                 SELECT * FROM drivers WHERE id = @id;
             `);
 
@@ -72,7 +143,12 @@ export const updateDriver = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
         const pool = getDatabase();
-        const { name, phone, address, license_number, status } = req.body;
+        const { name, phone, address, license_number, status, assignedVehicleIds } = req.body;
+        
+        // Convert assignedVehicleIds array to JSON string if provided
+        const assignedVehicleIdsStr = assignedVehicleIds && Array.isArray(assignedVehicleIds) 
+            ? JSON.stringify(assignedVehicleIds) 
+            : null;
 
         const result = await pool.request()
             .input('id', id)
@@ -81,10 +157,12 @@ export const updateDriver = async (req: Request, res: Response) => {
             .input('address', address)
             .input('license_number', license_number)
             .input('status', status)
+            .input('assignedVehicleIds', assignedVehicleIdsStr)
             .query(`
                 UPDATE drivers 
                 SET name = @name, phone = @phone, address = @address, 
                     license_number = @license_number, status = @status, 
+                    assigned_vehicles = @assignedVehicleIds,
                     last_updated = GETDATE()
                 WHERE id = @id;
                 SELECT * FROM drivers WHERE id = @id;
@@ -220,7 +298,7 @@ export const assignVehicleToDriver = async (req: Request, res: Response) => {
         // First check if driver exists
         const driverCheck = await pool.request()
             .input('driverId', driverId)
-            .query('SELECT assignedVehicleIds FROM drivers WHERE id = @driverId AND deleted_at IS NULL');
+            .query('SELECT assigned_vehicles FROM drivers WHERE id = @driverId AND deleted_at IS NULL');
 
         if (driverCheck.recordset.length === 0) {
             return res.status(404).json({ message: 'Driver not found' });
@@ -238,7 +316,7 @@ export const assignVehicleToDriver = async (req: Request, res: Response) => {
         // Get current assigned vehicles
         let currentAssignedVehicles: string[] = [];
         try {
-            const assignedVehiclesStr = driverCheck.recordset[0].assignedVehicleIds;
+            const assignedVehiclesStr = driverCheck.recordset[0].assigned_vehicles;
             if (assignedVehiclesStr) {
                 currentAssignedVehicles = JSON.parse(assignedVehiclesStr);
             }
@@ -260,7 +338,7 @@ export const assignVehicleToDriver = async (req: Request, res: Response) => {
             .input('assignedVehicleIds', JSON.stringify(currentAssignedVehicles))
             .query(`
                 UPDATE drivers 
-                SET assignedVehicleIds = @assignedVehicleIds, last_updated = GETDATE()
+                SET assigned_vehicles = @assignedVehicleIds, last_updated = GETDATE()
                 WHERE id = @driverId;
                 SELECT * FROM drivers WHERE id = @driverId;
             `);
@@ -280,7 +358,7 @@ export const unassignVehicleFromDriver = async (req: Request, res: Response) => 
         // First check if driver exists
         const driverCheck = await pool.request()
             .input('driverId', driverId)
-            .query('SELECT assignedVehicleIds FROM drivers WHERE id = @driverId AND deleted_at IS NULL');
+            .query('SELECT assigned_vehicles FROM drivers WHERE id = @driverId AND deleted_at IS NULL');
 
         if (driverCheck.recordset.length === 0) {
             return res.status(404).json({ message: 'Driver not found' });
@@ -289,7 +367,7 @@ export const unassignVehicleFromDriver = async (req: Request, res: Response) => 
         // Get current assigned vehicles
         let currentAssignedVehicles: string[] = [];
         try {
-            const assignedVehiclesStr = driverCheck.recordset[0].assignedVehicleIds;
+            const assignedVehiclesStr = driverCheck.recordset[0].assigned_vehicles;
             if (assignedVehiclesStr) {
                 currentAssignedVehicles = JSON.parse(assignedVehiclesStr);
             }
@@ -311,7 +389,7 @@ export const unassignVehicleFromDriver = async (req: Request, res: Response) => 
             .input('assignedVehicleIds', JSON.stringify(currentAssignedVehicles))
             .query(`
                 UPDATE drivers 
-                SET assignedVehicleIds = @assignedVehicleIds, last_updated = GETDATE()
+                SET assigned_vehicles = @assignedVehicleIds, last_updated = GETDATE()
                 WHERE id = @driverId;
                 SELECT * FROM drivers WHERE id = @driverId;
             `);
@@ -331,7 +409,7 @@ export const getDriverAssignedVehicles = async (req: Request, res: Response) => 
         // Get driver with assigned vehicles
         const driverResult = await pool.request()
             .input('driverId', driverId)
-            .query('SELECT assignedVehicleIds FROM drivers WHERE id = @driverId AND deleted_at IS NULL');
+            .query('SELECT assigned_vehicles FROM drivers WHERE id = @driverId AND deleted_at IS NULL');
 
         if (driverResult.recordset.length === 0) {
             return res.status(404).json({ message: 'Driver not found' });
@@ -340,7 +418,7 @@ export const getDriverAssignedVehicles = async (req: Request, res: Response) => 
         // Parse assigned vehicle IDs
         let assignedVehicleIds: string[] = [];
         try {
-            const assignedVehiclesStr = driverResult.recordset[0].assignedVehicleIds;
+            const assignedVehiclesStr = driverResult.recordset[0].assigned_vehicles;
             if (assignedVehiclesStr) {
                 assignedVehicleIds = JSON.parse(assignedVehiclesStr);
             }

@@ -34,6 +34,7 @@ interface Driver {
     last_updated: string;
     deleted_at?: string; // For soft delete functionality
     created_at: string;
+    assignedVehicleIds?: string[];
 }
 
 interface Maintenance {
@@ -405,7 +406,7 @@ export const driverAPI = {
     getDriverById: (id: string): Promise<Driver> => api.get<Driver>(`/drivers/${id}`),
 
     // Create new driver
-    createDriver: (driverData: Omit<Driver, 'id'>): Promise<Driver> => api.post<Driver>('/drivers', driverData),
+    createDriver: (driverData: Omit<Driver, 'id'>): Promise<Driver> => api.post<Driver>('/driver', driverData),
 
     // Update driver
     updateDriver: (id: string, driverData: Partial<Driver>): Promise<Driver> => api.put<Driver>(`/drivers/${id}`, driverData),
@@ -421,6 +422,15 @@ export const driverAPI = {
 
     // Get all drivers including soft deleted (for admin purposes)
     getAllDriversIncludingDeleted: (): Promise<Driver[]> => api.get<Driver[]>('/alldrivers'),
+
+    // Assign vehicle to driver
+    assignVehicleToDriver: (driverId: string, vehicleId: string): Promise<Driver> => api.post<Driver>(`/drivers/${driverId}/assign-vehicle`, { vehicleId }),
+
+    // Unassign vehicle from driver
+    unassignVehicleFromDriver: (driverId: string, vehicleId: string): Promise<Driver> => api.delete<Driver>(`/drivers/${driverId}/unassign-vehicle/${vehicleId}`),
+
+    // Get driver assigned vehicles
+    getDriverAssignedVehicles: (driverId: string): Promise<Vehicle[]> => api.get<Vehicle[]>(`/drivers/${driverId}/assigned-vehicles`),
 };
 
 export const claimsAPI = {
@@ -445,3 +455,4 @@ export const claimsAPI = {
 
 // Export types for use in other files
 export type { Vehicle, Expense, DashboardStats, Driver, Maintenance, Insurance,Claim };
+export type DriverWithAssignedVehicles = Driver & { assignedVehicleIds?: string[]; };

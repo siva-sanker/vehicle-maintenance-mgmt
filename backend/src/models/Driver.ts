@@ -5,5 +5,6 @@ export interface Driver {
     address?: string;
     licenseNumber?: string;
     status?: string;
+    assignedVehicleIds?: string | string[];
     [key: string]: any;
-} 
+}

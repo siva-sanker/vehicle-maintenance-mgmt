@@ -65,11 +65,20 @@ export const createMaintenance = async (req: Request, res: Response) => {
                 SELECT * FROM maintenance WHERE id = @id;
             `);
 
-        // If status is 'scheduled' or 'in progress', update vehicle status to 'maintenance'
+        // Update vehicle status based on maintenance status
         if (status && ["scheduled", "in progress", "Scheduled", "In Progress"].includes(status.trim().toLowerCase())) {
             await pool.request()
                 .input('vehicle_id', vehicle_id)
                 .input('status', 'maintenance')
+                .query(`
+                    UPDATE vehicles
+                    SET status = @status
+                    WHERE id = @vehicle_id;
+                `);
+        } else if (status && ["completed", "Completed"].includes(status.trim().toLowerCase())) {
+            await pool.request()
+                .input('vehicle_id', vehicle_id)
+                .input('status', 'active')
                 .query(`
                     UPDATE vehicles
                     SET status = @status
@@ -172,6 +181,34 @@ export const patchMaintenance = async (req: Request, res: Response) => {
         if (result.recordset.length === 0) {
             return res.status(404).json({ message: 'Maintenance record not found' });
         }
+
+        // Update vehicle status if maintenance status was changed
+        if (req.body.status) {
+            const maintenanceRecord = result.recordset[0];
+            const status = req.body.status;
+            const vehicle_id = maintenanceRecord.vehicle_id;
+
+            if (status && ["scheduled", "in progress", "Scheduled", "In Progress"].includes(status.trim().toLowerCase())) {
+                await pool.request()
+                    .input('vehicle_id', vehicle_id)
+                    .input('status', 'maintenance')
+                    .query(`
+                        UPDATE vehicles
+                        SET status = @status
+                        WHERE id = @vehicle_id;
+                    `);
+            } else if (status && ["completed", "Completed"].includes(status.trim().toLowerCase())) {
+                await pool.request()
+                    .input('vehicle_id', vehicle_id)
+                    .input('status', 'active')
+                    .query(`
+                        UPDATE vehicles
+                        SET status = @status
+                        WHERE id = @vehicle_id;
+                    `);
+            }
+        }
+
         res.json(result.recordset[0]);
     } catch (error) {
         console.error('Error patching maintenance record:', error);

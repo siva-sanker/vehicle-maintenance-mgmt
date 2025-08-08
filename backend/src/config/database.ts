@@ -50,6 +50,9 @@ export const getDatabase = () => {
 
 const createTables = async () => {
   const tableSql = `
+    -- Drop foreign key constraint if it exists
+    IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_assigned_vehicles')
+      ALTER TABLE drivers DROP CONSTRAINT FK_assigned_vehicles
     IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='vehicles' AND xtype='U')
     CREATE TABLE vehicles (
       id NVARCHAR(50) PRIMARY KEY,
@@ -82,8 +85,16 @@ const createTables = async () => {
       status NVARCHAR(50) DEFAULT 'active',
       last_updated DATETIME DEFAULT GETDATE(),
       deleted_at DATETIME NULL,
-      created_at DATETIME DEFAULT GETDATE()
+      created_at DATETIME DEFAULT GETDATE(),
+      assigned_vehicles NVARCHAR(MAX) NULL
     );
+    
+    -- Add assigned_vehicles column if table exists but column doesn't
+    IF EXISTS (SELECT * FROM sysobjects WHERE name='drivers' AND xtype='U')
+    AND NOT EXISTS (SELECT * FROM syscolumns WHERE id = OBJECT_ID('drivers') AND name = 'assigned_vehicles')
+    BEGIN
+      ALTER TABLE drivers ADD assigned_vehicles NVARCHAR(MAX) NULL
+    END
 
     IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='maintenance' AND xtype='U')
     CREATE TABLE maintenance (

@@ -27,6 +27,7 @@ const DriverPage: React.FC = () => {
     phone: '',
     address: '',
     status: 'active',
+    assignedVehicleIds: [] as string[],
   });
   const [error, setError] = useState('');
 
@@ -64,13 +65,23 @@ const DriverPage: React.FC = () => {
   );
 
   // Transform drivers data for the Table component
-  const tableData = filteredDrivers.map((driver, index) => ({
-    ...driver,
-    globalIndex: index + 1,
-    assignedVehicles: 'N/A', // Vehicle assignment feature not implemented in API
-    status: driver.status === 'active' ? 'Active' : 'Inactive',
-    actions: driver.id // We'll use this for the renderCell function
-  }));
+  const tableData = filteredDrivers.map((driver, index) => {
+    // Get assigned vehicles for this driver
+    const assignedVehicleNames = driver.assignedVehicleIds && driver.assignedVehicleIds.length > 0
+      ? driver.assignedVehicleIds.map(vehicleId => {
+          const vehicle = vehicles.find(v => v.id === vehicleId);
+          return vehicle ? vehicle.registration_number : 'Unknown';
+        }).join(', ')
+      : 'No vehicles assigned';
+    
+    return {
+      ...driver,
+      globalIndex: index + 1,
+      assignedVehicles: assignedVehicleNames,
+      status: driver.status === 'active' ? 'Active' : 'Inactive',
+      actions: driver.id // We'll use this for the renderCell function
+    };
+  });
 
   // Handle form input
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -88,10 +99,22 @@ const DriverPage: React.FC = () => {
     }
   };
 
-  // Handle vehicle assignment (placeholder - not implemented in API)
+  // Handle vehicle assignment
   const handleVehicleSelect = (vehicleId: string) => {
-    // Vehicle assignment feature not implemented in current API
-    console.log('Vehicle assignment not implemented:', vehicleId);
+    const currentAssigned = form.assignedVehicleIds || [];
+    if (currentAssigned.includes(vehicleId)) {
+      // Remove vehicle from assignment
+      setForm({
+        ...form,
+        assignedVehicleIds: currentAssigned.filter(id => id !== vehicleId)
+      });
+    } else {
+      // Add vehicle to assignment
+      setForm({
+        ...form,
+        assignedVehicleIds: [...currentAssigned, vehicleId]
+      });
+    }
   };
 
   // Open modal for add/edit
@@ -104,10 +127,11 @@ const DriverPage: React.FC = () => {
         phone: driver.phone,
         address: driver.address,
         status: driver.status,
+        assignedVehicleIds: driver.assignedVehicleIds || [],
       });
     } else {
       setEditDriver(null);
-      setForm({ name: '', license_number: '', phone: '', address: '', status: 'active' });
+      setForm({ name: '', license_number: '', phone: '', address: '', status: 'active', assignedVehicleIds: [] });
     }
     setShowModal(true);
     setError('');
@@ -162,12 +186,57 @@ const DriverPage: React.FC = () => {
         last_updated: new Date().toISOString(),
         created_at: editDriver ? editDriver.created_at : new Date().toISOString()
       };
+      // console.log('driver data',driverData);
       
+      let savedDriver;
       if (editDriver) {
-        await driverAPI.updateDriver(editDriver.id, driverData);
+        savedDriver = await driverAPI.updateDriver(editDriver.id, driverData);
       } else {
-        await driverAPI.createDriver(driverData);
+        savedDriver = await driverAPI.createDriver(driverData);
       }
+      
+      // Handle vehicle assignments
+      // try {
+      //   // First, get current assignments if editing
+      //   let currentAssignments: string[] = [];
+      //   if (editDriver && editDriver.assignedVehicleIds) {
+      //     currentAssignments = editDriver.assignedVehicleIds;
+      //   }
+        
+      //   const newAssignments = form.assignedVehicleIds || [];
+        
+      //   // Find vehicles to unassign (were assigned before but not now)
+      //   const toUnassign = currentAssignments.filter(vehicleId => 
+      //     !newAssignments.includes(vehicleId)
+      //   );
+        
+      //   // Find vehicles to assign (new assignments)
+      //   const toAssign = newAssignments.filter(vehicleId => 
+      //     !currentAssignments.includes(vehicleId)
+      //   );
+        
+      //   // Process unassignments
+      //   for (const vehicleId of toUnassign) {
+      //     try {
+      //       await driverAPI.unassignVehicleFromDriver(savedDriver.id, vehicleId);
+      //     } catch (unassignError) {
+      //       console.warn(`Failed to unassign vehicle ${vehicleId}:`, unassignError);
+      //     }
+      //   }
+        
+      //   // Process new assignments
+      //   for (const vehicleId of toAssign) {
+      //     try {
+      //       await driverAPI.assignVehicleToDriver(savedDriver.id, vehicleId);
+      //     } catch (assignError) {
+      //       console.warn(`Failed to assign vehicle ${vehicleId}:`, assignError);
+      //     }
+      //   }
+      // } catch (assignmentError) {
+      //   console.error('Error managing vehicle assignments:', assignmentError);
+      //   setError('Driver saved but there was an issue with vehicle assignments');
+      // }
+      
       // Refresh list
       const driversData = await driverAPI.getAllDrivers();
       setDrivers(driversData);
@@ -269,7 +338,7 @@ const DriverPage: React.FC = () => {
                   key: 'assignedVehicles',
                   header: 'Assigned Vehicles',
                   renderCell: (value: string) => {
-                    if (!value) return <span>No vehicles assigned</span>;
+                    if (!value || value === 'No vehicles assigned') return <span>No vehicles assigned</span>;
                     return value.split(', ').map((vid, index) => (
                       <span key={index} className="driver-vehicle-badge text-uppercase">
                         {vid}
@@ -326,7 +395,7 @@ const DriverPage: React.FC = () => {
                   </label>
                 </div>
                 <div style={{ marginBottom: 12 }}>
-                  <label>Assign Vehicles (Feature Coming Soon)</label>
+                  <label>Assign Vehicles</label>
                   <div className="vehicle-list">
                     {vehicles.map((v) => (
                       <div key={v.id} className='driver-checkbox'>
@@ -334,15 +403,14 @@ const DriverPage: React.FC = () => {
                           {v.make} {v.model} <span className='text-uppercase'>({v.registration_number})</span>
                             <input
                               type="checkbox"
-                              disabled
-                              checked={false}
+                              checked={form.assignedVehicleIds?.includes(v.id) || false}
                               onChange={() => handleVehicleSelect(v.id)} 
                             />
                         </label>
                       </div>
                     ))}
                   </div>
-                  <small style={{ color: '#666', fontStyle: 'italic' }}>Vehicle assignment feature will be available in a future update.</small>
+                  <small style={{ color: '#666', fontStyle: 'italic' }}>Select vehicles to assign to this driver.</small>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
                   <CancelButton onClick={closeModal} text='Cancel'/>

@@ -2,16 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {
-  Car,
-} from 'lucide-react';
+import { Car, } from 'lucide-react';
 import { Vehicle, Insurance, insuranceAPI } from '../services/api.ts';
-import {
-  calculateVehicleAge,
-  filterVehicles,
-  fetchVehiclesData,
-  formatDateDDMMYYYY,
-} from '../utils/vehicleUtils.ts';
+import {  calculateVehicleAge,  filterVehicles,  fetchVehiclesData,  formatDateDDMMYYYY,} from '../utils/vehicleUtils.ts';
 import {Claim, getClaimsByVehicleId} from '../utils/claimsUtils.ts';
 import { processExpiredInsurance } from '../utils/insuranceUtils.ts';
 import '../styles/Vehiclelist.css';
@@ -194,11 +187,11 @@ const VehicleList: React.FC = () => {
         <div className="info-grid">
           <div>
             <span className="info-label">Color:</span>
-            <span>{vehicle.color}</span>
+            <span style={{fontSize:'13px'}}>{vehicle.color}</span>
           </div>
           <div>
             <span className="info-label">Age:</span>
-            <span>{calculateVehicleAge(vehicle.purchase_date)} years</span>
+            <span style={{fontSize:'13px'}}>{calculateVehicleAge(vehicle.purchase_date)} years</span>
           </div>
           <div>
             <span className="info-label">Fuel Type:</span>
@@ -211,15 +204,15 @@ const VehicleList: React.FC = () => {
         <div className="info-grid">
           <div>
             <span className="info-label">Engine No.:</span>
-            <span>{vehicle.engine_number.toUpperCase()}</span>
+            <span style={{fontSize:'13px'}}>{vehicle.engine_number.toUpperCase()}</span>
           </div>
           <div>
             <span className="info-label">Chassis No.:</span>
-            <span>{vehicle.chassis_number.toUpperCase()}</span>
+            <span style={{fontSize:'13px'}}>{vehicle.chassis_number.toUpperCase()}</span>
           </div>
           <div>
             <span className="info-label">Price:</span>
-            <span>₹{vehicle.purchase_price}</span>
+            <span style={{fontSize:'13px'}}>₹{vehicle.purchase_price}</span>
           </div>
         </div>
       </div>
@@ -228,15 +221,15 @@ const VehicleList: React.FC = () => {
         <div className="info-grid">
           <div>
             <span className="info-label">Owner:</span>
-            <span className="text-capitalize">{vehicle.owner}</span>
+            <span className="text-capitalize" style={{fontSize:'13px'}}>{vehicle.owner}</span>
           </div>
           <div>
             <span className="info-label">Phone:</span>
-            <span>{vehicle.phone}</span>
+            <span style={{fontSize:'13px'}}>{vehicle.phone}</span>
           </div>
           <div className="full-width">
             <span className="info-label">Address:</span>
-            <span>{vehicle.address}</span>
+            <span style={{fontSize:'13px'}}>{vehicle.address}</span>
           </div>
         </div>
       </div>
@@ -255,35 +248,35 @@ const VehicleList: React.FC = () => {
                 )}
                 <div>
                   <span className="info-label">Policy Number:</span>
-                  <span className="policy-number">{insurance.policy_number}</span>
+                  <span className="policy-number" style={{fontSize:'13px'}}>{insurance.policy_number}</span>
                 </div>
                 <div>
                   <span className="info-label">Insurer:</span>
-                  <span className="text-capitalize">{insurance.insurer}</span>
+                  <span className="text-capitalize" style={{fontSize:'13px'}}>{insurance.insurer}</span>
                 </div>
                 <div>
                   <span className="info-label">Policy Type:</span>
-                  <span className="text-capitalize">{insurance.policy_type}</span>
+                  <span className="text-capitalize" style={{fontSize:'13px'}}>{insurance.policy_type}</span>
                 </div>
                 <div>
                   <span className="info-label">Premium Amount:</span>
-                  <span className="amount">₹{insurance.premium_amount?.toLocaleString()}</span>
+                  <span className="amount" style={{fontSize:'13px'}}>₹{insurance.premium_amount?.toLocaleString()}</span>
                 </div>
                 <div>
                   <span className="info-label">Start Date:</span>
-                  <span>{formatDateDDMMYYYY(insurance.start_date)}</span>
+                  <span style={{fontSize:'13px'}}>{formatDateDDMMYYYY(insurance.start_date)}</span>
                 </div>
                 <div>
                   <span className="info-label">End Date:</span>
-                  <span>{formatDateDDMMYYYY(insurance.end_date)}</span>
+                  <span style={{fontSize:'13px'}}>{formatDateDDMMYYYY(insurance.end_date)}</span>
                 </div>
                 <div>
                   <span className="info-label">Issue Date:</span>
-                  <span>{formatDateDDMMYYYY(insurance.issue_date)}</span>
+                  <span style={{fontSize:'13px'}}>{formatDateDDMMYYYY(insurance.issue_date)}</span>
                 </div>
                 <div>
                   <span className="info-label">Payment:</span>
-                  <span className="amount">₹{insurance.payment?.toLocaleString()}</span>
+                  <span className="amount" style={{fontSize:'13px'}}>₹{insurance.payment?.toLocaleString()}</span>
                 </div>
                 {index < selectedVehicleInsurance.length - 1 && (
                   <div className="full-width">

@@ -20,7 +20,10 @@ import {
     patchDriver,
     // deleteDriver,
     // softDeleteDriver,
-    restoreDriver
+    restoreDriver,
+    assignVehicleToDriver,
+    unassignVehicleFromDriver,
+    getDriverAssignedVehicles
 } from '../controllers/driverController';
 import {
     getMaintenance,
@@ -58,12 +61,15 @@ router.patch('/vehicles/:id/restore', restoreVehicle);
 router.get('/drivers', getDrivers);
 router.get('/alldrivers', getAllDrivers);
 router.get('/drivers/:id', getDriverById);
-router.post('/drivers', createDriver);
+router.post('/driver', createDriver);
 router.put('/drivers/:id', updateDriver);
 router.patch('/drivers/:id', patchDriver);
+router.patch('/drivers/:id/restore', restoreDriver);
+router.post('/drivers/:driverId/assign-vehicle', assignVehicleToDriver);
+router.delete('/drivers/:driverId/unassign-vehicle/:vehicleId', unassignVehicleFromDriver);
+router.get('/drivers/:driverId/assigned-vehicles', getDriverAssignedVehicles);
 // router.delete('/drivers/:id', deleteDriver);
 // router.patch('/drivers/:id/soft-delete', softDeleteDriver);
-router.patch('/drivers/:id/restore', restoreDriver);
 
 // Maintenance routes
 router.get('/maintenance', getMaintenance);
