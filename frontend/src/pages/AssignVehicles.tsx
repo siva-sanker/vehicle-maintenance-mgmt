@@ -6,6 +6,7 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorMessage from "../components/ErrorMessage";
 import SuccessMessage from "../components/SuccessMessage";
 import { driverAPI, vehicleAPI, Vehicle } from "../services/api";
+import EditButton from '../components/EditButton';
 
 interface Driver {
     id: string;
@@ -119,7 +120,8 @@ const AssignVehicles: React.FC = () => {
             setError('Please select a driver and at least one vehicle.');
             return;
         }
-
+        console.log('vehicle id:',selectedVehicleIds);
+        
         try {
             setLoading(prev => ({ ...prev, assigning: true }));
             setError(null);
@@ -227,6 +229,7 @@ const AssignVehicles: React.FC = () => {
                                         {selectedVehicleIds.length} selected
                                     </span>
                                 )}
+                                <EditButton />
                             </div>
 
                             {!selectedDriverId ? (
@@ -280,7 +283,7 @@ const AssignVehicles: React.FC = () => {
                                                                             {vehicle.status}
                                                                         </span>
                                                                         {isAssigned && (
-                                                                            <span className="badge bg-secondary ms-2">
+                                                                            <span className="status-badge bg-secondary ms-2 text-white">
                                                                                 Already Assigned
                                                                             </span>
                                                                         )}

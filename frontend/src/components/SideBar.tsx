@@ -183,7 +183,7 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
               </NavLink>
             </li> */}
 
-            <li>
+            {/* <li>
               <NavLink
                 to="/driver" style={{fontWeight:400,color:"#cccccc"}}
                 className={({ isActive }) =>
@@ -196,7 +196,7 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
                 </span>
                 {!collapsed && "Driver Management"}
               </NavLink>
-            </li>
+            </li> */}
 
             <li>
               <NavLink
@@ -210,6 +210,21 @@ const SideBar: React.FC<SideBarProps> = ({ collapsed = false }) => {
                   <FontAwesomeIcon icon={faCaretRight} />
                 </span>
                 {!collapsed && "Vehicle Maintenance"}
+              </NavLink>
+            </li>
+
+            <li>
+              <NavLink
+                to="/assign" style={{fontWeight:400,color:"#cccccc"}}
+                className={({ isActive }) =>
+                  isActive ? "nav-item active" : "nav-item"
+                }
+                title={collapsed ? "Assign Vehicles" : ""}
+              >
+                <span>
+                  <FontAwesomeIcon icon={faCaretRight} />
+                </span>
+                {!collapsed && "Assign Vehicles"}
               </NavLink>
             </li>
 

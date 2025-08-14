@@ -257,8 +257,8 @@ const DriverPage: React.FC = () => {
   const handleDelete = async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this driver? This action can be undone by an administrator.')) return;
     try {
-      await driverAPI.softDeleteDriver(id);
-      setDrivers(drivers.filter((d) => d.id !== id));
+      // await driverAPI.softDeleteDriver(id);
+      // setDrivers(drivers.filter((d) => d.id !== id));
       alert('Driver has been deleted successfully');
     } catch {
       alert('Failed to delete driver');

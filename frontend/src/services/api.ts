@@ -545,27 +545,6 @@ export const insuranceAPI = {
     deleteInsurance: (id: string): Promise<void> => api.delete<void>(`/insurance/${id}`),
 };
 
-// Fuel Logs API methods
-// export const fuelLogsAPI = {
-//     // Get all fuel logs
-//     getAllFuelLogs: (): Promise<FuelLog[]> => api.get<FuelLog[]>('/fuelLogs'),
-
-//     // Get fuel log by ID
-//     getFuelLogById: (id: string): Promise<FuelLog> => api.get<FuelLog>(`/fuelLogs/${id}`),
-
-//     // Get fuel logs by vehicle ID
-//     getFuelLogsByVehicle: (vehicleId: string): Promise<FuelLog[]> => api.get<FuelLog[]>(`/fuelLogs?vehicleId=${vehicleId}`),
-
-//     // Create new fuel log
-//     createFuelLog: (fuelLogData: Omit<FuelLog, 'id'>): Promise<FuelLog> => api.post<FuelLog>('/fuelLogs', fuelLogData),
-
-//     // Update fuel log
-//     updateFuelLog: (id: string, fuelLogData: Partial<FuelLog>): Promise<FuelLog> => api.put<FuelLog>(`/fuelLogs/${id}`, fuelLogData),
-
-//     // Delete fuel log
-//     deleteFuelLog: (id: string): Promise<void> => api.delete<void>(`/fuelLogs/${id}`),
-// };
-
 // Expenses API methods
 export const expensesAPI = {
     // Get all expenses

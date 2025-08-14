@@ -68,7 +68,7 @@ router.post('/driver', createDriver);
 router.put('/drivers/:id', updateDriver);
 router.patch('/drivers/:id', patchDriver);
 router.patch('/drivers/:id/restore', restoreDriver);
-router.post('/drivers/:driverId/assign-vehicle', assignVehicleToDriver);
+router.post('/drivers/:driverId/assign-vehicles', assignVehicleToDriver);
 router.delete('/drivers/:driverId/unassign-vehicle/:vehicleId', unassignVehicleFromDriver);
 router.get('/drivers/:driverId/assigned-vehicles', getDriverAssignedVehicles);
 // router.delete('/drivers/:id', deleteDriver);
