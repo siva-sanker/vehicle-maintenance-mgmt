@@ -615,7 +615,7 @@ export const driverAPI = {
     assignMultipleVehiclesToDriver: (driverId: string, vehicleIds: string[]): Promise<any> => api.post<any>(`/drivers/${driverId}/assign-vehicles`, { vehicleIds }),
 
     // Unassign vehicle from driver
-    unassignVehicleFromDriver: (driverId: string, vehicleId: string): Promise<any> => api.delete<any>(`/drivers/${driverId}/unassign-vehicle/${vehicleId}`),
+    unassignVehicleFromDriver: (driverId: string, vehicleId: string[]): Promise<any> => api.delete<any>(`/drivers/${driverId}/unassign-vehicle/${vehicleId}`),
 
     // Get driver assigned vehicles
     getDriverAssignedVehicles: (driverId: string): Promise<any[]> => api.get<any[]>(`/drivers/${driverId}/assigned-vehicles`),

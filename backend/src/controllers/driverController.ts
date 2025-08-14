@@ -637,11 +637,12 @@ export const assignMultipleVehiclesToDriver = async (req: Request, res: Response
     }
 };
 
-export const unassignVehicleFromDriver = async (req: Request, res: Response) => {
+export const toggleAssignVehicleToDriver = async (req: Request, res: Response) => {
     try {
         const { driverId, vehicleId } = req.params;
         const pool = getDatabase();
 
+        // Fetch the current assigned vehicles for the driver
         const driverCheck = await pool.request()
             .input('driverId', driverId)
             .query(`
@@ -663,12 +664,14 @@ export const unassignVehicleFromDriver = async (req: Request, res: Response) => 
             assigned = [];
         }
 
-        if (!assigned.includes(vehicleId)) {
-            return res.status(400).json({ message: 'Vehicle not assigned to this driver' });
+        // Toggle vehicleId in the assigned list
+        if (assigned.includes(vehicleId)) {
+            assigned = assigned.filter(v => v !== vehicleId); // Remove
+        } else {
+            assigned.push(vehicleId); // Add
         }
 
-        assigned = assigned.filter(v => v !== vehicleId);
-
+        // Update the DB with new list
         const result = await pool.request()
             .input('driverId', driverId)
             .input('assigned', JSON.stringify(assigned))
@@ -690,7 +693,7 @@ export const unassignVehicleFromDriver = async (req: Request, res: Response) => 
         const driver = result.recordset[0];
 
         res.json({
-            message: 'Vehicle unassigned successfully',
+            message: `Vehicle ${assigned.includes(vehicleId) ? 'assigned' : 'unassigned'} successfully`,
             driver: {
                 id: driver.vd_id_pk,
                 name: driver.name,
@@ -700,10 +703,11 @@ export const unassignVehicleFromDriver = async (req: Request, res: Response) => 
             }
         });
     } catch (error) {
-        console.error('Error unassigning vehicle:', error);
+        console.error('Error toggling vehicle assignment:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
 
 export const getDriverAssignedVehicles = async (req: Request, res: Response) => {
     try {

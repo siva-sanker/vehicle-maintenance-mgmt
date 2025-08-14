@@ -15,7 +15,7 @@ interface Driver {
     address: string;
     license_number: string;
     status: string;
-    assignedVehicleIds: string[];
+    assignedVehicleIds?: string[];
 }
 
 type DriverOption = { value: string; label: string; disabled?: boolean };
@@ -26,6 +26,8 @@ const AssignVehicles: React.FC = () => {
     const [vehicles, setVehicles] = useState<Vehicle[]>([]);
     const [selectedVehicleIds, setSelectedVehicleIds] = useState<string[]>([]);
     const [assignedVehicleIds, setAssignedVehicleIds] = useState<string[]>([]);
+    const [isEditingAssigned, setIsEditingAssigned] = useState(false);
+
     const [loading, setLoading] = useState({
         drivers: true,
         vehicles: false,
@@ -49,6 +51,16 @@ const AssignVehicles: React.FC = () => {
             setSelectedVehicleIds([]);
         }
     }, [selectedDriverId]);
+
+        useEffect(() => {
+    setSelectedVehicleIds(assignedVehicleIds);
+    }, [assignedVehicleIds]);
+
+    const haveVehicleSelectionsChanged = () => {
+    const selected = [...selectedVehicleIds].sort();
+    const assigned = [...assignedVehicleIds].sort();
+    return JSON.stringify(selected) !== JSON.stringify(assigned);
+    };
 
     const loadDrivers = async () => {
         try {
@@ -145,6 +157,29 @@ const AssignVehicles: React.FC = () => {
             setLoading(prev => ({ ...prev, assigning: false }));
         }
     };
+    const handleUpdateVehicle = async () => {
+        try {
+            console.log('unassign vehicles:', selectedVehicleIds);
+            setLoading(prev => ({ ...prev, assigning: true }));
+            setError(null);
+
+            // Loop over vehicle IDs and unassign them one-by-one
+            for (const vehicleId of selectedVehicleIds) {
+                await driverAPI.unassignVehicleFromDriver(selectedDriverId, vehicleId);
+            }
+            setSuccessMessage(
+                `Successfully updated driver.`
+            );
+            setSelectedVehicleIds([]);
+            await loadDriverAssignedVehicles(selectedDriverId);
+        } catch (err) {
+            console.error('Error updating vehicles:', err);
+            setError('Failed to update vehicles. Please try again.');
+        } finally {
+            setLoading(prev => ({ ...prev, assigning: false }));
+        }
+    };
+
 
     const isVehicleAssigned = (vehicleId: string) => {
         return assignedVehicleIds.includes(vehicleId);
@@ -203,15 +238,20 @@ const AssignVehicles: React.FC = () => {
                                 />
                             )}
 
-                            {selectedDriverId && selectedVehicleIds.length > 0 && (
+                            {selectedDriverId && haveVehicleSelectionsChanged() && (
                                 <div className="mt-4">
                                     <ButtonWithGradient
-                                        text={`Assign ${selectedVehicleIds.length} Vehicle${selectedVehicleIds.length > 1 ? 's' : ''}`}
-                                        onClick={handleAssignVehicles}
+                                        text={
+                                            isEditingAssigned
+                                            ? `Update Driver`
+                                            : `Assign ${selectedVehicleIds.length} Vehicle${selectedVehicleIds.length > 1 ? 's' : ''}`
+                                        }
+                                        onClick={isEditingAssigned?handleUpdateVehicle:handleAssignVehicles}
                                         disabled={loading.assigning}
                                         processing={loading.assigning}
                                         className="w-100"
                                     />
+
                                 </div>
                             )}
                         </div>
@@ -229,7 +269,7 @@ const AssignVehicles: React.FC = () => {
                                         {selectedVehicleIds.length} selected
                                     </span>
                                 )}
-                                <EditButton />
+                                <EditButton onClick={() => setIsEditingAssigned(prev => !prev)} />
                             </div>
 
                             {!selectedDriverId ? (
@@ -255,7 +295,8 @@ const AssignVehicles: React.FC = () => {
                                                         key={vehicle.id} 
                                                         className={`list-group-item list-group-item-action ${
                                                             isAssigned ? 'list-group-item-secondary' : ''
-                                                        } ${isSelected ? 'bg-light border-primary' : ''}`}
+                                                        } ${isSelected ? 'bg-light border-primary' : ''}
+                                                         ${isEditingAssigned && isAssigned ? 'bg-white' : ''}`}
                                                     >
                                                         <div className="d-flex align-items-center">
                                                             <div className="form-check me-3">
@@ -264,7 +305,7 @@ const AssignVehicles: React.FC = () => {
                                                                     type="checkbox"
                                                                     id={`vehicle-${vehicle.id}`}
                                                                     checked={isSelected}
-                                                                    disabled={isAssigned || loading.assigning}
+                                                                    disabled={(!isEditingAssigned && isAssigned) || loading.assigning}
                                                                     onChange={(e) => handleVehicleCheckboxChange(vehicle.id, e.target.checked)}
                                                                 />
                                                             </div>
@@ -287,6 +328,11 @@ const AssignVehicles: React.FC = () => {
                                                                                 Already Assigned
                                                                             </span>
                                                                         )}
+                                                                        {/* {isEditingAssigned &&(
+                                                                            <span className="status-badge bg-primary ms-2 text-white">
+                                                                                Al
+                                                                            </span>
+                                                                        )} */}
                                                                     </div>
                                                                 </div>
                                                             </div>
