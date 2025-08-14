@@ -5,88 +5,134 @@ import { v4 as uuidv4 } from 'uuid';
 export const getDrivers = async (req: Request, res: Response) => {
     try {
         const pool = getDatabase();
-        const result = await pool.request()
-            .query('SELECT * FROM drivers WHERE deleted_at IS NULL ORDER BY created_at DESC');
-        
-        // Parse assigned_vehicles from JSON string to array for each driver
-        const driversWithParsedVehicles = result.recordset.map(driver => {
-            let assignedVehicleIds: string[] = [];
-            if (driver.assigned_vehicles) {
-                try {
-                    assignedVehicleIds = JSON.parse(driver.assigned_vehicles);
-                } catch (error) {
-                    console.warn(`Failed to parse assigned_vehicles for driver ${driver.id}:`, error);
-                    assignedVehicleIds = [];
-                }
-            }
+        const result = await pool.request().query(`
+            SELECT 
+                em.em_employeeid_pk AS id,
+                CONCAT(em.EM_FirstName, ' ', ISNULL(em.EM_LastName, '')) AS name, 
+                em.em_mobile AS phone, 
+                em.em_address AS address
+            FROM EMP_Physician_Master em
+            ORDER BY em.EM_FirstName
+        `);
+
+        const drivers = result.recordset.map(driver => {
             return {
-                ...driver,
-                assignedVehicleIds
+                id: driver.id,
+                name: driver.name.trim(),
+                phone: driver.phone,
+                address: driver.address,
+                license_number: null,
+                status: 'active',
+                assignedVehicleIds: [],
+                created_at: null,
+                modified_by: null,
+                modified_on: null,
+                provider_id: null,
+                outlet_id: null
             };
         });
-        
-        res.json(driversWithParsedVehicles);
+
+        res.json(drivers);
     } catch (error) {
         console.error('Error fetching drivers:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
 export const getAllDrivers = async (req: Request, res: Response) => {
     try {
         const pool = getDatabase();
-        const result = await pool.request()
-            .query('SELECT * FROM drivers');
-        
-        // Parse assigned_vehicles from JSON string to array for each driver
-        const driversWithParsedVehicles = result.recordset.map(driver => {
+        const result = await pool.request().query(`
+            SELECT 
+                vd.*, 
+                em.EM_FirstName AS name, 
+                em.em_mobile AS phone, 
+                em.em_address AS address
+            FROM vehicle_drivers vd
+            LEFT JOIN EMP_Physician_Master em ON vd.vd_id_pk = em.em_employeeid_pk
+            ORDER BY vd.vd_created_at DESC
+        `);
+
+        const drivers = result.recordset.map(driver => {
             let assignedVehicleIds: string[] = [];
-            if (driver.assigned_vehicles) {
+            if (driver.vd_assigned_vehicles) {
                 try {
-                    assignedVehicleIds = JSON.parse(driver.assigned_vehicles);
+                    assignedVehicleIds = JSON.parse(driver.vd_assigned_vehicles);
                 } catch (error) {
-                    console.warn(`Failed to parse assigned_vehicles for driver ${driver.id}:`, error);
-                    assignedVehicleIds = [];
+                    console.warn(`Failed to parse assigned vehicles for driver ${driver.vd_id_pk}`, error);
                 }
             }
+
             return {
-                ...driver,
-                assignedVehicleIds
+                id: driver.vd_id_pk,
+                name: driver.name,
+                phone: driver.phone,
+                address: driver.address,
+                license_number: driver.vd_license_number,
+                status: driver.vd_status,
+                assignedVehicleIds,
+                created_at: driver.vd_created_at,
+                modified_by: driver.vd_modified_by_fk,
+                modified_on: driver.vd_modified_on,
+                provider_id: driver.vd_provider_id_fk,
+                outlet_id: driver.vd_outlet_fk,
+                deleted_at: driver.vd_deleted_at
             };
         });
-        
-        res.json(driversWithParsedVehicles);
+
+        res.json(drivers);
     } catch (error) {
-        console.error('Error fetching drivers:', error);
+        console.error('Error fetching all drivers:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
 
 export const getDriverById = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
         const pool = getDatabase();
+
         const result = await pool.request()
             .input('id', id)
-            .query('SELECT * FROM drivers WHERE id = @id AND deleted_at IS NULL');
+            .query(`
+                SELECT 
+                    vd.*, 
+                    em.EM_FirstName AS name,
+                    em.em_mobile AS phone, 
+                    em.em_address AS address
+                FROM vehicle_drivers vd
+                LEFT JOIN EMP_Physician_Master em ON vd.vd_id_pk = em.em_employeeid_pk
+                WHERE vd.vd_id_pk = @id AND vd.vd_deleted_at IS NULL
+            `);
 
         if (result.recordset.length === 0) {
             return res.status(404).json({ message: 'Driver not found' });
         }
-        
+
         const driver = result.recordset[0];
         let assignedVehicleIds: string[] = [];
-        if (driver.assigned_vehicles) {
+        if (driver.vd_assigned_vehicles) {
             try {
-                assignedVehicleIds = JSON.parse(driver.assigned_vehicles);
+                assignedVehicleIds = JSON.parse(driver.vd_assigned_vehicles);
             } catch (error) {
-                console.warn(`Failed to parse assigned_vehicles for driver ${driver.id}:`, error);
-                assignedVehicleIds = [];
+                console.warn(`Failed to parse assigned vehicles for driver ${driver.vd_id_pk}`, error);
             }
         }
-        
+
         res.json({
-            ...driver,
-            assignedVehicleIds
+            id: driver.vd_id_pk,
+            name: driver.name,
+            phone: driver.phone,
+            address: driver.address,
+            license_number: driver.vd_license_number,
+            status: driver.vd_status,
+            assignedVehicleIds,
+            created_at: driver.vd_created_at,
+            modified_by: driver.vd_modified_by_fk,
+            modified_on: driver.vd_modified_on,
+            provider_id: driver.vd_provider_id_fk,
+            outlet_id: driver.vd_outlet_fk
         });
     } catch (error) {
         console.error('Error fetching driver:', error);
@@ -94,102 +140,184 @@ export const getDriverById = async (req: Request, res: Response) => {
     }
 };
 
+
 export const createDriver = async (req: Request, res: Response) => {
     try {
         const pool = getDatabase();
-        const id = uuidv4().slice(0, 8);
-        const { name, phone, address, license_number, status, assignedVehicleIds } = req.body;
-        // console.log(req.body);
+
+        const { employeeId, license_number, status, assignedVehicleIds, outlet_id, provider_id, modified_by } = req.body;
+
+        // Validate employee exists
+        const employeeCheck = await pool.request()
+            .input('employeeId', employeeId)
+            .query('SELECT EM_FirstName, em_mobile, em_address FROM EMP_Physician_Master WHERE em_employeeid_pk = @employeeId');
+
+        if (employeeCheck.recordset.length === 0) {
+            return res.status(400).json({ message: 'Employee not found' });
+        }
+
         // Convert assignedVehicleIds array to JSON string if provided
-        const assignedVehicleIdsStr = assignedVehicleIds && Array.isArray(assignedVehicleIds) 
-            ? JSON.stringify(assignedVehicleIds) 
+        const assignedVehicleIdsStr = assignedVehicleIds && Array.isArray(assignedVehicleIds)
+            ? JSON.stringify(assignedVehicleIds)
             : null;
 
-        // Validate assigned vehicle IDs exist in vehicles table if provided
-        if (assignedVehicleIds && Array.isArray(assignedVehicleIds) && assignedVehicleIds.length > 0) {
-            const vehicleChecks = assignedVehicleIds.map(vehicleId => `'${vehicleId}'`).join(',');
+        // Validate assigned vehicle IDs if provided
+        if (assignedVehicleIds && assignedVehicleIds.length > 0) {
+            const vehicleChecks = (assignedVehicleIds as string[]).map(v => `'${v}'`).join(',');
             const vehicleValidation = await pool.request()
-                .query(`SELECT COUNT(*) as count FROM vehicles WHERE id IN (${vehicleChecks}) AND deleted_at IS NULL`);
-            
+                .query(`SELECT COUNT(*) AS count FROM vehicles WHERE id IN (${vehicleChecks}) AND deleted_at IS NULL`);
+
             if (vehicleValidation.recordset[0].count !== assignedVehicleIds.length) {
-                return res.status(400).json({ 
-                    message: 'One or more assigned vehicle IDs do not exist or are deleted' 
-                });
+                return res.status(400).json({ message: 'One or more assigned vehicle IDs are invalid or deleted' });
             }
         }
 
-        const result = await pool.request()
-            .input('id', id)
-            .input('name', name)
-            .input('phone', phone)
-            .input('address', address)
+        // Insert driver
+        await pool.request()
+            .input('id', employeeId)
             .input('license_number', license_number)
             .input('status', status || 'active')
             .input('assignedVehicleIds', assignedVehicleIdsStr)
+            .input('outlet_id', outlet_id)
+            .input('provider_id', provider_id)
+            .input('modified_by', modified_by)
             .query(`
-                INSERT INTO drivers (id, name, phone, address, license_number, status, assigned_vehicles)
-                VALUES (@id, @name, @phone, @address, @license_number, @status, @assignedVehicleIds);
-                SELECT * FROM drivers WHERE id = @id;
+                INSERT INTO vehicle_drivers (
+                    vd_id_pk, vd_license_number, vd_status, vd_assigned_vehicles,
+                    vd_created_at, vd_modified_on, vd_outlet_fk, vd_provider_id_fk, vd_modified_by_fk
+                )
+                VALUES (
+                    @id, @license_number, @status, @assignedVehicleIds,
+                    GETDATE(), GETDATE(), @outlet_id, @provider_id, @modified_by
+                );
             `);
 
-        res.status(201).json(result.recordset[0]);
+        // Return driver with joined data
+        const result = await pool.request()
+            .input('id', employeeId)
+            .query(`
+                SELECT 
+                    vd.*, 
+                    em.EM_FirstName AS name, 
+                    em.em_mobile AS phone, 
+                    em.em_address AS address
+                FROM vehicle_drivers vd
+                LEFT JOIN EMP_Physician_Master em ON vd.vd_id_pk = em.em_employeeid_pk
+                WHERE vd.vd_id_pk = @id
+            `);
+
+        const driver = result.recordset[0];
+        const assignedVehicleIdsParsed = driver.vd_assigned_vehicles ? JSON.parse(driver.vd_assigned_vehicles) : [];
+
+        res.status(201).json({
+            id: driver.vd_id_pk,
+            name: driver.name,
+            phone: driver.phone,
+            address: driver.address,
+            license_number: driver.vd_license_number,
+            status: driver.vd_status,
+            assignedVehicleIds: assignedVehicleIdsParsed,
+            created_at: driver.vd_created_at,
+            outlet_id: driver.vd_outlet_fk,
+            provider_id: driver.vd_provider_id_fk
+        });
     } catch (error) {
         console.error('Error creating driver:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
 
+
 export const updateDriver = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
         const pool = getDatabase();
-        const { name, phone, address, license_number, status, assignedVehicleIds } = req.body;
-        
+        const { license_number, status, assignedVehicleIds, outlet_id, provider_id, modified_by } = req.body;
+
         // Convert assignedVehicleIds array to JSON string if provided
-        const assignedVehicleIdsStr = assignedVehicleIds && Array.isArray(assignedVehicleIds) 
-            ? JSON.stringify(assignedVehicleIds) 
+        const assignedVehicleIdsStr = assignedVehicleIds && Array.isArray(assignedVehicleIds)
+            ? JSON.stringify(assignedVehicleIds)
             : null;
 
-        const result = await pool.request()
+        // Validate driver exists
+        const existing = await pool.request()
             .input('id', id)
-            .input('name', name)
-            .input('phone', phone)
-            .input('address', address)
+            .query('SELECT * FROM vehicle_drivers WHERE vd_id_pk = @id AND vd_deleted_at IS NULL');
+
+        if (existing.recordset.length === 0) {
+            return res.status(404).json({ message: 'Driver not found' });
+        }
+
+        // Update driver
+        await pool.request()
+            .input('id', id)
             .input('license_number', license_number)
             .input('status', status)
             .input('assignedVehicleIds', assignedVehicleIdsStr)
+            .input('outlet_id', outlet_id)
+            .input('provider_id', provider_id)
+            .input('modified_by', modified_by)
             .query(`
-                UPDATE drivers 
-                SET name = @name, phone = @phone, address = @address, 
-                    license_number = @license_number, status = @status, 
-                    assigned_vehicles = @assignedVehicleIds,
-                    last_updated = GETDATE()
-                WHERE id = @id;
-                SELECT * FROM drivers WHERE id = @id;
+                UPDATE vehicle_drivers 
+                SET vd_license_number = @license_number,
+                    vd_status = @status,
+                    vd_assigned_vehicles = @assignedVehicleIds,
+                    vd_outlet_fk = @outlet_id,
+                    vd_provider_id_fk = @provider_id,
+                    vd_modified_by_fk = @modified_by,
+                    vd_modified_on = GETDATE()
+                WHERE vd_id_pk = @id;
             `);
 
-        if (result.recordset.length === 0) {
-            return res.status(404).json({ message: 'Driver not found' });
-        }
-        res.json(result.recordset[0]);
+        // Return updated driver with joined data
+        const result = await pool.request()
+            .input('id', id)
+            .query(`
+                SELECT 
+                    vd.*, 
+                    em.EM_FirstName AS name,
+                    em.em_mobile AS phone, 
+                    em.em_address AS address
+                FROM vehicle_drivers vd
+                LEFT JOIN EMP_Physician_Master em ON vd.vd_id_pk = em.em_employeeid_pk
+                WHERE vd.vd_id_pk = @id
+            `);
+
+        const driver = result.recordset[0];
+        const assignedVehicleIdsParsed = driver.vd_assigned_vehicles ? JSON.parse(driver.vd_assigned_vehicles) : [];
+
+        res.json({
+            id: driver.vd_id_pk,
+            name: driver.name,
+            phone: driver.phone,
+            address: driver.address,
+            license_number: driver.vd_license_number,
+            status: driver.vd_status,
+            assignedVehicleIds: assignedVehicleIdsParsed,
+            outlet_id: driver.vd_outlet_fk,
+            provider_id: driver.vd_provider_id_fk,
+            modified_on: driver.vd_modified_on
+        });
     } catch (error) {
         console.error('Error updating driver:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
 
+
 export const patchDriver = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
         const pool = getDatabase();
 
-        // Build dynamic update query
+        // Build dynamic SQL update query
         const updateFields: string[] = [];
         const inputs: any = { id };
 
         Object.keys(req.body).forEach(key => {
             if (key !== 'id') {
-                updateFields.push(`${key} = @${key}`);
+                const columnName = `vd_${key}`;
+                updateFields.push(`${columnName} = @${key}`);
                 inputs[key] = req.body[key];
             }
         });
@@ -198,11 +326,23 @@ export const patchDriver = async (req: Request, res: Response) => {
             return res.status(400).json({ message: 'No fields to update' });
         }
 
+        // Always update timestamp and status to inactive
+        updateFields.push("vd_modified_on = GETDATE()");
+        updateFields.push("vd_status = 'inactive'");
+
         const query = `
-            UPDATE drivers 
-            SET ${updateFields.join(', ')}, last_updated = GETDATE(), status='inactive'
-            WHERE id = @id;
-            SELECT * FROM drivers WHERE id = @id;
+            UPDATE vehicle_drivers 
+            SET ${updateFields.join(', ')}
+            WHERE vd_id_pk = @id;
+
+            SELECT 
+                vd.*, 
+                em.EM_FirstName AS name,
+                em.em_mobile AS phone, 
+                em.em_address AS address
+            FROM vehicle_drivers vd
+            LEFT JOIN EMP_Physician_Master em ON vd.vd_id_pk = em.em_employeeid_pk
+            WHERE vd.vd_id_pk = @id;
         `;
 
         const request = pool.request();
@@ -215,55 +355,27 @@ export const patchDriver = async (req: Request, res: Response) => {
         if (result.recordset.length === 0) {
             return res.status(404).json({ message: 'Driver not found' });
         }
-        res.json(result.recordset[0]);
+
+        const driver = result.recordset[0];
+        const assignedVehicleIds = driver.vd_assigned_vehicles ? JSON.parse(driver.vd_assigned_vehicles) : [];
+
+        res.json({
+            id: driver.vd_id_pk,
+            name: driver.name,
+            phone: driver.phone,
+            address: driver.address,
+            license_number: driver.vd_license_number,
+            status: driver.vd_status,
+            assignedVehicleIds,
+            outlet_id: driver.vd_outlet_fk,
+            provider_id: driver.vd_provider_id_fk,
+            modified_on: driver.vd_modified_on
+        });
     } catch (error) {
         console.error('Error patching driver:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
-
-// export const deleteDriver = async (req: Request, res: Response) => {
-//     try {
-//         const { id } = req.params;
-//         const pool = getDatabase();
-
-//         const result = await pool.request()
-//             .input('id', id)
-//             .query('DELETE FROM drivers WHERE id = @id');
-
-//         if (result.rowsAffected[0] === 0) {
-//             return res.status(404).json({ message: 'Driver not found' });
-//         }
-//         res.status(204).send();
-//     } catch (error) {
-//         console.error('Error deleting driver:', error);
-//         res.status(500).json({ message: 'Internal server error' });
-//     }
-// };
-
-// export const softDeleteDriver = async (req: Request, res: Response) => {
-//     try {
-//         const { id } = req.params;
-//         const pool = getDatabase();
-
-//         const result = await pool.request()
-//             .input('id', id)
-//             .query(`
-//                 UPDATE drivers 
-//                 SET deleted_at = GETDATE(), last_updated = GETDATE() 
-//                 WHERE id = @id;
-//                 SELECT * FROM drivers WHERE id = @id;
-//             `);
-
-//         if (result.recordset.length === 0) {
-//             return res.status(404).json({ message: 'Driver not found' });
-//         }
-//         res.json({ message: 'Driver soft-deleted', driver: result.recordset[0] });
-//     } catch (error) {
-//         console.error('Error soft-deleting driver:', error);
-//         res.status(500).json({ message: 'Internal server error' });
-//     }
-// };
 
 export const restoreDriver = async (req: Request, res: Response) => {
     try {
@@ -273,16 +385,42 @@ export const restoreDriver = async (req: Request, res: Response) => {
         const result = await pool.request()
             .input('id', id)
             .query(`
-                UPDATE drivers 
-                SET deleted_at = NULL, last_updated = GETDATE(), status='active'
-                WHERE id = @id;
-                SELECT * FROM drivers WHERE id = @id;
+                UPDATE vehicle_drivers 
+                SET vd_deleted_at = NULL, vd_modified_on = GETDATE(), vd_status = 'active'
+                WHERE vd_id_pk = @id;
+
+                SELECT 
+                    vd.*, 
+                    em.EM_FirstName AS name,
+                    em.em_mobile AS phone, 
+                    em.em_address AS address
+                FROM vehicle_drivers vd
+                LEFT JOIN EMP_Physician_Master em ON vd.vd_id_pk = em.em_employeeid_pk
+                WHERE vd.vd_id_pk = @id;
             `);
 
         if (result.recordset.length === 0) {
             return res.status(404).json({ message: 'Driver not found' });
         }
-        res.json({ message: 'Driver restored', driver: result.recordset[0] });
+
+        const driver = result.recordset[0];
+        const assignedVehicleIds = driver.vd_assigned_vehicles ? JSON.parse(driver.vd_assigned_vehicles) : [];
+
+        res.json({
+            message: 'Driver restored',
+            driver: {
+                id: driver.vd_id_pk,
+                name: driver.name,
+                phone: driver.phone,
+                address: driver.address,
+                license_number: driver.vd_license_number,
+                status: driver.vd_status,
+                assignedVehicleIds,
+                outlet_id: driver.vd_outlet_fk,
+                provider_id: driver.vd_provider_id_fk,
+                modified_on: driver.vd_modified_on
+            }
+        });
     } catch (error) {
         console.error('Error restoring driver:', error);
         res.status(500).json({ message: 'Internal server error' });
@@ -295,10 +433,14 @@ export const assignVehicleToDriver = async (req: Request, res: Response) => {
         const { vehicleId } = req.body;
         const pool = getDatabase();
 
-        // First check if driver exists
+        // Check if driver exists
         const driverCheck = await pool.request()
             .input('driverId', driverId)
-            .query('SELECT assigned_vehicles FROM drivers WHERE id = @driverId AND deleted_at IS NULL');
+            .query(`
+                SELECT vd_assigned_vehicles 
+                FROM vehicle_drivers 
+                WHERE vd_id_pk = @driverId AND vd_deleted_at IS NULL
+            `);
 
         if (driverCheck.recordset.length === 0) {
             return res.status(404).json({ message: 'Driver not found' });
@@ -307,45 +449,162 @@ export const assignVehicleToDriver = async (req: Request, res: Response) => {
         // Check if vehicle exists
         const vehicleCheck = await pool.request()
             .input('vehicleId', vehicleId)
-            .query('SELECT id FROM vehicles WHERE id = @vehicleId AND deleted_at IS NULL');
+            .query('SELECT v_id_pk FROM vehicles WHERE v_id_pk = @vehicleId AND v_deleted_at IS NULL');
 
         if (vehicleCheck.recordset.length === 0) {
             return res.status(404).json({ message: 'Vehicle not found' });
         }
 
-        // Get current assigned vehicles
-        let currentAssignedVehicles: string[] = [];
+        // Parse current assigned vehicles
+        let assigned: string[] = [];
         try {
-            const assignedVehiclesStr = driverCheck.recordset[0].assigned_vehicles;
-            if (assignedVehiclesStr) {
-                currentAssignedVehicles = JSON.parse(assignedVehiclesStr);
-            }
+            assigned = driverCheck.recordset[0].vd_assigned_vehicles
+                ? JSON.parse(driverCheck.recordset[0].vd_assigned_vehicles)
+                : [];
         } catch {
-            currentAssignedVehicles = [];
+            assigned = [];
         }
 
-        // Check if vehicle is already assigned
-        if (currentAssignedVehicles.includes(vehicleId)) {
+        if (assigned.includes(vehicleId)) {
             return res.status(400).json({ message: 'Vehicle already assigned to this driver' });
         }
 
-        // Add vehicle to assigned list
-        currentAssignedVehicles.push(vehicleId);
+        assigned.push(vehicleId);
 
-        // Update driver with new assigned vehicles
+        // Update assignment
         const result = await pool.request()
             .input('driverId', driverId)
-            .input('assignedVehicleIds', JSON.stringify(currentAssignedVehicles))
+            .input('assigned', JSON.stringify(assigned))
             .query(`
-                UPDATE drivers 
-                SET assigned_vehicles = @assignedVehicleIds, last_updated = GETDATE()
-                WHERE id = @driverId;
-                SELECT * FROM drivers WHERE id = @driverId;
+                UPDATE vehicle_drivers 
+                SET vd_assigned_vehicles = @assigned, vd_modified_on = GETDATE()
+                WHERE vd_id_pk = @driverId;
+
+                SELECT 
+                    vd.*, 
+                    em.EM_FirstName AS name,
+                    em.em_mobile AS phone, 
+                    em.em_address AS address
+                FROM vehicle_drivers vd
+                LEFT JOIN EMP_Physician_Master em ON vd.vd_id_pk = em.em_employeeid_pk
+                WHERE vd.vd_id_pk = @driverId;
             `);
 
-        res.json({ message: 'Vehicle assigned successfully', driver: result.recordset[0] });
+        const driver = result.recordset[0];
+
+        res.json({
+            message: 'Vehicle assigned successfully',
+            driver: {
+                id: driver.vd_id_pk,
+                name: driver.name,
+                phone: driver.phone,
+                address: driver.address,
+                assignedVehicleIds: assigned
+            }
+        });
     } catch (error) {
-        console.error('Error assigning vehicle to driver:', error);
+        console.error('Error assigning vehicle:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+// Bulk assign multiple vehicles to driver
+export const assignMultipleVehiclesToDriver = async (req: Request, res: Response) => {
+    try {
+        const { driverId } = req.params;
+        const { vehicleIds } = req.body;
+        const pool = getDatabase();
+
+        if (!Array.isArray(vehicleIds) || vehicleIds.length === 0) {
+            return res.status(400).json({ message: 'vehicleIds must be a non-empty array' });
+        }
+
+        // Check if driver exists or create new entry
+        const driverCheck = await pool.request()
+            .input('driverId', driverId)
+            .query(`
+                SELECT vd_assigned_vehicles 
+                FROM vehicle_drivers 
+                WHERE vd_id_pk = @driverId AND vd_deleted_at IS NULL
+            `);
+
+        // If driver doesn't exist in vehicle_drivers table, create entry
+        if (driverCheck.recordset.length === 0) {
+            // Check if employee exists
+            const employeeCheck = await pool.request()
+                .input('driverId', driverId)
+                .query('SELECT EM_FirstName FROM EMP_Physician_Master WHERE em_employeeid_pk = @driverId');
+
+            if (employeeCheck.recordset.length === 0) {
+                return res.status(404).json({ message: 'Driver not found in employee master' });
+            }
+
+            // Create new driver entry
+            await pool.request()
+                .input('driverId', driverId)
+                .input('assigned', JSON.stringify(vehicleIds))
+                .query(`
+                    INSERT INTO vehicle_drivers (vd_id_pk, vd_status, vd_assigned_vehicles, vd_created_at, vd_modified_on)
+                    VALUES (@driverId, 'active', @assigned, GETDATE(), GETDATE())
+                `);
+        } else {
+            // Parse current assigned vehicles
+            let assigned: string[] = [];
+            try {
+                assigned = driverCheck.recordset[0].vd_assigned_vehicles
+                    ? JSON.parse(driverCheck.recordset[0].vd_assigned_vehicles)
+                    : [];
+            } catch {
+                assigned = [];
+            }
+
+            // Add new vehicle IDs (avoid duplicates)
+            for (const vehicleId of vehicleIds) {
+                if (!assigned.includes(vehicleId)) {
+                    assigned.push(vehicleId);
+                }
+            }
+
+            // Update assignment
+            await pool.request()
+                .input('driverId', driverId)
+                .input('assigned', JSON.stringify(assigned))
+                .query(`
+                    UPDATE vehicle_drivers 
+                    SET vd_assigned_vehicles = @assigned, vd_modified_on = GETDATE()
+                    WHERE vd_id_pk = @driverId
+                `);
+        }
+
+        // Return updated driver data
+        const result = await pool.request()
+            .input('driverId', driverId)
+            .query(`
+                SELECT 
+                    vd.*, 
+                    em.EM_FirstName AS name,
+                    em.em_mobile AS phone, 
+                    em.em_address AS address
+                FROM vehicle_drivers vd
+                LEFT JOIN EMP_Physician_Master em ON vd.vd_id_pk = em.em_employeeid_pk
+                WHERE vd.vd_id_pk = @driverId
+            `);
+
+        const driver = result.recordset[0];
+        const assignedVehicleIds = driver.vd_assigned_vehicles ? JSON.parse(driver.vd_assigned_vehicles) : [];
+
+        res.json({
+            message: `Successfully assigned ${vehicleIds.length} vehicles to driver`,
+            driver: {
+                id: driver.vd_id_pk,
+                name: driver.name,
+                phone: driver.phone,
+                address: driver.address,
+                assignedVehicleIds
+            }
+        });
+    } catch (error) {
+        console.error('Error assigning multiple vehicles:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
@@ -355,48 +614,65 @@ export const unassignVehicleFromDriver = async (req: Request, res: Response) => 
         const { driverId, vehicleId } = req.params;
         const pool = getDatabase();
 
-        // First check if driver exists
         const driverCheck = await pool.request()
             .input('driverId', driverId)
-            .query('SELECT assigned_vehicles FROM drivers WHERE id = @driverId AND deleted_at IS NULL');
+            .query(`
+                SELECT vd_assigned_vehicles 
+                FROM vehicle_drivers 
+                WHERE vd_id_pk = @driverId AND vd_deleted_at IS NULL
+            `);
 
         if (driverCheck.recordset.length === 0) {
             return res.status(404).json({ message: 'Driver not found' });
         }
 
-        // Get current assigned vehicles
-        let currentAssignedVehicles: string[] = [];
+        let assigned: string[] = [];
         try {
-            const assignedVehiclesStr = driverCheck.recordset[0].assigned_vehicles;
-            if (assignedVehiclesStr) {
-                currentAssignedVehicles = JSON.parse(assignedVehiclesStr);
-            }
+            assigned = driverCheck.recordset[0].vd_assigned_vehicles
+                ? JSON.parse(driverCheck.recordset[0].vd_assigned_vehicles)
+                : [];
         } catch {
-            currentAssignedVehicles = [];
+            assigned = [];
         }
 
-        // Check if vehicle is assigned
-        if (!currentAssignedVehicles.includes(vehicleId)) {
+        if (!assigned.includes(vehicleId)) {
             return res.status(400).json({ message: 'Vehicle not assigned to this driver' });
         }
 
-        // Remove vehicle from assigned list
-        currentAssignedVehicles = currentAssignedVehicles.filter(id => id !== vehicleId);
+        assigned = assigned.filter(v => v !== vehicleId);
 
-        // Update driver with new assigned vehicles
         const result = await pool.request()
             .input('driverId', driverId)
-            .input('assignedVehicleIds', JSON.stringify(currentAssignedVehicles))
+            .input('assigned', JSON.stringify(assigned))
             .query(`
-                UPDATE drivers 
-                SET assigned_vehicles = @assignedVehicleIds, last_updated = GETDATE()
-                WHERE id = @driverId;
-                SELECT * FROM drivers WHERE id = @driverId;
+                UPDATE vehicle_drivers 
+                SET vd_assigned_vehicles = @assigned, vd_modified_on = GETDATE()
+                WHERE vd_id_pk = @driverId;
+
+                SELECT 
+                    vd.*, 
+                    em.EM_FirstName AS name,
+                    em.em_mobile AS phone, 
+                    em.em_address AS address
+                FROM vehicle_drivers vd
+                LEFT JOIN EMP_Physician_Master em ON vd.vd_id_pk = em.em_employeeid_pk
+                WHERE vd.vd_id_pk = @driverId;
             `);
 
-        res.json({ message: 'Vehicle unassigned successfully', driver: result.recordset[0] });
+        const driver = result.recordset[0];
+
+        res.json({
+            message: 'Vehicle unassigned successfully',
+            driver: {
+                id: driver.vd_id_pk,
+                name: driver.name,
+                phone: driver.phone,
+                address: driver.address,
+                assignedVehicleIds: assigned
+            }
+        });
     } catch (error) {
-        console.error('Error unassigning vehicle from driver:', error);
+        console.error('Error unassigning vehicle:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
@@ -406,43 +682,47 @@ export const getDriverAssignedVehicles = async (req: Request, res: Response) => 
         const { driverId } = req.params;
         const pool = getDatabase();
 
-        // Get driver with assigned vehicles
+        // Step 1: Fetch assigned vehicle IDs for driver
         const driverResult = await pool.request()
             .input('driverId', driverId)
-            .query('SELECT assigned_vehicles FROM drivers WHERE id = @driverId AND deleted_at IS NULL');
+            .query(`
+                SELECT vd_assigned_vehicles 
+                FROM vehicle_drivers 
+                WHERE vd_id_pk = @driverId AND vd_deleted_at IS NULL
+            `);
 
         if (driverResult.recordset.length === 0) {
-            return res.status(404).json({ message: 'Driver not found' });
+            return res.status(404).json({ message: 'Driver not found or deleted' });
         }
 
-        // Parse assigned vehicle IDs
+        // Step 2: Parse vehicle IDs
         let assignedVehicleIds: string[] = [];
         try {
-            const assignedVehiclesStr = driverResult.recordset[0].assigned_vehicles;
-            if (assignedVehiclesStr) {
-                assignedVehicleIds = JSON.parse(assignedVehiclesStr);
+            const raw = driverResult.recordset[0].vd_assigned_vehicles;
+            if (raw) {
+                assignedVehicleIds = JSON.parse(raw);
             }
-        } catch {
-            assignedVehicleIds = [];
+        } catch (err) {
+            console.warn('Invalid JSON for assigned vehicles:', err);
         }
 
         if (assignedVehicleIds.length === 0) {
-            return res.json([]);
+            return res.json([]); // No vehicles assigned
         }
 
-        // Get vehicle details for assigned vehicles
-        const placeholders = assignedVehicleIds.map((_, index) => `@vehicleId${index}`).join(',');
+        // Step 3: Fetch vehicle details
+        const placeholders = assignedVehicleIds.map((_, index) => `@v${index}`).join(',');
         const request = pool.request();
         assignedVehicleIds.forEach((id, index) => {
-            request.input(`vehicleId${index}`, id);
+            request.input(`v${index}`, id);
         });
 
-        const vehiclesResult = await request.query(`
+        const vehicleResult = await request.query(`
             SELECT * FROM vehicles 
             WHERE id IN (${placeholders}) AND deleted_at IS NULL
         `);
 
-        res.json(vehiclesResult.recordset);
+        res.json(vehicleResult.recordset);
     } catch (error) {
         console.error('Error getting driver assigned vehicles:', error);
         res.status(500).json({ message: 'Internal server error' });

@@ -9,9 +9,9 @@ interface Option {
 
 interface SelectInputProps {
   label?: string;
-  name: string;
-  value: string | number;
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  name?: string;
+  value?: string | number;
+  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   options: Option[];
   placeholder?: string;
   required?: boolean;

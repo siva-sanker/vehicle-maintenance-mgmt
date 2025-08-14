@@ -54,7 +54,7 @@ const ClaimsModal: React.FC<ClaimsModalProps> = ({
                 <div key={index} className="claim-item">
                   <div className="claim-header">
                     <h4>Claim #{index + 1}</h4>
-                    <span className={`claim-status ${claim.status.toLowerCase()}`}>
+                    <span className={`claim-status ${claim.status}`}>
                       {claim.status}
                     </span>
                   </div>

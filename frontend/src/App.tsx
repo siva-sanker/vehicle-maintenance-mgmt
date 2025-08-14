@@ -17,6 +17,7 @@ import Driver from './pages/Driver.tsx';
 import VehicleMaintenance from './pages/VehicleMaintenance.tsx';
 import Header from './components/Header.tsx';
 import Footer from './components/Footer.tsx';
+import AssignVehicles from './pages/AssignVehicles.tsx';
 // import PageContainer from './components/PageContainer.tsx';
 
 const App: React.FC = () => {
@@ -51,6 +52,7 @@ const App: React.FC = () => {
               <Route path="/api" element={<ApiExample />}/>
               <Route path="/driver" element={<Driver />}/>
               <Route path="/main" element={<VehicleMaintenance />}/>
+              <Route path="/assign" element={<AssignVehicles />}/>
             </Routes>
             {/* </PageContainer> */}
             <Footer/>

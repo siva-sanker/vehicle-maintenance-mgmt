@@ -34,7 +34,8 @@ import {
     patchMaintenance,
     deleteMaintenance,
     getCompletedMaintenance,
-    getScheduledMaintenance
+    getScheduledMaintenance,
+    getDeletedMaintenance
 } from '../controllers/maintenanceController';
 
 import {
@@ -42,6 +43,8 @@ import {
     getClaimsByVehicleId,
     createClaim
 } from '../controllers/claimsController';
+
+import { getAssignedDrivers } from '../controllers/assignDriverController';
 
 const router = Router();
 
@@ -81,9 +84,12 @@ router.patch('/maintenance/:id', patchMaintenance);
 router.delete('/maintenance/:id', deleteMaintenance);
 router.get('/maintenance/completed', getCompletedMaintenance);
 router.get('/maintenance/scheduled', getScheduledMaintenance);
+router.get('/deletedmaintenance',getDeletedMaintenance);
 
 router.get('/claims', getClaims);
 router.get('/claims/vehicle/:vehicleId', getClaimsByVehicleId);
 router.post('/claims', createClaim);
+
+router.get('/assigned-drivers', getAssignedDrivers);
 
 export default router; 

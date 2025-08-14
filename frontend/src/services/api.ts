@@ -64,7 +64,17 @@ interface Insurance {
     created_at: string;
 }
 
-import { Claim } from "../utils/vehicleUtils";
+// Claims interface will be defined locally to avoid circular imports
+interface Claim {
+    id: string;
+    registration_number: string;
+    vehicle_id: string;
+    claim_date: string;
+    claim_amount: number;
+    reason: string;
+    status: string;
+    created_at?: string;
+}
 
 // interface FuelLog {
 //     id: string;
@@ -227,32 +237,101 @@ const api = {
     },
 };
 
+// Helper function to transform backend vehicle data to frontend format
+const transformVehicleData = (backendVehicle: any): Vehicle => {
+    return {
+        id: backendVehicle.v_id_pk?.toString() || '',
+        make: backendVehicle.v_make || '',
+        model: backendVehicle.v_model || '',
+        purchase_date: backendVehicle.v_purchase_date || '',
+        registration_number: backendVehicle.v_registration_number || '',
+        purchase_price: backendVehicle.v_purchase_price || 0,
+        fuel_type: backendVehicle.v_fuel_type || '',
+        engine_number: backendVehicle.v_engine_number || '',
+        chassis_number: backendVehicle.v_chassis_number || '',
+        kilometers: backendVehicle.v_kilometers || 0,
+        color: backendVehicle.v_color || '',
+        owner: backendVehicle.v_owner || '',
+        phone: backendVehicle.v_phone || '',
+        address: backendVehicle.v_address || '',
+        status: backendVehicle.v_status || 'active',
+        last_updated: backendVehicle.v_modified_on || backendVehicle.v_created_at || '',
+        deleted_at: backendVehicle.v_deleted_at || undefined,
+        created_at: backendVehicle.v_created_at || ''
+    };
+};
+
+// Helper function to transform frontend vehicle data to backend format
+const transformToBackendVehicleData = (frontendVehicle: any): any => {
+    const result: any = {};
+    
+    if (frontendVehicle.make !== undefined) result.make = frontendVehicle.make;
+    if (frontendVehicle.model !== undefined) result.model = frontendVehicle.model;
+    if (frontendVehicle.purchase_date !== undefined) result.purchase_date = frontendVehicle.purchase_date;
+    if (frontendVehicle.registration_number !== undefined) result.registration_number = frontendVehicle.registration_number;
+    if (frontendVehicle.purchase_price !== undefined) result.purchase_price = frontendVehicle.purchase_price;
+    if (frontendVehicle.fuel_type !== undefined) result.fuel_type = frontendVehicle.fuel_type;
+    if (frontendVehicle.engine_number !== undefined) result.engine_number = frontendVehicle.engine_number;
+    if (frontendVehicle.chassis_number !== undefined) result.chassis_number = frontendVehicle.chassis_number;
+    if (frontendVehicle.kilometers !== undefined) result.kilometers = frontendVehicle.kilometers;
+    if (frontendVehicle.color !== undefined) result.color = frontendVehicle.color;
+    if (frontendVehicle.owner !== undefined) result.owner = frontendVehicle.owner;
+    if (frontendVehicle.phone !== undefined) result.phone = frontendVehicle.phone;
+    if (frontendVehicle.address !== undefined) result.address = frontendVehicle.address;
+    if (frontendVehicle.status !== undefined) result.status = frontendVehicle.status;
+    
+    return result;
+};
+
 // Vehicle API methods
 export const vehicleAPI = {
     // Get all vehicles (excluding soft deleted)
     getAllVehicles: async (): Promise<Vehicle[]> => {
-        const allVehicles = await api.get<Vehicle[]>('/vehicles');
-        // Filter out soft deleted vehicles
-        return allVehicles.filter(vehicle => !vehicle.deleted_at);
+        const backendVehicles = await api.get<any[]>('/vehicles');
+        // Transform and filter out soft deleted vehicles
+        return backendVehicles
+            .filter(vehicle => !vehicle.v_deleted_at)
+            .map(transformVehicleData);
     },
 
     // Get vehicle by ID
-    getVehicleById: (id: string): Promise<Vehicle> => api.get<Vehicle>(`/vehicles/${id}`),
+    getVehicleById: async (id: string): Promise<Vehicle> => {
+        const backendVehicle = await api.get<any>(`/vehicles/${id}`);
+        return transformVehicleData(backendVehicle);
+    },
 
     // Create new vehicle
-    createVehicle: (vehicleData: Omit<Vehicle, 'id'>): Promise<Vehicle> => api.post<Vehicle>('/vehicles', vehicleData),
+    createVehicle: async (vehicleData: Omit<Vehicle, 'id'>): Promise<Vehicle> => {
+        const backendData = transformToBackendVehicleData(vehicleData);
+        const createdVehicle = await api.post<any>('/vehicles', backendData);
+        return transformVehicleData(createdVehicle);
+    },
 
     // Update vehicle
-    updateVehicle: (id: string, vehicleData: Partial<Vehicle>): Promise<Vehicle> => api.put<Vehicle>(`/vehicles/${id}`, vehicleData),
+    updateVehicle: async (id: string, vehicleData: Partial<Vehicle>): Promise<Vehicle> => {
+        const backendData = transformToBackendVehicleData(vehicleData);
+        const updatedVehicle = await api.put<any>(`/vehicles/${id}`, backendData);
+        return transformVehicleData(updatedVehicle);
+    },
 
     // Partially update vehicle
-    patchVehicle: (id: string, vehicleData: Partial<Vehicle>): Promise<Vehicle> => api.patch<Vehicle>(`/vehicles/${id}`, vehicleData),
+    patchVehicle: async (id: string, vehicleData: Partial<Vehicle>): Promise<Vehicle> => {
+        const backendData = transformToBackendVehicleData(vehicleData);
+        const updatedVehicle = await api.patch<any>(`/vehicles/${id}`, backendData);
+        return transformVehicleData(updatedVehicle);
+    },
 
     // Soft delete vehicle
-    softDeleteVehicle: (id: string): Promise<Vehicle> => api.patch<Vehicle>(`/vehicles/${id}/soft-delete`, {}),
+    softDeleteVehicle: async (id: string): Promise<Vehicle> => {
+        const updatedVehicle = await api.patch<any>(`/vehicles/${id}/soft-delete`, {});
+        return transformVehicleData(updatedVehicle);
+    },
 
     // Restore soft deleted vehicle
-    restoreVehicle: (id: string): Promise<Vehicle> => api.patch<Vehicle>(`/vehicles/${id}/restore`, {}),
+    restoreVehicle: async (id: string): Promise<Vehicle> => {
+        const restoredVehicle = await api.patch<any>(`/vehicles/${id}/restore`, {});
+        return transformVehicleData(restoredVehicle);
+    },
 
     // Hard delete vehicle (for admin purposes)
     deleteVehicle: (id: string): Promise<void> => api.delete<void>(`/vehicles/${id}`),
@@ -285,55 +364,182 @@ export const vehicleAPI = {
     },
 
     // Get all vehicles including soft deleted (for admin purposes)
-    getAllVehiclesIncludingDeleted: (): Promise<Vehicle[]> => api.get<Vehicle[]>('/vehicles/all'),
+    getAllVehiclesIncludingDeleted: async (): Promise<Vehicle[]> => {
+        const backendVehicles = await api.get<any[]>('/vehicles/all');
+        return backendVehicles.map(transformVehicleData);
+    },
+};
+
+// Helper function to transform backend maintenance data to frontend format
+const transformMaintenanceData = (backendMaintenance: any): Maintenance => {
+    return {
+        id: backendMaintenance.vm_id_pk?.toString() || '',
+        vehicle_id: backendMaintenance.vm_vehicle_id_fk?.toString() || '',
+        description: backendMaintenance.vm_description || '',
+        date: backendMaintenance.vm_date || '',
+        cost: backendMaintenance.vm_cost || 0,
+        status: backendMaintenance.vm_status || '',
+        last_updated: backendMaintenance.vm_modified_on || backendMaintenance.vm_created_at || '',
+        created_at: backendMaintenance.vm_created_at || '',
+        deleted_at: backendMaintenance.vm_deleted_at != null && backendMaintenance.vm_deleted_at !== '' ? true : false
+    };
+};
+
+// Helper function to transform frontend maintenance data to backend format
+const transformToBackendMaintenanceData = (frontendMaintenance: any): any => {
+    const result: any = {};
+    
+    if (frontendMaintenance.vehicle_id !== undefined) result.vehicle_id = frontendMaintenance.vehicle_id;
+    if (frontendMaintenance.description !== undefined) result.description = frontendMaintenance.description;
+    if (frontendMaintenance.date !== undefined) result.date = frontendMaintenance.date;
+    if (frontendMaintenance.cost !== undefined) result.cost = frontendMaintenance.cost;
+    if (frontendMaintenance.status !== undefined) result.status = frontendMaintenance.status;
+    if (frontendMaintenance.deleted_at !== undefined) result.deleted_at = frontendMaintenance.deleted_at;
+    
+    return result;
 };
 
 // Maintenance API methods
 export const maintenanceAPI = {
     // Get all maintenance records
-    getAllMaintenance: (): Promise<Maintenance[]> => api.get<Maintenance[]>('/maintenance'),
+    getAllMaintenance: async (): Promise<Maintenance[]> => {
+        const backendMaintenance = await api.get<any[]>('/maintenance');
+        return backendMaintenance.map(transformMaintenanceData);
+    },
 
     // Get maintenance by ID
-    getMaintenanceById: (id: string): Promise<Maintenance> => api.get<Maintenance>(`/maintenance/${id}`),
+    getMaintenanceById: async (id: string): Promise<Maintenance> => {
+        const backendMaintenance = await api.get<any>(`/maintenance/${id}`);
+        return transformMaintenanceData(backendMaintenance);
+    },
 
     // Get maintenance by vehicle ID
-    getMaintenanceByVehicle: (vehicleId: string): Promise<Maintenance[]> => api.get<Maintenance[]>(`/maintenance?vehicleId=${vehicleId}`),
+    getMaintenanceByVehicle: async (vehicleId: string): Promise<Maintenance[]> => {
+        const backendMaintenance = await api.get<any[]>(`/maintenance?vehicleId=${vehicleId}`);
+        return backendMaintenance.map(transformMaintenanceData);
+    },
 
     // Create new maintenance record
-    createMaintenance: (maintenanceData: { vehicle_id: string; description: string; date: string; cost: number; status: string }): Promise<Maintenance> => api.post<Maintenance>('/maintenance', maintenanceData),
+    createMaintenance: async (maintenanceData: { vehicle_id: string; description: string; date: string; cost: number; status: string }): Promise<Maintenance> => {
+        const backendData = transformToBackendMaintenanceData(maintenanceData);
+        const createdMaintenance = await api.post<any>('/maintenance', backendData);
+        return transformMaintenanceData(createdMaintenance);
+    },
 
     // Update maintenance record
-    updateMaintenance: (id: string, maintenanceData: Partial<Maintenance> | { deleted: boolean }): Promise<Maintenance> => api.patch<Maintenance>(`/maintenance/${id}`, maintenanceData),
+    updateMaintenance: async (id: string, maintenanceData: Partial<Maintenance> | { deleted_at: any }): Promise<Maintenance> => {
+        const backendData = transformToBackendMaintenanceData(maintenanceData);
+        const updatedMaintenance = await api.patch<any>(`/maintenance/${id}`, backendData);
+        return transformMaintenanceData(updatedMaintenance);
+    },
 
     // Delete maintenance record
     deleteMaintenance: (id: string): Promise<void> => api.delete<void>(`/maintenance/${id}`),
 
     // Get completed maintenance
-    getCompletedMaintenance: (): Promise<Maintenance[]> => api.get<Maintenance[]>('/maintenance?status=Completed'),
+    getCompletedMaintenance: async (): Promise<Maintenance[]> => {
+        const backendMaintenance = await api.get<any[]>('/maintenance?status=Completed');
+        return backendMaintenance.map(transformMaintenanceData);
+    },
 
     // Get scheduled maintenance
-    getScheduledMaintenance: (): Promise<Maintenance[]> => api.get<Maintenance[]>('/maintenance?status=Scheduled'),
+    getScheduledMaintenance: async (): Promise<Maintenance[]> => {
+        const backendMaintenance = await api.get<any[]>('/maintenance?status=Scheduled');
+        return backendMaintenance.map(transformMaintenanceData);
+    },
+
+    // Get all maintenance records including deleted ones (for admin purposes)
+    getAllMaintenanceIncludingDeleted: async (): Promise<Maintenance[]> => {
+        try {
+            // First try the /maintenance/all endpoint
+            const backendMaintenance = await api.get<any[]>('/deletedmaintenance');
+            return backendMaintenance.map(transformMaintenanceData);
+        } catch (error) {
+            // If the endpoint doesn't exist, fallback to regular endpoint
+            // and let the frontend handle filtering
+            console.log('Fallback to regular maintenance endpoint for deleted records');
+            const backendMaintenance = await api.get<any[]>('/maintenance');
+            return backendMaintenance.map(transformMaintenanceData);
+        }
+    },
+};
+
+// Helper function to transform backend insurance data to frontend format
+const transformInsuranceData = (backendInsurance: any): Insurance => {
+    return {
+        id: backendInsurance.vi_id?.toString() || '',
+        vehicle_id: backendInsurance.vi_vehicle_id?.toString() || '',
+        policy_number: backendInsurance.vi_policy_number || '',
+        insurer: backendInsurance.vi_insurer || '',
+        policy_type: backendInsurance.vi_policy_type || '',
+        start_date: backendInsurance.vi_start_date || '',
+        end_date: backendInsurance.vi_end_date || '',
+        payment: backendInsurance.vi_payment || 0,
+        issue_date: backendInsurance.vi_issue_date || '',
+        premium_amount: backendInsurance.vi_premium_amount || 0,
+        has_insurance: backendInsurance.vi_has_insurance || false,
+        created_at: backendInsurance.vi_created_at || ''
+    };
+};
+
+// Helper function to transform frontend insurance data to backend format
+const transformToBackendInsuranceData = (frontendInsurance: any): any => {
+    const result: any = {};
+    
+    if (frontendInsurance.vehicle_id !== undefined) result.vehicle_id = frontendInsurance.vehicle_id;
+    if (frontendInsurance.policy_number !== undefined) result.policy_number = frontendInsurance.policy_number;
+    if (frontendInsurance.insurer !== undefined) result.insurer = frontendInsurance.insurer;
+    if (frontendInsurance.policy_type !== undefined) result.policy_type = frontendInsurance.policy_type;
+    if (frontendInsurance.start_date !== undefined) result.start_date = frontendInsurance.start_date;
+    if (frontendInsurance.end_date !== undefined) result.end_date = frontendInsurance.end_date;
+    if (frontendInsurance.payment !== undefined) result.payment = frontendInsurance.payment;
+    if (frontendInsurance.issue_date !== undefined) result.issue_date = frontendInsurance.issue_date;
+    if (frontendInsurance.premium_amount !== undefined) result.premium_amount = frontendInsurance.premium_amount;
+    if (frontendInsurance.has_insurance !== undefined) result.has_insurance = frontendInsurance.has_insurance;
+    
+    return result;
 };
 
 // Insurance API methods
 export const insuranceAPI = {
     // Get all insurance records
-    getAllInsurance: (): Promise<Insurance[]> => api.get<Insurance[]>('/insurance'),
+    getAllInsurance: async (): Promise<Insurance[]> => {
+        const backendInsurance = await api.get<any[]>('/insurance');
+        return backendInsurance.map(transformInsuranceData);
+    },
 
     // Get insurance by ID
-    getInsuranceById: (id: string): Promise<Insurance> => api.get<Insurance>(`/insurance/${id}`),
+    getInsuranceById: async (id: string): Promise<Insurance> => {
+        const backendInsurance = await api.get<any>(`/insurance/${id}`);
+        return transformInsuranceData(backendInsurance);
+    },
 
     // Get insurance by vehicle ID
-    getInsuranceByVehicle: (vehicleId: string): Promise<Insurance[]> => api.get<Insurance[]>(`/insurance/vehicle/${vehicleId}`),
+    getInsuranceByVehicle: async (vehicleId: string): Promise<Insurance[]> => {
+        const backendInsurance = await api.get<any[]>(`/insurance/vehicle/${vehicleId}`);
+        return backendInsurance.map(transformInsuranceData);
+    },
 
     // Create new insurance record
-    createInsurance: (insuranceData: Omit<Insurance, 'id' | 'created_at'>): Promise<Insurance> => api.post<Insurance>('/insurance', insuranceData),
+    createInsurance: async (insuranceData: Omit<Insurance, 'id' | 'created_at'>): Promise<Insurance> => {
+        const backendData = transformToBackendInsuranceData(insuranceData);
+        const createdInsurance = await api.post<any>('/insurance', backendData);
+        return transformInsuranceData(createdInsurance);
+    },
 
     // Update insurance record
-    updateInsurance: (id: string, insuranceData: Partial<Insurance>): Promise<Insurance> => api.put<Insurance>(`/insurance/${id}`, insuranceData),
+    updateInsurance: async (id: string, insuranceData: Partial<Insurance>): Promise<Insurance> => {
+        const backendData = transformToBackendInsuranceData(insuranceData);
+        const updatedInsurance = await api.put<any>(`/insurance/${id}`, backendData);
+        return transformInsuranceData(updatedInsurance);
+    },
 
     // Partially update insurance record
-    patchInsurance: (id: string, insuranceData: Partial<Insurance>): Promise<Insurance> => api.patch<Insurance>(`/insurance/${id}`, insuranceData),
+    patchInsurance: async (id: string, insuranceData: Partial<Insurance>): Promise<Insurance> => {
+        const backendData = transformToBackendInsuranceData(insuranceData);
+        const updatedInsurance = await api.patch<any>(`/insurance/${id}`, backendData);
+        return transformInsuranceData(updatedInsurance);
+    },
 
     // Delete insurance record
     deleteInsurance: (id: string): Promise<void> => api.delete<void>(`/insurance/${id}`),
@@ -406,13 +612,13 @@ export const driverAPI = {
     getDriverById: (id: string): Promise<Driver> => api.get<Driver>(`/drivers/${id}`),
 
     // Create new driver
-    createDriver: (driverData: Omit<Driver, 'id'>): Promise<Driver> => api.post<Driver>('/driver', driverData),
+    createDriver: (driverData: Omit<Driver, 'id'>): Promise<Driver> => api.post<Driver>('/drivers', driverData),
 
     // Update driver
     updateDriver: (id: string, driverData: Partial<Driver>): Promise<Driver> => api.put<Driver>(`/drivers/${id}`, driverData),
 
-    // Soft delete driver
-    softDeleteDriver: (id: string): Promise<Driver> => api.patch<Driver>(`/drivers/${id}`, { deleted_at: new Date().toISOString() }),
+    // Patch driver
+    patchDriver: (id: string, driverData: Partial<Driver>): Promise<Driver> => api.patch<Driver>(`/drivers/${id}`, driverData),
 
     // Restore soft deleted driver
     restoreDriver: (id: string): Promise<Driver> => api.patch<Driver>(`/drivers/${id}/restore`, { deleted_at: null }),
@@ -421,33 +627,88 @@ export const driverAPI = {
     deleteDriver: (id: string): Promise<void> => api.delete<void>(`/drivers/${id}`),
 
     // Get all drivers including soft deleted (for admin purposes)
-    getAllDriversIncludingDeleted: (): Promise<Driver[]> => api.get<Driver[]>('/alldrivers'),
+    getAllDriversIncludingDeleted: (): Promise<Driver[]> => api.get<Driver[]>('/drivers/all'),
 
     // Assign vehicle to driver
-    assignVehicleToDriver: (driverId: string, vehicleId: string): Promise<Driver> => api.post<Driver>(`/drivers/${driverId}/assign-vehicle`, { vehicleId }),
+    assignVehicleToDriver: (driverId: string, vehicleId: string): Promise<any> => api.post<any>(`/drivers/${driverId}/assign-vehicle`, { vehicleId }),
+
+    // Assign multiple vehicles to driver
+    assignMultipleVehiclesToDriver: (driverId: string, vehicleIds: string[]): Promise<any> => api.post<any>(`/drivers/${driverId}/assign-vehicles`, { vehicleIds }),
 
     // Unassign vehicle from driver
-    unassignVehicleFromDriver: (driverId: string, vehicleId: string): Promise<Driver> => api.delete<Driver>(`/drivers/${driverId}/unassign-vehicle/${vehicleId}`),
+    unassignVehicleFromDriver: (driverId: string, vehicleId: string): Promise<any> => api.delete<any>(`/drivers/${driverId}/unassign-vehicle/${vehicleId}`),
 
     // Get driver assigned vehicles
-    getDriverAssignedVehicles: (driverId: string): Promise<Vehicle[]> => api.get<Vehicle[]>(`/drivers/${driverId}/assigned-vehicles`),
+    getDriverAssignedVehicles: (driverId: string): Promise<any[]> => api.get<any[]>(`/drivers/${driverId}/assigned-vehicles`),
+};
+
+// Helper function to transform backend claims data to frontend format
+const transformClaimsData = (backendClaim: any): Claim => {
+    return {
+        id: backendClaim.vc_id_pk?.toString() || '',
+        registration_number: backendClaim.registration_number || '',
+        vehicle_id: backendClaim.vc_vehicle_id_fk?.toString() || '',
+        claim_date: backendClaim.vc_claim_date || '',
+        claim_amount: backendClaim.vc_claim_amount || 0,
+        reason: backendClaim.vc_reason || '',
+        status: backendClaim.vc_status || '',
+        created_at: backendClaim.vc_created_at || ''
+    };
+};
+
+// Helper function to transform frontend claims data to backend format
+const transformToBackendClaimsData = (frontendClaim: any): any => {
+    const result: any = {};
+    
+    if (frontendClaim.vehicle_id !== undefined) result.vehicle_id = frontendClaim.vehicle_id;
+    if (frontendClaim.claim_date !== undefined) result.claim_date = frontendClaim.claim_date;
+    if (frontendClaim.claim_amount !== undefined) result.claim_amount = frontendClaim.claim_amount;
+    if (frontendClaim.reason !== undefined) result.reason = frontendClaim.reason;
+    if (frontendClaim.status !== undefined) result.status = frontendClaim.status;
+    if (frontendClaim.registration_number !== undefined) result.registration_number = frontendClaim.registration_number;
+    
+    return result;
 };
 
 export const claimsAPI = {
     
-  getAllClaims: (): Promise<Claim[]> => api.get<Claim[]>('/claims'),
+  getAllClaims: async (): Promise<Claim[]> => {
+    const backendClaims = await api.get<any[]>('/claims');
+    return backendClaims.map(transformClaimsData);
+  },
 
-  getClaimById: (id: string): Promise<Claim> => api.get<Claim>(`/claims/${id}`),
+  getClaimById: async (id: string): Promise<Claim> => {
+    const backendClaim = await api.get<any>(`/claims/${id}`);
+    return transformClaimsData(backendClaim);
+  },
 
-  getClaimsByInsurance: (insuranceId: string): Promise<Claim[]> => api.get<Claim[]>(`/claims/insurance/${insuranceId}`),
+  getClaimsByInsurance: async (insuranceId: string): Promise<Claim[]> => {
+    const backendClaims = await api.get<any[]>(`/claims/insurance/${insuranceId}`);
+    return backendClaims.map(transformClaimsData);
+  },
 
-  getClaimsByVehicle: (vehicleId: string): Promise<Claim[]> => api.get<Claim[]>(`/claims/vehicle/${vehicleId}`),
+  getClaimsByVehicle: async (vehicleId: string): Promise<Claim[]> => {
+    const backendClaims = await api.get<any[]>(`/claims/vehicle/${vehicleId}`);
+    return backendClaims.map(transformClaimsData);
+  },
 
-  createClaim: (claimData: Omit<Claim, 'id' | 'created_at'>): Promise<Claim> => api.post<Claim>('/claims', claimData),
+  createClaim: async (claimData: any): Promise<Claim> => {
+    const backendData = transformToBackendClaimsData(claimData);
+    const createdClaim = await api.post<any>('/claims', backendData);
+    return transformClaimsData(createdClaim);
+  },
 
-  updateClaim: (id: string, claimData: Partial<Claim>): Promise<Claim> => api.put<Claim>(`/claims/${id}`, claimData),
+  updateClaim: async (id: string, claimData: Partial<Claim>): Promise<Claim> => {
+    const backendData = transformToBackendClaimsData(claimData);
+    const updatedClaim = await api.put<any>(`/claims/${id}`, backendData);
+    return transformClaimsData(updatedClaim);
+  },
 
-  patchClaim: (id: string, claimData: Partial<Claim>): Promise<Claim> => api.patch<Claim>(`/claims/${id}`, claimData),
+  patchClaim: async (id: string, claimData: Partial<Claim>): Promise<Claim> => {
+    const backendData = transformToBackendClaimsData(claimData);
+    const updatedClaim = await api.patch<any>(`/claims/${id}`, backendData);
+    return transformClaimsData(updatedClaim);
+  },
 
   deleteClaim: (id: string): Promise<void> => api.delete<void>(`/claims/${id}`),
 };

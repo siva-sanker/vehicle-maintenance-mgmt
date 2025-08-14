@@ -2,11 +2,13 @@ import { vehicleAPI, insuranceAPI, Vehicle, Insurance, claimsAPI } from '../serv
 
 export interface Claim {
   id: string;
+  registration_number:string;
   vehicle_id: string;
   claim_date: string;
   claim_amount: number;
   reason: string;
   status: string;
+  created_at?: string;
   globalIndex?: number; // Optional, added when displaying
 }
 

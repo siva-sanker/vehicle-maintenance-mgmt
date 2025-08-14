@@ -13,9 +13,14 @@ import FormDateInput from "../components/Date";
 import Table from "../components/Table";
 import EditButton from "../components/EditButton";
 import DeleteButton from "../components/DeleteButton";
-import RestoreButton from '../components/RestoreButton';
-import { vehicleAPI, Vehicle, maintenanceAPI, Maintenance } from "../services/api";
-import { formatDateDDMMYYYY } from '../utils/vehicleUtils';
+import RestoreButton from "../components/RestoreButton";
+import {
+  vehicleAPI,
+  Vehicle,
+  maintenanceAPI,
+  Maintenance,
+} from "../services/api";
+import { formatDateDDMMYYYY } from "../utils/vehicleUtils";
 
 const VehicleMaintenance: React.FC = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
@@ -26,16 +31,22 @@ const VehicleMaintenance: React.FC = () => {
     date: "",
     description: "",
     cost: "",
-    status: "Scheduled"
+    status: "Scheduled",
   });
-  const [maintenanceRecords, setMaintenanceRecords] = useState<Maintenance[]>([]);
+  const [maintenanceRecords, setMaintenanceRecords] = useState<Maintenance[]>(
+    []
+  );
   const [maintenanceLoading, setMaintenanceLoading] = useState(true);
   const [editingRecord, setEditingRecord] = useState<Maintenance | null>(null);
-  const [showRestoreMaintenanceModal, setShowRestoreMaintenanceModal] = useState(false);
-  const [deletedMaintenance, setDeletedMaintenance] = useState<Maintenance[]>([]);
-  const [restoreMaintenanceLoading, setRestoreMaintenanceLoading] = useState(false);
-  const [fromDate, setFromDate] = useState<string>('');
-  const [toDate, setToDate] = useState<string>('');
+  const [showRestoreMaintenanceModal, setShowRestoreMaintenanceModal] =
+    useState(false);
+  const [deletedMaintenance, setDeletedMaintenance] = useState<Maintenance[]>(
+    []
+  );
+  const [restoreMaintenanceLoading, setRestoreMaintenanceLoading] =
+    useState(false);
+  const [fromDate, setFromDate] = useState<string>("");
+  const [toDate, setToDate] = useState<string>("");
 
   // for cards
   useEffect(() => {
@@ -69,12 +80,18 @@ const VehicleMaintenance: React.FC = () => {
     fetchMaintenance();
   }, []);
 
-  const activeCount = vehicles.filter(v => v.status === "active").length;
-  const maintenanceCount = vehicles.filter(v => v.status === "maintenance").length;
+  const activeCount = vehicles.filter((v) => v.status === "active").length;
+  const maintenanceCount = vehicles.filter(
+    (v) => v.status === "maintenance"
+  ).length;
 
-  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleFormChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleFromDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,26 +105,26 @@ const VehicleMaintenance: React.FC = () => {
   const validateForm = (): { isValid: boolean; errors: string[] } => {
     const errors: string[] = [];
 
-    // Check for null/empty required fields
-    if (!form.vehicle_id || form.vehicle_id.trim() === '') {
-      errors.push('Vehicle is required');
+    // Check for null/empty required fields - vehicle_id is only required for new records
+    if (!editingRecord && (!form.vehicle_id || form.vehicle_id.trim() === "")) {
+      errors.push("Vehicle is required");
     }
 
-    if (!form.date || form.date.trim() === '') {
-      errors.push('Service date is required');
+    if (!form.date || form.date.trim() === "") {
+      errors.push("Service date is required");
     }
 
-    if (!form.description || form.description.trim() === '') {
-      errors.push('Description is required');
+    if (!form.description || form.description.trim() === "") {
+      errors.push("Description is required");
     }
 
-    if (!form.cost || form.cost.trim() === '') {
-      errors.push('Cost is required');
+    if (!form.cost || form.cost.trim() === "") {
+      errors.push("Cost is required");
     }
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   };
 
@@ -118,7 +135,7 @@ const VehicleMaintenance: React.FC = () => {
       date: "",
       description: "",
       cost: "",
-      status: "Scheduled"
+      status: "Scheduled",
     });
     setIsModalOpen(true);
   };
@@ -130,7 +147,7 @@ const VehicleMaintenance: React.FC = () => {
       date: record.date,
       description: record.description,
       cost: record.cost.toString(),
-      status: record.status || "Scheduled"
+      status: record.status || "Scheduled",
     });
     setIsModalOpen(true);
   };
@@ -138,10 +155,10 @@ const VehicleMaintenance: React.FC = () => {
   const handleSubmit = async () => {
     // Validate form before submission
     const validation = validateForm();
-    
+
     if (!validation.isValid) {
       // Show validation errors in alert
-      const errorMessage = validation.errors.join('\n');
+      const errorMessage = validation.errors.join("\n");
       alert(`Please fill in all required fields:\n${errorMessage}`);
       return;
     }
@@ -152,15 +169,25 @@ const VehicleMaintenance: React.FC = () => {
         date: form.date,
         description: form.description,
         cost: parseFloat(form.cost),
-        status: form.status || "Scheduled"
+        status: form.status || "Scheduled",
       };
 
       if (editingRecord) {
-        await maintenanceAPI.updateMaintenance(editingRecord.id, maintenanceData);
-        toast.success('Maintenance record updated successfully!');
+        // For updates, exclude vehicle_id to avoid backend mapping issues
+        const updateData = {
+          date: form.date,
+          description: form.description,
+          cost: parseFloat(form.cost),
+          status: form.status || "Scheduled",
+        };
+        await maintenanceAPI.updateMaintenance(
+          editingRecord.id,
+          updateData
+        );
+        toast.success("Maintenance record updated successfully!");
       } else {
         await maintenanceAPI.createMaintenance(maintenanceData);
-        toast.success('Maintenance record added successfully!');
+        toast.success("Maintenance record added successfully!");
       }
       // Refresh maintenance records
       const updatedRecords = await maintenanceAPI.getAllMaintenance();
@@ -171,33 +198,38 @@ const VehicleMaintenance: React.FC = () => {
         date: "",
         description: "",
         cost: "",
-        status: "Scheduled"
+        status: "Scheduled",
       });
       setEditingRecord(null);
       setIsModalOpen(false);
     } catch (error) {
-      console.error('Error saving maintenance record:', error);
-      toast.error('Failed to save maintenance record. Please try again.');
+      console.error("Error saving maintenance record:", error);
+      toast.error("Failed to save maintenance record. Please try again.");
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this record? This action can be undone by an administrator.')) return;
+    if (
+      !window.confirm(
+        "Are you sure you want to delete this record? This action can be undone by an administrator."
+      )
+    )
+      return;
     try {
       await maintenanceAPI.deleteMaintenance(id);
-      toast.success('Record deleted');
+      toast.success("Record deleted");
       const updatedRecords = await maintenanceAPI.getAllMaintenance();
       setMaintenanceRecords(updatedRecords);
     } catch {
-      toast.error('Failed to delete record');
+      toast.error("Failed to delete record");
     }
   };
 
   const fetchDeletedMaintenance = async () => {
     setRestoreMaintenanceLoading(true);
     try {
-      const all = await maintenanceAPI.getAllMaintenance();
-      setDeletedMaintenance(all.filter(m => m.deleted_at));
+      const all = await maintenanceAPI.getAllMaintenanceIncludingDeleted();
+      setDeletedMaintenance(all.filter((m) => m.deleted_at === true));
     } catch {
       setDeletedMaintenance([]);
     } finally {
@@ -211,16 +243,21 @@ const VehicleMaintenance: React.FC = () => {
   };
 
   const handleRestoreMaintenance = async (id: string) => {
-    if (!window.confirm('Are you sure you want to restore this maintenance record?')) return;
+    if (
+      !window.confirm(
+        "Are you sure you want to restore this maintenance record?"
+      )
+    )
+      return;
     setRestoreMaintenanceLoading(true);
     try {
-      toast.success('Maintenance record restored successfully');
+      toast.success("Maintenance record restored successfully");
       await maintenanceAPI.updateMaintenance(id, { deleted_at: null });
       await fetchDeletedMaintenance();
       const updatedRecords = await maintenanceAPI.getAllMaintenance();
       setMaintenanceRecords(updatedRecords);
     } catch {
-      toast.error('Failed to restore maintenance record');
+      toast.error("Failed to restore maintenance record");
     } finally {
       setRestoreMaintenanceLoading(false);
     }
@@ -230,58 +267,94 @@ const VehicleMaintenance: React.FC = () => {
     <>
       {/* <Header sidebarCollapsed={sidebarCollapsed} toggleSidebar={toggleSidebar} showDate showTime showCalculator /> */}
       <PageContainer>
-        <SectionHeading title="Vehicle Maintenance" subtitle="Vehicle maintenance records" />
+        <SectionHeading
+          title="Vehicle Maintenance"
+          subtitle="Vehicle maintenance records"
+        />
         <div style={{ display: "flex", gap: 16, marginBottom: 20 }}>
-          <Cards title="Total Active Vehicles" subtitle={loading ? "-" : activeCount} />
-          <Cards title="Vehicles in Maintenance" subtitle={loading ? "-" : maintenanceCount} />
+          <Cards
+            title="Total Active Vehicles"
+            subtitle={loading ? "-" : activeCount}
+          />
+          <Cards
+            title="Vehicles in Maintenance"
+            subtitle={loading ? "-" : maintenanceCount}
+          />
         </div>
-        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5}}>
-          <div style={{display:'flex',gap:'15px'}}>
-            <FormDateInput name="fromDate" label="From Date" value={fromDate} onChange={handleFromDateChange}/>
-            <FormDateInput name="toDate" label="To Date" value={toDate} onChange={handleToDateChange}/>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginBottom: 5,
+          }}
+        >
+          <div style={{ display: "flex", gap: "15px" }}>
+            <FormDateInput
+              name="fromDate"
+              label="From Date"
+              value={fromDate}
+              onChange={handleFromDateChange}
+            />
+            <FormDateInput
+              name="toDate"
+              label="To Date"
+              value={toDate}
+              onChange={handleToDateChange}
+            />
           </div>
-          <div style={{ display: 'flex', gap: 8 }}>
+          <div style={{ display: "flex", gap: 8 }}>
             <ButtonWithGradient onClick={openAddModal}>
               Add Maintenance Record
             </ButtonWithGradient>
-            <RestoreButton onClick={handleOpenRestoreMaintenanceModal} text="Restore Deleted Maintenance" />
+            <RestoreButton
+              onClick={handleOpenRestoreMaintenanceModal}
+              text="Restore Deleted Maintenance"
+            />
           </div>
         </div>
         <ReusableModal
           isOpen={isModalOpen}
-          onClose={() => { setIsModalOpen(false); setEditingRecord(null); }}
-          title={editingRecord ? "Edit Maintenance Record" : "Add Maintenance Record"}
+          onClose={() => {
+            setIsModalOpen(false);
+            setEditingRecord(null);
+          }}
+          title={
+            editingRecord ? "Edit Maintenance Record" : "Add Maintenance Record"
+          }
           onSubmit={handleSubmit}
           submitButtonText={editingRecord ? "Update" : "Add"}
         >
           <form>
-            <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
+            <div style={{ display: "flex", gap: 16, marginBottom: 16 }}>
               <div className="form-group" style={{ flex: 1 }}>
                 <SelectInput
-                  label="Vehicle *"
+                  label={editingRecord ? "Vehicle (Cannot be changed)" : "Vehicle *"}
                   name="vehicle_id"
                   value={form.vehicle_id}
                   onChange={handleFormChange}
+                  disabled={editingRecord !== null}
                   options={[
-                    { label: 'Select vehicle', value: '', disabled: true },
-                    ...vehicles.map(v => ({
-                      label: `${v.registration_number.toUpperCase()} (${v.make} ${v.model})`,
-                      value: v.id
-                    }))
+                    { label: "Select vehicle", value: "", disabled: true },
+                    ...vehicles.map((v) => ({
+                      label: `${v.registration_number.toUpperCase()} (${
+                        v.make
+                      } ${v.model})`,
+                      value: v.id,
+                    })),
                   ]}
-                  required
+                  required={!editingRecord}
                 />
               </div>
               <div style={{ flex: 1 }}>
                 <FormDateInput
-                    label="Service Date *"
-                    name="date"
-                    value={form.date}
-                    onChange={handleFormChange}
-                    />
+                  label="Service Date *"
+                  name="date"
+                  value={form.date}
+                  onChange={handleFormChange}
+                />
               </div>
             </div>
-            <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
+            <div style={{ display: "flex", gap: 16, marginBottom: 16 }}>
               <div style={{ flex: 1 }}>
                 <InputText
                   label="Cost *"
@@ -300,10 +373,10 @@ const VehicleMaintenance: React.FC = () => {
                   value={form.status}
                   onChange={handleFormChange}
                   options={[
-                    { label: 'Set status', value: '', disabled: true },
+                    { label: "Set status", value: "", disabled: true },
                     { label: "Scheduled", value: "Scheduled" },
                     { label: "Completed", value: "Completed" },
-                    { label: "In Progress", value: "In Progress" }
+                    { label: "In Progress", value: "In Progress" },
                   ]}
                   required
                 />
@@ -319,7 +392,7 @@ const VehicleMaintenance: React.FC = () => {
                 required
               />
             </div>
-            <ButtonWithGradient text="Add Record" onClick={handleSubmit}/>
+            <ButtonWithGradient text="Add Record" onClick={handleSubmit} />
           </form>
         </ReusableModal>
 
@@ -336,29 +409,49 @@ const VehicleMaintenance: React.FC = () => {
           {restoreMaintenanceLoading ? (
             <div>Loading deleted maintenance records...</div>
           ) : deletedMaintenance.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '40px' }}>
+            <div style={{ textAlign: "center", padding: "40px" }}>
               <h3>No deleted maintenance records found</h3>
             </div>
           ) : (
             <div className="table-container">
               <Table
                 columns={[
-                  { key: 'vehicleInfo', header: 'Vehicle', renderCell: (_: any, row: any) => {
-                      const vehicle = vehicles.find(v => v.id === row.vehicle_id);
-                      return vehicle ? `${vehicle.registration_number.toUpperCase()}` : 'Unknown Vehicle';
-                  }},
-                  { key: 'date', header: 'Service Date' },
-                  { key: 'description', header: 'Description' },
-                  { key: 'cost', header: 'Cost', renderCell: (cost: number) => `₹${cost.toLocaleString()}` },
+                  {
+                    key: "vehicleInfo",
+                    header: "Vehicle",
+                    renderCell: (_: any, row: any) => {
+                      const vehicle = vehicles.find(
+                        (v) => v.id === row.vehicle_id
+                      );
+                      return vehicle
+                        ? `${vehicle.registration_number.toUpperCase()}`
+                        : "Unknown Vehicle";
+                    },
+                  },
+                  { key: "date", header: "Service Date" },
+                  { key: "description", header: "Description" },
+                  {
+                    key: "cost",
+                    header: "Cost",
+                    renderCell: (cost: number) => `₹${cost.toLocaleString()}`,
+                  },
                   // { key: 'status', header: 'Status' },
-                  { key: 'actions', header: 'Actions', renderCell: (id: string) => (
-                    <ButtonWithGradient onClick={() => handleRestoreMaintenance(id)} text="Restore" className="btn-success" />
-                  ) }
+                  {
+                    key: "actions",
+                    header: "Actions",
+                    renderCell: (id: string) => (
+                      <ButtonWithGradient
+                        onClick={() => handleRestoreMaintenance(id)}
+                        text="Restore"
+                        className="btn-success"
+                      />
+                    ),
+                  },
                 ]}
-                data={deletedMaintenance.map(m => ({
+                data={deletedMaintenance.map((m) => ({
                   ...m,
                   vehicleInfo: m.vehicle_id, // needed for Table to pass row to renderCell
-                  actions: m.id
+                  actions: m.id,
                 }))}
               />
             </div>
@@ -368,23 +461,27 @@ const VehicleMaintenance: React.FC = () => {
           columns={[
             { key: "number", header: "#" },
             { key: "vehicleInfo", header: "Vehicle" },
-            { key: "date", header: "Service Date", renderCell: (value) => formatDateDDMMYYYY(value) },
-            { key: "description", header: "Description" },
-            { key: "cost", header: "Cost" ,
-              renderCell: (cost) => `₹${cost.toLocaleString()}`
+            {
+              key: "date",
+              header: "Service Date",
+              renderCell: (value) => formatDateDDMMYYYY(value),
             },
+            { key: "description", header: "Description" },
+            { key: "cost", header: "Cost", renderCell: (cost) => `₹${cost}` },
             { key: "status", header: "Status" },
-            { key: "actions", header: "Actions",
+            {
+              key: "actions",
+              header: "Actions",
               renderCell: (_: any, row: any) => (
-                <div style={{display:"flex",gap:'10px'}}>
+                <div style={{ display: "flex", gap: "10px" }}>
                   <EditButton onClick={() => openEditModal(row)} />
                   <DeleteButton onClick={() => handleDelete(row.id)} />
                 </div>
-              )
-            }
+              ),
+            },
           ]}
           data={maintenanceRecords
-            .filter(record => {
+            .filter((record) => {
               if (record.deleted_at) return false;
               let matchesFrom = true;
               let matchesTo = true;
@@ -397,11 +494,15 @@ const VehicleMaintenance: React.FC = () => {
               return matchesFrom && matchesTo;
             })
             .map((record, index) => {
-              const vehicle = vehicles.find(v => v.id === record.vehicle_id);
+              const vehicle = vehicles.find((v) => v.id === record.vehicle_id);
               return {
                 ...record,
                 number: index + 1,
-                vehicleInfo: vehicle ? `${vehicle.registration_number.toUpperCase()} (${vehicle.make} ${vehicle.model})` : 'Unknown Vehicle'
+                vehicleInfo: vehicle
+                  ? `${vehicle.registration_number.toUpperCase()} (${
+                      vehicle.make
+                    } ${vehicle.model})`
+                  : "Unknown Vehicle",
               };
             })}
         />
@@ -410,4 +511,4 @@ const VehicleMaintenance: React.FC = () => {
   );
 };
 
-export default VehicleMaintenance; 
+export default VehicleMaintenance;

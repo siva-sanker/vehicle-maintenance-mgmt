@@ -51,120 +51,102 @@ export const getDatabase = () => {
 const createTables = async () => {
   const tableSql = `
     -- Drop foreign key constraint if it exists
-    IF EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_assigned_vehicles')
-      ALTER TABLE drivers DROP CONSTRAINT FK_assigned_vehicles
+
     IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='vehicles' AND xtype='U')
     CREATE TABLE vehicles (
-      id NVARCHAR(50) PRIMARY KEY,
-      make NVARCHAR(100) NOT NULL,
-      model NVARCHAR(100) NOT NULL,
-      purchase_date DATE NOT NULL,
-      registration_number NVARCHAR(100) UNIQUE NOT NULL,
-      purchase_price FLOAT NOT NULL,
-      fuel_type NVARCHAR(50) NOT NULL,
-      engine_number NVARCHAR(100),
-      chassis_number NVARCHAR(100),
-      kilometers INT DEFAULT 0,
-      color NVARCHAR(50),
-      owner NVARCHAR(100),
-      phone NVARCHAR(50),
-      address NVARCHAR(255),
-      status NVARCHAR(50) DEFAULT 'active',
-      last_updated DATETIME DEFAULT GETDATE(),
-      deleted_at DATETIME NULL,
-      created_at DATETIME DEFAULT GETDATE()
+    v_id_pk BIGINT PRIMARY KEY,
+    v_make NVARCHAR(100) NOT NULL,
+    v_model NVARCHAR(100) NOT NULL,
+    v_purchase_date DATE NOT NULL,
+    v_registration_number NVARCHAR(100) UNIQUE NOT NULL,
+    v_purchase_price FLOAT NOT NULL,
+    v_fuel_type NVARCHAR(50) NOT NULL,
+    v_engine_number NVARCHAR(100),
+    v_chassis_number NVARCHAR(100),
+    v_kilometers INT DEFAULT 0,
+    v_color NVARCHAR(50),
+    v_owner NVARCHAR(100),
+    v_phone NVARCHAR(50),
+    v_address NVARCHAR(255),
+    v_status NVARCHAR(50) DEFAULT 'active',
+    v_deleted_at DATETIME NULL,
+    v_created_at DATETIME DEFAULT GETDATE(),
+    v_modified_by_fk BIGINT,
+    v_modified_on DATETIME DEFAULT GETDATE(),
+    v_provider_id_fk BIGINT,
+    v_outlet_fk BIGINT
     );
 
-    IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='drivers' AND xtype='U')
-    CREATE TABLE drivers (
-      id NVARCHAR(50) PRIMARY KEY,
-      name NVARCHAR(100) NOT NULL,
-      phone NVARCHAR(50) NOT NULL,
-      address NVARCHAR(255),
-      license_number NVARCHAR(100),
-      status NVARCHAR(50) DEFAULT 'active',
-      last_updated DATETIME DEFAULT GETDATE(),
-      deleted_at DATETIME NULL,
-      created_at DATETIME DEFAULT GETDATE(),
-      assigned_vehicles NVARCHAR(MAX) NULL
-    );
+    IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='vehicle_drivers' AND xtype='U')
+    CREATE TABLE vehicle_drivers (
+        vd_id_pk BIGINT PRIMARY KEY,
+        vd_license_number NVARCHAR(100),
+        vd_status NVARCHAR(50) DEFAULT 'active',
+        vd_deleted_at DATETIME NULL,
+        vd_created_at DATETIME DEFAULT GETDATE(),
+        vd_assigned_vehicles NVARCHAR(MAX) NULL,
+        vd_modified_by_fk BIGINT NULL,
+        vd_modified_on DATETIME DEFAULT GETDATE(),
+        vd_provider_id_fk BIGINT NULL,
+        vd_outlet_fk BIGINT NULL,
+        FOREIGN KEY (vd_id_pk) REFERENCES EMP_Physician_Master(em_employeeid_pk) ON DELETE CASCADE
+      );
     
-    -- Add assigned_vehicles column if table exists but column doesn't
-    IF EXISTS (SELECT * FROM sysobjects WHERE name='drivers' AND xtype='U')
-    AND NOT EXISTS (SELECT * FROM syscolumns WHERE id = OBJECT_ID('drivers') AND name = 'assigned_vehicles')
-    BEGIN
-      ALTER TABLE drivers ADD assigned_vehicles NVARCHAR(MAX) NULL
-    END
 
-    IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='maintenance' AND xtype='U')
-    CREATE TABLE maintenance (
-      id NVARCHAR(50) PRIMARY KEY,
-      vehicle_id NVARCHAR(50) NOT NULL,
-      description NVARCHAR(255) NOT NULL,
-      date DATE NOT NULL,
-      cost FLOAT NOT NULL,
-      status NVARCHAR(50) DEFAULT 'scheduled',
-      last_updated DATETIME DEFAULT GETDATE(),
-      created_at DATETIME DEFAULT GETDATE(),
-      FOREIGN KEY (vehicle_id) REFERENCES vehicles(id) ON DELETE CASCADE
-    );
+    IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='vehicle_maintenance' AND xtype='U')
+    CREATE TABLE vehicle_maintenance (
+    vm_id_pk BIGINT PRIMARY KEY,
+    vm_vehicle_id_fk BIGINT NOT NULL,
+    vm_description NVARCHAR(255) NOT NULL,
+    vm_date DATE NOT NULL,
+    vm_odo_before varchar(30),
+    vm_odo_after varchar(30),
+    vm_cost FLOAT NOT NULL,
+    vm_status NVARCHAR(50) DEFAULT 'scheduled',
+    vm_created_at DATETIME DEFAULT GETDATE(),
+    vm_modified_by_fk BIGINT,
+    vm_modified_on DATETIME DEFAULT GETDATE(),
+    vm_provider_id_fk BIGINT,
+    vm_outlet_fk BIGINT,
+    FOREIGN KEY (vm_vehicle_id_fk) REFERENCES vehicles(v_id_pk) ON DELETE CASCADE
+  );
 
-    IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='insurance' AND xtype='U')
-    CREATE TABLE insurance (
-      id NVARCHAR(50) PRIMARY KEY,
-      vehicle_id NVARCHAR(50) NOT NULL,
-      policy_number NVARCHAR(100) NOT NULL,
-      insurer NVARCHAR(100) NOT NULL,
-      policy_type NVARCHAR(100) NOT NULL,
-      start_date DATE NOT NULL,
-      end_date DATE NOT NULL,
-      payment FLOAT NOT NULL,
-      issue_date DATE NOT NULL,
-      premium_amount FLOAT NOT NULL,
-      has_insurance BIT DEFAULT 1,
-      created_at DATETIME DEFAULT GETDATE(),
-      FOREIGN KEY (vehicle_id) REFERENCES vehicles(id) ON DELETE CASCADE
-    );
+    IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='vehicle_insurance' AND xtype='U')
+    CREATE TABLE vehicle_insurance (
+    vi_id BIGINT PRIMARY KEY,
+    vi_vehicle_id BIGINT NOT NULL,
+    vi_policy_number NVARCHAR(100) NOT NULL,
+    vi_insurer NVARCHAR(100) NOT NULL,
+    vi_policy_type NVARCHAR(100) NOT NULL,
+    vi_start_date DATE NOT NULL,
+    vi_end_date DATE NOT NULL,
+    vi_payment FLOAT NOT NULL,
+    vi_issue_date DATE NOT NULL,
+    vi_premium_amount FLOAT NOT NULL,
+    vi_has_insurance BIT DEFAULT 1,
+    vi_created_at DATETIME DEFAULT GETDATE(),
+    vi_modified_by_fk BIGINT,
+    vi_modified_on DATETIME DEFAULT GETDATE(),
+    vi_provider_id_fk BIGINT,
+    vi_outlet_fk BIGINT,
+    FOREIGN KEY (vi_vehicle_id) REFERENCES vehicles(v_id_pk) ON DELETE CASCADE
+  );
 
-    IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='claims' AND xtype='U')
-    CREATE TABLE claims (
-      id NVARCHAR(50) PRIMARY KEY,
-      vehicle_id NVARCHAR(50) NOT NULL,
-      claim_date DATE NOT NULL,
-      claim_amount FLOAT NOT NULL,
-      reason NVARCHAR(255) NOT NULL,
-      status NVARCHAR(50) DEFAULT 'pending',
-      created_at DATETIME DEFAULT GETDATE(),
-      FOREIGN KEY (vehicle_id) REFERENCES vehicles(id) ON DELETE CASCADE
-    );
-
-    IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='vehicle_locations' AND xtype='U')
-    CREATE TABLE vehicle_locations (
-      id NVARCHAR(50) PRIMARY KEY,
-      vehicle_id NVARCHAR(50) NOT NULL,
-      latitude FLOAT NOT NULL,
-      longitude FLOAT NOT NULL,
-      timestamp DATETIME DEFAULT GETDATE(),
-      address NVARCHAR(255),
-      FOREIGN KEY (vehicle_id) REFERENCES vehicles(id) ON DELETE CASCADE
-    );
-
-    -- Indexes
-    IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name='idx_vehicles_status')
-      CREATE INDEX idx_vehicles_status ON vehicles(status);
-    IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name='idx_vehicles_deleted_at')
-      CREATE INDEX idx_vehicles_deleted_at ON vehicles(deleted_at);
-    IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name='idx_drivers_status')
-      CREATE INDEX idx_drivers_status ON drivers(status);
-    IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name='idx_drivers_deleted_at')
-      CREATE INDEX idx_drivers_deleted_at ON drivers(deleted_at);
-    IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name='idx_maintenance_vehicle_id')
-      CREATE INDEX idx_maintenance_vehicle_id ON maintenance(vehicle_id);
-    IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name='idx_maintenance_date')
-      CREATE INDEX idx_maintenance_date ON maintenance(date);
-    IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name='idx_maintenance_status')
-      CREATE INDEX idx_maintenance_status ON maintenance(status);
-  `;
+    IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='vehicle_claims' AND xtype='U')
+    CREATE TABLE vehicle_claims (
+    vc_id_pk BIGINT PRIMARY KEY,
+    vc_vehicle_id_fk BIGINT NOT NULL,
+    vc_claim_date DATE NOT NULL,
+    vc_claim_amount FLOAT NOT NULL,
+    vc_reason NVARCHAR(255) NOT NULL,
+    vc_status NVARCHAR(50) DEFAULT 'pending',
+    vc_created_at DATETIME DEFAULT GETDATE(),
+    vc_modified_by_fk BIGINT,
+    vc_modified_on DATETIME DEFAULT GETDATE(),
+    vc_provider_id_fk BIGINT,
+    vc_outlet_fk BIGINT,
+    FOREIGN KEY (vc_vehicle_id_fk) REFERENCES vehicles(v_id_pk) ON DELETE CASCADE
+  ); `;
 
   try {
     // Split and run each statement (MSSQL doesn't support multiple CREATEs in one batch)

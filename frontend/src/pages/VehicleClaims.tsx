@@ -303,7 +303,14 @@ const VehicleClaims: React.FC = () => {
                         renderCell: (value: string) => (
                           <span className="reason-cell">{value}</span>
                         )
-                      }
+                      },
+                      // {
+                      //   key: 'status',
+                      //   header: 'Status',
+                      //   renderCell: (value: string) => (
+                      //     <span className={`status-cell status-${value.toLowerCase()}`}>{value}</span>
+                      //   )
+                      // }
                     ]}
                     data={filteredClaims}
                   />
